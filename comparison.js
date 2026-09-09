@@ -20,11 +20,18 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 const ROTATE_DEG_PER_SEC = 20; // full turn in 18s; calmer than BSB's 60deg/s with this many cells
-const ASSET_V = '4'; // bump when GLBs are re-exported, so cached copies don't linger
+const ASSET_V = '5'; // bump when GLBs are re-exported, so cached copies don't linger
 
 const glbCache = new Map(); // url -> Promise<scene template>; rows sharing a file share the load
+
+// the GLBs are Draco-compressed (36 MB -> 3 MB); one shared loader + decoder
+const _draco = new DRACOLoader();
+_draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+const _gltf = new GLTFLoader();
+_gltf.setDRACOLoader(_draco);
 
 // one loader pass for the placeholder geometry, shared by every cell
 const placeholderGeom = new Promise((resolve) => {
@@ -45,7 +52,7 @@ const placeholderGeom = new Promise((resolve) => {
 function loadAsset(url) {
   if (!glbCache.has(url)) {
     glbCache.set(url, new Promise((resolve, reject) => {
-      new GLTFLoader().load(url, (gltf) => {
+      _gltf.load(url, (gltf) => {
         const root = gltf.scene;
         root.traverse((child) => {
           if (!child.isMesh) return;
