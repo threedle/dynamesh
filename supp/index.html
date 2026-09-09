@@ -40,7 +40,7 @@ video { display: block; margin: 0 auto; }
 </style>
 <div class="container">
         <h1 align="center">DynaMesh: Dynamic 3D Texture Generation</h1>
-        <h2 align="center">Supplementary Material</h2>
+        <h2 align="center">More Results</h2>
         <hr />
         <h2 align="center">Temporal Results</h2>
         <p align="left">
@@ -50,7 +50,8 @@ video { display: block; margin: 0 auto; }
             alongside views of the temporal 3D results. All clips loop.
         </p>
         <hr />
-        <h2 align="left">Figure 1. DynaMesh carries a video&rsquo;s evolving effect onto a 3D object as a texture that changes over time.</h2>
+        <p style="text-align:center;margin:1.2rem 0;"><a href="../index.html" style="display:inline-block;background:#263966;color:#fff;font-weight:700;padding:0.6rem 1.4rem;border-radius:10px;text-decoration:none;">&larr; Back to the project page</a></p>
+<h2 align="left">Figure 1. DynaMesh carries a video&rsquo;s evolving effect onto a 3D object as a texture that changes over time.</h2>
         <p align="left">The reference video of the prompted effect, then our dynamic texture result that follows it frame by frame.</p>
 
         <h3 align="left">aircraft</h3> &mdash; <i>&ldquo;Continuous, Hokusai waves gushing&rdquo;</i>
@@ -61,60 +62,6 @@ video { display: block; margin: 0 auto; }
             </tbody>
         </table>
         <hr />
-        <h2 align="left">Figure 2. Gallery of results.</h2>
-        <p align="left">Four objects driven by four different effects. DynaMesh can generate a variety of temporal effects for various 3D shapes.</p>
-
-        <h3 align="left">hand</h3> &mdash; <i>&ldquo;Rorschach pattern forming&rdquo;</i>
-        <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="1" valign="middle"><video width="200" controls autoplay muted playsinline loop><source src="videos/006_hand__reference_video.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/007_hand__supervised_view.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/008_hand__novel_view_1.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/009_hand__novel_view_2.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-
-        <h3 align="left">chair</h3> &mdash; <i>&ldquo;Blue paint cracks and peels&rdquo;</i>
-        <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="1" valign="middle"><video width="200" controls autoplay muted playsinline loop><source src="videos/010_chair__reference_video.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/011_chair__supervised_view.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/012_chair__novel_view_1.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/013_chair__novel_view_2.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-
-        <h3 align="left">pumpkin</h3> &mdash; <i>&ldquo;Rot spreads and darkens&rdquo;</i>
-        <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="1" valign="middle"><video width="200" controls autoplay muted playsinline loop><source src="videos/014_pumpkin__reference_video.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/015_pumpkin__supervised_view.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/016_pumpkin__novel_view_1.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/017_pumpkin__novel_view_2.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-
-        <h3 align="left">airplane</h3> &mdash; <i>&ldquo;Red cracks spreading&rdquo;</i>
-        <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="1" valign="middle"><video width="200" controls autoplay muted playsinline loop><source src="videos/018_airplane__reference_video.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/019_airplane__supervised_view.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/020_airplane__novel_view_1.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/021_airplane__novel_view_2.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-        <hr />
-        <h2 align="left">Figure 5. Generalization.</h2>
-        <p align="left">We show the Reference video, trained shape, and the effect transferred to unseen shapes for two different effects. Trained only on one object, our method generalizes the effect well to different other shapes.</p>
-
-        <h3 align="left">Rorschach adapter</h3> &mdash; <i>&ldquo;Rorschach effect with spots growing&rdquo;</i>
-        <div class="scroll"><table width="100%" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Training shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="1" valign="middle"><video width="96" controls autoplay muted playsinline loop><source src="videos/022_rorschach_adapter__reference_video.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/023_rorschach_adapter__training_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/024_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/025_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/026_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/027_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/028_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/029_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/030_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/031_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/032_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/033_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/034_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/035_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-</div>
-        <h3 align="left">Lava adapter</h3> &mdash; <i>&ldquo;Lava effect with cracks glowing in bright orange&rdquo;</i>
-        <div class="scroll"><table width="100%" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Training shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th><th align="center">Unseen shape</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="1" valign="middle"><video width="96" controls autoplay muted playsinline loop><source src="videos/036_lava_adapter__reference_video.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/037_lava_adapter__training_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/038_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/039_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/040_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/041_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/042_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/043_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/044_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/045_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/046_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/047_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/048_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td><td align="center"><video width="96" controls autoplay muted playsinline loop><source src="videos/049_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-</div>        <hr />
         <h2 align="left">Figure 6. Flicker.</h2>
         <p align="left">A chair with moss spreading over its surface. Frozen TRELLIS.2 changes the texture abruptly from one moment to the next, while our method keeps the moss growing smoothly, as in the video.</p>
 
@@ -126,17 +73,6 @@ video { display: block; margin: 0 auto; }
                 <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/051_chair__view6.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/052_chair__view7.mp4" type="video/mp4"></video></td></tr>
                 <tr><td colspan="2" align="center" class="mname">Frozen TRELLIS.2</td></tr>
                 <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/053_chair__view8.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/054_chair__view9.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-        <hr />
-        <h2 align="left">Figure 7. Making an existing static texture dynamic.</h2>
-        <p align="left">The object already carries its own initial texture. The prompted effect sets the dots in motion while the facial attributes hold their place.</p>
-
-        <h3 align="left">duck</h3> &mdash; <i>&ldquo;Polka dots gliding over the duck&rdquo;</i>
-        <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="1" valign="middle"><video width="200" controls autoplay muted playsinline loop><source src="videos/055_duck__reference_video.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/056_duck__supervised_view.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/057_duck__novel_view_1.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/058_duck__novel_view_2.mp4" type="video/mp4"></video></td></tr>
             </tbody>
         </table>
         <hr />

@@ -1007,3 +1007,84 @@ pre {
 #more-results {
   margin-top: -2.5rem;
 }
+
+/* ---------------- video result grids ---------------- */
+
+.vgrid {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.vgrid-4 { grid-template-columns: repeat(4, 1fr); }
+.vgrid-2 { grid-template-columns: repeat(2, 1fr); }
+
+.vgrid video, .vscroll video, .cmp-ref video {
+  width: 100%;
+  border-radius: 6px;
+  background: #ffffff;
+  display: block;
+}
+
+.vhead {
+  margin-bottom: 2px;
+}
+
+.vhead div {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.vprompt {
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+  font-size: 1.0rem;
+  margin: 0.9rem 0 0.3rem;
+}
+
+.vscroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.vscroll video {
+  height: 130px;
+  width: auto;
+  flex: 0 0 auto;
+}
+
+/* comparison: reference on the left, two method columns of three */
+.cmp-layout {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.cmp-ref {
+  flex: 0 0 180px;
+}
+
+.cmp-cols {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  min-width: 0;
+}
+
+.cmp-method {
+  margin-bottom: 10px;
+}
+
+.cmp-method .dm-block-label {
+  margin-bottom: 0.25rem;
+}
+
+@media (max-width: 760px) {
+  .cmp-layout { flex-direction: column; }
+  .cmp-ref { position: static; flex: none; width: 50%; }
+  .cmp-cols { grid-template-columns: 1fr; }
+}

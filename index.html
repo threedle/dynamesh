@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="assets/threedle_icon.png">
-  <link href="style.css?v=5" rel="stylesheet">
+  <link href="style.css?v=8" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
     /* from https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css */
@@ -82,21 +82,21 @@
       <span class="side-toc-dot" aria-hidden="true"></span>
       <span class="side-toc-label">Abstract</span>
     </a>
-    <a href="#key-idea" data-section="key-idea">
-      <span class="side-toc-dot" aria-hidden="true"></span>
-      <span class="side-toc-label">Key Idea</span>
-    </a>
     <a href="#method" data-section="method">
       <span class="side-toc-dot" aria-hidden="true"></span>
       <span class="side-toc-label">Method</span>
+    </a>
+    <a href="#key-idea" data-section="key-idea">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Key Idea</span>
     </a>
     <a href="#gallery" data-section="gallery">
       <span class="side-toc-dot" aria-hidden="true"></span>
       <span class="side-toc-label">Gallery</span>
     </a>
-    <a href="#robustness" data-section="robustness">
+    <a href="#generalization" data-section="generalization">
       <span class="side-toc-dot" aria-hidden="true"></span>
-      <span class="side-toc-label">Robustness</span>
+      <span class="side-toc-label">Generalization</span>
     </a>
     <a href="#applications" data-section="applications">
       <span class="side-toc-dot" aria-hidden="true"></span>
@@ -124,11 +124,9 @@
       <div class="dm-grid dm-grid-8" data-method="plane" data-nt="8" data-az="45" data-el="25"></div>
     </div>
     <p class="graybox">
-      <em>DynaMesh</em> carries a video's evolving effect onto a 3D object as a <em>texture that changes over
-      time</em>. Given a reference video of the prompted effect unfolding on a render of the object (top), we produce
-      a single mesh whose texture follows the video frame by frame. Each cell below the strip is the actual 3D output
-      at that moment of the sequence. The geometry stays fixed while the appearance evolves, so every moment can be
-      re-rendered from any viewpoint.
+      <em>DynaMesh</em> generates a dynamic appearance effect for a 3D mesh. We create a video of the desired
+      effect conditioned on a text prompt and a single view of the mesh, and propagate it consistently to the
+      entire 3D surface.
     </p>
   </section>
   <section id="abstract">
@@ -153,12 +151,12 @@
       different shapes never seen during training.
     </p>
   </section>
-  <section id="key-idea">
-    <h2>Key Idea</h2>
+  <section id="method">
+    <h2>Method</h2>
     <img class="halfwidthflex blcent" style="width: calc(1.55 * var(--halfwidthflex-w)); max-width: 100%;" src="assets/system.jpg"
       alt="system overview diagram: a render of the mesh and a text prompt go to a video generation model, whose frames condition the 3D generator through temporal attention.">
     <p class="graybox">
-      <b>System overview.</b> A render of the input mesh, together with a text prompt describing the effect, is passed
+      <b>System overview.</b> A render of the input mesh and a text prompt describing the effect are passed
       to a video generation model, which returns the reference video for our pipeline. The 3D generator then produces
       the textured object at every frame. Our temporal cross-attention (the new module) conditions each frame's
       generation on a window of neighboring video frames. Low-rank adapters on the attention modules are fit per scene
@@ -166,31 +164,41 @@
       video.
     </p>
   </section>
-  <section id="method">
-    <h2>Method</h2>
+  <section id="key-idea">
+    <h2>Key Idea</h2>
     <img class="halfwidthflex blcent" style="width: calc(1.55 * var(--halfwidthflex-w)); max-width: 100%;" src="assets/method.jpg"
-      alt="method overview diagram: token maps of an eleven-frame window are blended by temporal attention and condition spatial cross-attention and 3D self-attention over the voxel tokens of the mesh.">
+      alt="token maps of a temporal window are blended by temporal attention and condition spatial cross-attention and 3D self-attention over the voxel tokens of the mesh.">
     <p class="graybox">
-      <b>Method overview.</b> The token maps of an eleven-frame window are blended by a temporal attention layer. The
-      blend conditions the generator's spatial cross-attention, which writes the frame's appearance onto the voxel
-      tokens of the input mesh, and the 3D self-attention then propagates that appearance across the surface. Every
-      weight except the rank-4 adapters on those two attentions is frozen.
+      <b>Turning a 3D generator of static objects into a dynamic texture generator.</b> To generate a smooth temporal
+      appearance sequence, we blend the tokens of nearby video frames with a temporal attention layer before they
+      reach the 3D generator. The blended tokens describe what the surface should look like at that moment, the
+      generator's cross-attention paints that appearance onto the voxels of the mesh, and its self-attention
+      propagates the effect across the entire surface.
     </p>
   </section>
   <section id="gallery">
     <h2>Gallery</h2>
-    <img class="fullwidth blcent" src="assets/gallery.jpg"
-      alt="gallery of results: a hand with a Rorschach pattern forming, a chair with paint peeling, a pumpkin with rot spreading, and an airplane with red cracks spreading; each with its driving video strip and renders from two novel viewpoints.">
+    <div class="vgrid vgrid-4 vhead"><div>Driving video</div><div>Novel view #1</div><div>Novel view #2</div><div>Rotating view</div></div>
+    <p class="vprompt">&ldquo;Rorschach pattern forming&rdquo;</p>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/006_hand__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/008_hand__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/009_hand__novel_view_2.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/hand_rotating.mp4" type="video/mp4"></video></div>
+    <p class="vprompt">&ldquo;Blue paint cracks and peels&rdquo;</p>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/010_chair__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/012_chair__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/013_chair__novel_view_2.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/chair_rotating.mp4" type="video/mp4"></video></div>
+    <p class="vprompt">&ldquo;Rot spreads and darkens&rdquo;</p>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/014_pumpkin__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/016_pumpkin__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/017_pumpkin__novel_view_2.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/pumpkin_rotating.mp4" type="video/mp4"></video></div>
+    <p class="vprompt">&ldquo;Red cracks spreading&rdquo;</p>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/018_airplane__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/020_airplane__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/021_airplane__novel_view_2.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/airplane_rotating.mp4" type="video/mp4"></video></div>
     <p class="graybox">
-      <b>Gallery of results.</b> Four objects driven by four different effects. Each panel shows the driving video as
-      a film strip and, below it, our output rendered from two novel viewpoints. The texture remains coherent even at
-      viewpoints unseen in training.
+      <b>Gallery of results.</b> Four objects driven by four different effects. Each row shows the driving video and
+      our output at two novel viewpoints and under a rotating camera. The texture remains coherent even at viewpoints
+      unseen in training.
     </p>
   </section>
-  <section id="robustness">
-    <h2>Robustness</h2>
-    <img class="fullwidth blcent" src="assets/generalization.jpg"
-      alt="generalization results: a Rorschach effect and a lava effect fitted on one object each are applied to meshes never seen during fitting, and the effects propagate on the new shapes.">
+  <section id="generalization">
+    <h2>Generalization</h2>
+    <p class="vprompt">&ldquo;Rorschach effect with spots growing&rdquo; &mdash; reference video, the training shape, then twelve unseen shapes</p>
+    <div class="vscroll"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/022_rorschach_adapter__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/023_rorschach_adapter__training_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/024_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/025_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/026_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/027_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/028_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/029_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/030_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/031_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/032_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/033_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/034_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/035_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></div>
+    <p class="vprompt">&ldquo;Lava effect with cracks glowing in bright orange&rdquo; &mdash; reference video, the training shape, then twelve unseen shapes</p>
+    <div class="vscroll"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/036_lava_adapter__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/037_lava_adapter__training_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/038_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/039_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/040_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/041_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/042_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/043_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/044_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/045_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/046_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/047_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/048_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/049_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></div>
     <p class="graybox">
       <b>Generalization across shapes.</b> Per-scene adapters fit on a reference video are applied, without any
       retraining, to meshes never seen during fitting. Both effects clearly propagate on the new shapes according to
@@ -199,58 +207,43 @@
     </p>
   </section>
   <section id="applications">
-    <h2>Applications</h2>
-    <div class="imgsflex" style="align-items: flex-end;">
-      <figure class="halfwidthflex" style="width: calc(0.90 * var(--halfwidthflex-w))">
-        <img
-          src="assets/duck.jpg"
-          alt="a molded rubber duck float whose painted dots glide around the ring while the head, eyes, and beak stay in place.">
-        <figcaption class="caption">Making an existing texture dynamic</figcaption>
-      </figure>
-      <figure class="halfwidthflex" style="width: calc(1.06 * var(--halfwidthflex-w))">
-        <img
-          src="assets/continuation.jpg"
-          alt="a metal unicorn whose crack effect is continued by a second reference video generated from the last frame of the first.">
-        <figcaption class="caption">Continuing an effect across clips</figcaption>
-      </figure>
-    </div>
+    <h2>Bringing an existing texture to life</h2>
+    <div class="vgrid vgrid-4 vhead"><div>Driving video</div><div>Supervised view</div><div>Novel view #1</div><div>Novel view #2</div></div>
+    <p class="vprompt">&ldquo;Polka dots gliding over the duck&rdquo;</p>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/055_duck__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/056_duck__supervised_view.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/057_duck__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/058_duck__novel_view_2.mp4" type="video/mp4"></video></div>
     <p class="graybox">
-      <b>Making an existing static texture dynamic.</b> Our method can operate on objects with a given texture and
-      make it change over time, as shown for the moving spots over the duck. The dots glide around the ring while the
-      head stays clear, and the painted eyes, beak, and molded shading hold their place, so only the pattern moves.<br>
-      <br>
-      <b>Continuing an effect across clips.</b> A second reference video, generated from the last frame of the first,
-      continues the same effect, so a progression that does not fit in one clip can be carried across several. The
-      cracks spread over the metal unicorn in the first clip and heat to glowing amber in the second.
+      Our method can operate on objects that already have a texture and make it change over time, as shown for the
+      moving spots over the duck. The dots glide around the ring while the head stays clear, and the painted eyes,
+      beak, and molded shading hold their place, so only the pattern moves.
     </p>
   </section>
   <section id="comparison">
     <h2>Comparison</h2>
-    <p class="comparison-instruction">🖱️ To interact with the 3D models, <em>Scroll</em> to zoom, hold the <em>Left Click + drag</em> to rotate, and hold the <em>Right Click + drag </em> to translate.</p>
-    <div class="dm-strip">
-      <img src="assets/comparison_strip.jpg"
-        alt="reference video film strip: a lava effect with cracks glowing in bright orange unfolding on a cow.">
-    </div>
-    <div id="dm-comparison" class="dm-3d">
-      <div class="dm-block" data-method="ours">
-        <p class="dm-block-label">DynaMesh (ours)</p>
-        <div class="dm-grid" data-view="0"></div>
+    <p class="vprompt">&ldquo;Lava effect with cracks glowing in bright orange&rdquo;</p>
+    <div class="cmp-layout">
+      <div class="cmp-ref">
+        <p class="dm-block-label">Reference video</p>
+        <video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/059_spot__reference_video.mp4" type="video/mp4"></video>
       </div>
-      <div class="dm-block" data-method="frozen">
-        <p class="dm-block-label">Frozen TRELLIS.2</p>
-        <div class="dm-grid" data-view="0"></div>
-      </div>
-      <div class="dm-block" data-method="meshnca">
-        <p class="dm-block-label">MeshNCA</p>
-        <div class="dm-grid" data-view="0"></div>
+      <div class="cmp-cols">
+        <div class="cmp-col">
+          <div class="vgrid vgrid-2 vhead"><div>Novel view #1</div><div>Novel view #2</div></div>
+        <div class="cmp-method"><p class="dm-block-label">DynaMesh (ours)</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/061_spot__novel_view.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_ours_nv2.mp4" type="video/mp4"></video></div></div>
+        <div class="cmp-method"><p class="dm-block-label">Frozen TRELLIS.2</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/063_spot__view5.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_frozen_nv2.mp4" type="video/mp4"></video></div></div>
+        <div class="cmp-method"><p class="dm-block-label">MeshNCA</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/065_spot__view7.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_meshnca_nv2.mp4" type="video/mp4"></video></div></div>
+        </div>
+        <div class="cmp-col">
+          <div class="vgrid vgrid-2 vhead"><div>Novel view #1</div><div>Novel view #2</div></div>
+        <div class="cmp-method"><p class="dm-block-label">L4GM</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/067_spot__view9.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_l4gm_nv2.mp4" type="video/mp4"></video></div></div>
+        <div class="cmp-method"><p class="dm-block-label">SV4D 2.0</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/069_spot__view11.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_sv4d2_nv2.mp4" type="video/mp4"></video></div></div>
+        <div class="cmp-method"><p class="dm-block-label">DG4D</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/071_spot__view13.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_dg4d_nv2.mp4" type="video/mp4"></video></div></div>
+        </div>
       </div>
     </div>
     <p class="graybox">
-      We compare the methods that produce a true textured mesh on one reference video (top strip), with each method
-      shown at four timesteps of the effect. Every cell is a real 3D asset that you can inspect from any angle,
-      starting from the unseen view of the paper's comparison figure. The remaining baselines in the paper (SV4D 2.0,
-      L4GM, DG4D) operate in video or Gaussian space and produce no mesh to interact with. DynaMesh tracks the effect
-      consistently at every view and preserves the shape's geometry.
+      We compare our method against the baselines on one reference video, with every method shown at two novel views
+      that none of them was supervised on. The baselines either flicker or degrade the geometry at those views. Only
+      our method tracks the effect consistently and preserves the shape's geometry.
     </p>
   </section>
   <section id="more-results" aria-label="more results">
@@ -395,6 +388,48 @@
     })();
   </script>
 
+  <script>
+    // ---- synchronized playback for video groups --------------------
+    // Clips autoplay as each one finishes loading, so a long strip ends
+    // up with its halves on different timelines. Each group below waits
+    // until every member can play, starts them together, and re-pins
+    // them to the first video's clock so drift cannot accumulate.
+    (function () {
+      var groups = [];
+      document.querySelectorAll('.vscroll').forEach(function (g) { groups.push(g.querySelectorAll('video')); });
+      document.querySelectorAll('.vgrid:not(.vhead)').forEach(function (g) {
+        if (!g.closest('#comparison')) groups.push(g.querySelectorAll('video'));
+      });
+      var cmp = document.getElementById('comparison');
+      if (cmp) groups.push(cmp.querySelectorAll('video'));
+
+      groups.forEach(function (nodes) {
+        var vids = Array.prototype.slice.call(nodes);
+        if (vids.length < 2) return;
+        var started = false;
+        vids.forEach(function (v) { v.autoplay = false; v.pause(); v.preload = 'auto'; });
+        function ready(v) { return v.readyState >= 3; }
+        function tryStart() {
+          if (started || !vids.every(ready)) return;
+          started = true;
+          vids.forEach(function (v) { v.currentTime = 0; v.play().catch(function () {}); });
+        }
+        vids.forEach(function (v) {
+          v.addEventListener('canplay', tryStart);
+          if (ready(v)) tryStart();
+        });
+        setInterval(function () {
+          if (!started) { tryStart(); return; }
+          var t = vids[0].currentTime;
+          var d = vids[0].duration || 6;
+          if (t < 0.4 || t > d - 0.4) return;   // never correct across the loop wrap
+          for (var i = 1; i < vids.length; i++) {
+            if (Math.abs(vids[i].currentTime - t) > 0.3) vids[i].currentTime = t;
+          }
+        }, 1500);
+      });
+    })();
+  </script>
   <script type="importmap">
   {
     "imports": {
