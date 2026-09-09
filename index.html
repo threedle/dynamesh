@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>DynaMesh: Dynamic 3D Texture Generation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/threedle_icon.png">
+  <link href="style.css?v=5" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <style>
+    /* from https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css */
+    @font-face {
+      font-family: 'Academicons';
+      font-style: normal;
+      font-weight: 400;
+      font-display: block;
+      src: url('https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/fonts/academicons.eot') format('embedded-opentype'),
+        url('https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/fonts/academicons.ttf') format('truetype'),
+        url('https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/fonts/academicons.woff') format('woff'),
+        url('https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/fonts/academicons.svg') format('svg');
+    }
+
+    .ai {
+      font-family: 'Academicons';
+      font-weight: 400;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      line-height: 1;
+    }
+
+    .ai-arxiv:before {
+      content: "\e974";
+    }
+  </style>
+
+  <meta name="description" content="DynaMesh: Dynamic 3D Texture Generation">
+  <meta name="keywords" content="Dynamic Textures, 3D Texture Generation, Video Diffusion, Texture Synthesis, 4D Generation">
+
+  <meta property='og:title' content='DynaMesh: Dynamic 3D Texture Generation' />
+  <meta property='og:url' content='https://threedle.github.io/dynamesh/' />
+  <meta property='og:image' content='https://threedle.github.io/dynamesh/assets/teaser.jpg' />
+  <meta property="og:type" content="website" />
+</head>
+
+<body>
+  <section class="intro" aria-label="intro">
+    <a href="https://3dl.cs.uchicago.edu" aria-label="3DL threedle home">
+      <div class="logobox">
+        <img src="assets/threedle_icon.png" alt="3DL threedle logo">
+      </div>
+    </a>
+    <div class="titlebox">
+      <h1>DynaMesh: Dynamic<i class="med-nbsp" aria-hidden="true"></i>3D<i class="med-nbsp"
+          aria-hidden="true"></i>Texture<wbr> Generation</h1>
+    </div>
+    <nav>
+      <a href="#" aria-label="paper pdf">
+        <i class="icon fas fa-file-pdf"></i>Paper
+      </a>
+      <a href="#"><i class="icon ai ai-arxiv"></i>arXiv</a>
+      <a href="#" aria-label="code github"><i class="icon fab fa-github"></i>Code</a>
+    </nav>
+    <div class="authors" aria-label="authors">
+      <span>Raj Hansini</span>
+      <span>Guan Chen</span>
+      <span><a href="https://people.cs.uchicago.edu/~ranahanocka/">Rana Hanocka</a></span>
+      <span><a href="https://itailang.github.io/">Itai Lang</a></span>
+    </div>
+    <div class="affiliations" aria-label="affiliations">University of Chicago</div>
+  </section>
+
+  <!-- Floating mini-TOC pinned to the right edge on wide screens. JS
+       marks the entry corresponding to the current section as active. -->
+  <aside class="side-toc" aria-label="Page sections" data-toc>
+    <a href="#abstract" data-section="abstract">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Abstract</span>
+    </a>
+    <a href="#key-idea" data-section="key-idea">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Key Idea</span>
+    </a>
+    <a href="#method" data-section="method">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Method</span>
+    </a>
+    <a href="#gallery" data-section="gallery">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Gallery</span>
+    </a>
+    <a href="#robustness" data-section="robustness">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Robustness</span>
+    </a>
+    <a href="#applications" data-section="applications">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Applications</span>
+    </a>
+    <a href="#comparison" data-section="comparison">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Comparison</span>
+    </a>
+    <a href="#bibtex" data-section="bibtex">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">BibTeX</span>
+    </a>
+  </aside>
+
+  <section class="teaser" aria-label="teaser">
+    <div class="imgsflex">
+      <figure class="blcent">
+        <img class="fullwidth" src="assets/teaser_strip.jpg"
+          alt="A reference video of a Hokusai wave effect unfolding on a render of an airplane.">
+      </figure>
+    </div>
+    <p class="dm-block-label">Output dynamic 3D texture &mdash; drag any moment to look around</p>
+    <div id="dm-teaser" class="dm-3d">
+      <div class="dm-grid dm-grid-8" data-method="plane" data-nt="8" data-az="45" data-el="25"></div>
+    </div>
+    <p class="graybox">
+      <em>DynaMesh</em> carries a video's evolving effect onto a 3D object as a <em>texture that changes over
+      time</em>. Given a reference video of the prompted effect unfolding on a render of the object (top), we produce
+      a single mesh whose texture follows the video frame by frame. Each cell below the strip is the actual 3D output
+      at that moment of the sequence. The geometry stays fixed while the appearance evolves, so every moment can be
+      re-rendered from any viewpoint.
+    </p>
+  </section>
+  <section id="abstract">
+    <h2>Abstract</h2>
+    <p class="graybox">
+      We present DynaMesh, a dynamic texture generation method for 3D meshes. Given a textureless shape and a text
+      prompt describing an effect, our method produces an appearance that evolves while the object's geometry remains
+      unchanged. Previous works on dynamic 3D content generation have focused on motion, where an object's geometry
+      and position change while keeping its appearance the same. Methods on texture generation sit on the other side
+      of the problem, painting appearance onto a shape as a fixed surface property and not as an evolving process.
+      Neither addresses a visual effect that propagates on a 3D object. <br>
+      <br>
+      A natural route consists of two generators: a video model that shows the effect from a single view, and an
+      image-to-3D generator that lifts each frame to 3D. However, the latter has no notion of time, so running it per
+      video frame produces a sequence that flickers, loses effect details, and yields a different mesh at every video
+      frame. Our method addresses these failures by conditioning a video model on a render of the mesh and the prompt
+      to obtain a reference video, then running a frozen image-to-3D generator on the video with two changes. The
+      conditioning of each frame is blended over a temporal window, and low-rank adapters are fit per shape to restore
+      the lost details. The mesh is encoded once for the whole sequence, so geometry is constant by construction, and
+      the output is a single mesh with a texture per frame. Applied to various objects and effects, DynaMesh
+      substantially improves over recent video-to-4D and texturing methods, and can generalize its temporal effect to
+      different shapes never seen during training.
+    </p>
+  </section>
+  <section id="key-idea">
+    <h2>Key Idea</h2>
+    <img class="halfwidthflex blcent" style="width: calc(1.55 * var(--halfwidthflex-w)); max-width: 100%;" src="assets/system.jpg"
+      alt="system overview diagram: a render of the mesh and a text prompt go to a video generation model, whose frames condition the 3D generator through temporal attention.">
+    <p class="graybox">
+      <b>System overview.</b> A render of the input mesh, together with a text prompt describing the effect, is passed
+      to a video generation model, which returns the reference video for our pipeline. The 3D generator then produces
+      the textured object at every frame. Our temporal cross-attention (the new module) conditions each frame's
+      generation on a window of neighboring video frames. Low-rank adapters on the attention modules are fit per scene
+      to recover detail. Geometry is shared across frames, so the output is one mesh whose texture evolves with the
+      video.
+    </p>
+  </section>
+  <section id="method">
+    <h2>Method</h2>
+    <img class="halfwidthflex blcent" style="width: calc(1.55 * var(--halfwidthflex-w)); max-width: 100%;" src="assets/method.jpg"
+      alt="method overview diagram: token maps of an eleven-frame window are blended by temporal attention and condition spatial cross-attention and 3D self-attention over the voxel tokens of the mesh.">
+    <p class="graybox">
+      <b>Method overview.</b> The token maps of an eleven-frame window are blended by a temporal attention layer. The
+      blend conditions the generator's spatial cross-attention, which writes the frame's appearance onto the voxel
+      tokens of the input mesh, and the 3D self-attention then propagates that appearance across the surface. Every
+      weight except the rank-4 adapters on those two attentions is frozen.
+    </p>
+  </section>
+  <section id="gallery">
+    <h2>Gallery</h2>
+    <img class="fullwidth blcent" src="assets/gallery.jpg"
+      alt="gallery of results: a hand with a Rorschach pattern forming, a chair with paint peeling, a pumpkin with rot spreading, and an airplane with red cracks spreading; each with its driving video strip and renders from two novel viewpoints.">
+    <p class="graybox">
+      <b>Gallery of results.</b> Four objects driven by four different effects. Each panel shows the driving video as
+      a film strip and, below it, our output rendered from two novel viewpoints. The texture remains coherent even at
+      viewpoints unseen in training.
+    </p>
+  </section>
+  <section id="robustness">
+    <h2>Robustness</h2>
+    <img class="fullwidth blcent" src="assets/generalization.jpg"
+      alt="generalization results: a Rorschach effect and a lava effect fitted on one object each are applied to meshes never seen during fitting, and the effects propagate on the new shapes.">
+    <p class="graybox">
+      <b>Generalization across shapes.</b> Per-scene adapters fit on a reference video are applied, without any
+      retraining, to meshes never seen during fitting. Both effects clearly propagate on the new shapes according to
+      the video. The adapters change only how appearance is generated, and each object keeps its own geometry, so the
+      same spreading blots or lava cracks work even on different shapes.
+    </p>
+  </section>
+  <section id="applications">
+    <h2>Applications</h2>
+    <div class="imgsflex" style="align-items: flex-end;">
+      <figure class="halfwidthflex" style="width: calc(0.90 * var(--halfwidthflex-w))">
+        <img
+          src="assets/duck.jpg"
+          alt="a molded rubber duck float whose painted dots glide around the ring while the head, eyes, and beak stay in place.">
+        <figcaption class="caption">Making an existing texture dynamic</figcaption>
+      </figure>
+      <figure class="halfwidthflex" style="width: calc(1.06 * var(--halfwidthflex-w))">
+        <img
+          src="assets/continuation.jpg"
+          alt="a metal unicorn whose crack effect is continued by a second reference video generated from the last frame of the first.">
+        <figcaption class="caption">Continuing an effect across clips</figcaption>
+      </figure>
+    </div>
+    <p class="graybox">
+      <b>Making an existing static texture dynamic.</b> Our method can operate on objects with a given texture and
+      make it change over time, as shown for the moving spots over the duck. The dots glide around the ring while the
+      head stays clear, and the painted eyes, beak, and molded shading hold their place, so only the pattern moves.<br>
+      <br>
+      <b>Continuing an effect across clips.</b> A second reference video, generated from the last frame of the first,
+      continues the same effect, so a progression that does not fit in one clip can be carried across several. The
+      cracks spread over the metal unicorn in the first clip and heat to glowing amber in the second.
+    </p>
+  </section>
+  <section id="comparison">
+    <h2>Comparison</h2>
+    <p class="comparison-instruction">🖱️ To interact with the 3D models, <em>Scroll</em> to zoom, hold the <em>Left Click + drag</em> to rotate, and hold the <em>Right Click + drag </em> to translate.</p>
+    <div class="dm-strip">
+      <img src="assets/comparison_strip.jpg"
+        alt="reference video film strip: a lava effect with cracks glowing in bright orange unfolding on a cow.">
+    </div>
+    <div id="dm-comparison" class="dm-3d">
+      <div class="dm-block" data-method="ours">
+        <p class="dm-block-label">DynaMesh (ours)</p>
+        <div class="dm-grid" data-view="0"></div>
+      </div>
+      <div class="dm-block" data-method="frozen">
+        <p class="dm-block-label">Frozen TRELLIS.2</p>
+        <div class="dm-grid" data-view="0"></div>
+      </div>
+      <div class="dm-block" data-method="meshnca">
+        <p class="dm-block-label">MeshNCA</p>
+        <div class="dm-grid" data-view="0"></div>
+      </div>
+    </div>
+    <p class="graybox">
+      We compare the methods that produce a true textured mesh on one reference video (top strip), with each method
+      shown at four timesteps of the effect. Every cell is a real 3D asset that you can inspect from any angle,
+      starting from the unseen view of the paper's comparison figure. The remaining baselines in the paper (SV4D 2.0,
+      L4GM, DG4D) operate in video or Gaussian space and produce no mesh to interact with. DynaMesh tracks the effect
+      consistently at every view and preserves the shape's geometry.
+    </p>
+  </section>
+  <section id="more-results" aria-label="more results">
+    <div class="more-results-wrap">
+      <a class="more-results-btn" target="_blank" rel="noopener noreferrer"
+        href="supp/index.html">
+        <i class="icon fas fa-film" aria-hidden="true"></i>More results
+      </a>
+    </div>
+  </section>
+  <section id="bibtex">
+    <h2>BibTeX</h2>
+    <div class="bibtex-wrapper">
+      <button type="button" class="bibtex-copy-btn" data-target="bibtex-code"
+        aria-label="Copy BibTeX entry to clipboard">
+        <span class="bibtex-copy-icon" aria-hidden="true">
+          <i class="far fa-copy"></i>
+        </span>
+        <span class="bibtex-copy-text">Copy</span>
+      </button>
+      <pre class="graybox" id="bibtex-code">@InProceedings{hansini2027dynamesh,
+  author    = {Hansini, Raj and Chen, Guan and Hanocka, Rana and Lang, Itai},
+  title     = {{DynaMesh: Dynamic 3D Texture Generation}},
+  booktitle = {International Conference on 3D Vision (3DV)},
+  year      = {2027}
+}</pre>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <p>
+      This webpage was adapted from the <a href="https://threedle.github.io/geometry-in-style/" target="_blank" rel="noopener noreferrer">Geometry in Style</a>
+      webpage. We thank <a href="https://people.cs.uchicago.edu/~namanh/" target="_blank" rel="noopener noreferrer">Nam Anh Dinh</a> for creating this template.
+    </p>
+  </footer>
+
+  <script>
+    // ---- Heading anchor links (deep-link helpers) -----------------
+    (function () {
+        var sections = document.querySelectorAll('section[id] h2');
+        sections.forEach(function (h) {
+            var section = h.closest('section[id]');
+            if (!section) return;
+            if (h.querySelector('.heading-anchor')) return;
+            var a = document.createElement('a');
+            a.className = 'heading-anchor';
+            a.href = '#' + section.id;
+            a.setAttribute('aria-label', 'Permalink to ' + h.textContent.trim());
+            a.textContent = '#';
+            h.insertBefore(a, h.firstChild);
+        });
+    })();
+
+    // ---- Side TOC + active section highlight ----------------------
+    (function () {
+        var sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+        var tocLinks = document.querySelectorAll('.side-toc a[data-section]');
+        if (!sections.length) return;
+
+        var visibility = Object.create(null);
+
+        function setActive(id) {
+            tocLinks.forEach(function (a) {
+                a.classList.toggle('is-active', a.dataset.section === id);
+            });
+        }
+
+        if ('IntersectionObserver' in window) {
+            var obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    visibility[entry.target.id] = entry.intersectionRatio;
+                });
+                var bestId = null;
+                var bestRatio = 0;
+                Object.keys(visibility).forEach(function (id) {
+                    if (visibility[id] > bestRatio) {
+                        bestRatio = visibility[id];
+                        bestId = id;
+                    }
+                });
+                if (bestId && bestRatio > 0) setActive(bestId);
+            }, {
+                rootMargin: '-20% 0px -20% 0px',
+                threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+            });
+            sections.forEach(function (s) { obs.observe(s); });
+        }
+
+        var toc = document.querySelector('[data-toc]');
+        if (toc) {
+            var introH = (document.querySelector('.intro') || {}).offsetHeight || 400;
+            var onScroll = function () {
+                if (window.pageYOffset > introH * 0.6) toc.classList.add('is-visible');
+                else toc.classList.remove('is-visible');
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        }
+    })();
+  </script>
+
+  <script>
+    // ---- BibTeX copy-to-clipboard ---------------------------------
+    (function () {
+      var btn = document.querySelector('.bibtex-copy-btn');
+      if (!btn) return;
+      var resetTimer = null;
+      btn.addEventListener('click', function () {
+        var target = document.getElementById(btn.dataset.target);
+        if (!target) return;
+        var text = target.innerText;
+        var done = function (ok) {
+          btn.classList.remove('is-success', 'is-error');
+          btn.classList.add(ok ? 'is-success' : 'is-error');
+          var label = btn.querySelector('.bibtex-copy-text');
+          if (label) label.textContent = ok ? 'Copied!' : 'Copy failed';
+          if (resetTimer) clearTimeout(resetTimer);
+          resetTimer = setTimeout(function () {
+            btn.classList.remove('is-success', 'is-error');
+            if (label) label.textContent = 'Copy';
+          }, 1800);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { done(true); },
+            function () { done(false); });
+        } else {
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            var ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            done(ok);
+          } catch (err) {
+            done(false);
+          }
+        }
+      });
+    })();
+  </script>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="comparison.js?v=8"></script>
+</body>
+</html>
