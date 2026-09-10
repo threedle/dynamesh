@@ -23,7 +23,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 const ROTATE_DEG_PER_SEC = 20; // full turn in 18s; calmer than BSB's 60deg/s with this many cells
-const ASSET_V = '7'; // bump when GLBs are re-exported, so cached copies don't linger
+const ASSET_V = '9'; // bump when GLBs are re-exported, so cached copies don't linger
 
 const glbCache = new Map(); // url -> Promise<scene template>; rows sharing a file share the load
 
@@ -235,147 +235,237 @@ for (const container of document.querySelectorAll('.dm-3d')) {
   const video = document.getElementById('teaserVideo');
   if (!container || !video) return;
 
-  let buf;
+  const startVideo = () => { try { video.play().catch(() => {}); } catch (e) {} };
+  const bail = () => { container.textContent = ''; startVideo(); };
+
+  // ---- streamed download -------------------------------------------------
+  // The pack is laid out header, geometry, frame-0 colors, then delta
+  // frames, so the mesh can appear and start as soon as the first ~0.7 MB
+  // arrives; the remaining frames keep decoding in the background. If
+  // playback ever outruns the download, the texture clamps to the newest
+  // decoded frame and catches up silently.
+  let resp;
   try {
-    const resp = await fetch(`assets/teaser_anim/plane_anim.bin?v=${ASSET_V}`);
-    if (!resp.ok) throw new Error(resp.status);
-    buf = await resp.arrayBuffer();
-    const head = new Uint8Array(buf, 0, 2);
-    if (head[0] === 0x1f && head[1] === 0x8b) {
-      // the pack ships gzipped (delta streams compress ~7x); decompress
-      // manually so it works whether or not the server sets an encoding
-      buf = await new Response(
-        new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip')),
-      ).arrayBuffer();
-    }
-  } catch (e) {
-    container.textContent = '';
-    return; // animation pack missing: leave the panel empty rather than broken
+    resp = await fetch(`assets/teaser_anim/plane_anim.bin?v=${ASSET_V}`);
+    if (!resp.ok || !resp.body) throw new Error(resp.status);
+  } catch (e) { bail(); return; }
+
+  const rawReader = resp.body.getReader();
+  const first = await rawReader.read().catch(() => ({}));
+  if (!first.value) { bail(); return; }
+  let stream = new ReadableStream({
+    start(c) { c.enqueue(first.value); },
+    async pull(c) {
+      const r = await rawReader.read();
+      if (r.done) c.close(); else c.enqueue(r.value);
+    },
+  });
+  if (first.value[0] === 0x1f && first.value[1] === 0x8b) {
+    // gzip on the wire (delta streams compress ~4x); ungzip incrementally
+    stream = stream.pipeThrough(new DecompressionStream('gzip'));
   }
+  const reader = stream.getReader();
 
-  const headLen = new DataView(buf).getUint32(0, true);
-  const meta = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, headLen)));
-  const { verts, tris, frames, times } = meta;
-  const posOff = 4 + headLen;
-  const idxOff = posOff + verts * 12;
-  const colOff = idxOff + Math.ceil((tris * 3 * 2) / 4) * 4;
-  const positions = new Float32Array(buf, posOff, verts * 3);
-  const indices = new Uint16Array(buf, idxOff, tris * 3);
-  const stored = new Uint8Array(buf, colOff, frames * verts * 3);
-
-  // sRGB -> linear once per stored frame, so the unlit material shows the
-  // field's own values (same correction as loadAsset above)
+  // sRGB -> linear, so the unlit material shows the field's own values
   const s2l = new Uint8Array(256);
   for (let i = 0; i < 256; i++) {
     const c = i / 255;
     const l = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     s2l[i] = Math.round(l * 255);
   }
-  const n = verts * 3;
-  const colorsLin = new Uint8Array(stored.length);
-  if (meta.v >= 2) {
-    // v2: colors quantized to `bits`, frame 0 raw, later frames as deltas
-    // mod 256 — undo the deltas, expand to 8 bits (bit replication), LUT
+
+  let pre = new Uint8Array(0);          // bytes accumulated before the header parses
+  let u8 = null, got = 0, total = 0;
+  let meta = null, colOff = 0, n = 0;
+  let colorsLin = null, absQ = null, lutQ = null, mask = 0;
+  let framesReady = 0;
+  let built = false;
+  let setColorsAt = null;               // installed by buildScene
+  let onNewFrames = null;
+
+  function tryHeader() {
+    if (meta || pre.length < 4) return;
+    const headLen = new DataView(pre.buffer, pre.byteOffset, pre.length).getUint32(0, true);
+    if (pre.length < 4 + headLen) return;
+    meta = JSON.parse(new TextDecoder().decode(pre.subarray(4, 4 + headLen)));
+    const { verts, tris, frames } = meta;
+    const posOff = 4 + headLen;
+    colOff = meta.v >= 3
+      ? posOff + Math.ceil((verts * 6 + tris * 6) / 4) * 4
+      : posOff + verts * 12 + Math.ceil((tris * 3 * 2) / 4) * 4;
+    n = verts * 3;
+    total = colOff + frames * n;
+    u8 = new Uint8Array(total);
+    const seed = pre.subarray(0, Math.min(pre.length, total));
+    u8.set(seed);
+    got = seed.length;
+    pre = null;
+    colorsLin = new Uint8Array(frames * n);
     const bits = meta.bits || 8;
     const shift = 8 - bits;
-    const lutQ = new Uint8Array(1 << bits);
-    for (let i = 0; i < lutQ.length; i++) lutQ[i] = s2l[(i << shift) | (i >> (bits - shift))];
-    const mask = (1 << bits) - 1;
-    const abs = new Uint8Array(n);
-    for (let i = 0; i < n; i++) { abs[i] = stored[i] & mask; colorsLin[i] = lutQ[abs[i]]; }
-    for (let f = 1; f < frames; f++) {
-      const off = f * n;
-      for (let i = 0; i < n; i++) {
-        abs[i] = (abs[i] + stored[off + i]) & mask;
-        colorsLin[off + i] = lutQ[abs[i]];
+    mask = (1 << bits) - 1;
+    lutQ = new Uint8Array(1 << bits);
+    for (let i = 0; i < lutQ.length; i++) {
+      lutQ[i] = meta.v >= 2 ? s2l[(i << shift) | (shift ? i >> (bits - shift) : 0)] : s2l[i];
+    }
+    absQ = new Uint8Array(n);
+  }
+
+  function decodeReadyFrames() {
+    if (!u8) return;
+    const { frames } = meta;
+    while (framesReady < frames && got >= colOff + (framesReady + 1) * n) {
+      const off = colOff + framesReady * n;
+      const dst = framesReady * n;
+      if (framesReady === 0 || meta.v < 2) {
+        for (let i = 0; i < n; i++) { absQ[i] = u8[off + i] & mask; colorsLin[dst + i] = lutQ[absQ[i]]; }
+      } else {
+        for (let i = 0; i < n; i++) {
+          absQ[i] = (absQ[i] + u8[off + i]) & mask;
+          colorsLin[dst + i] = lutQ[absQ[i]];
+        }
       }
+      framesReady++;
     }
-  } else {
-    for (let i = 0; i < stored.length; i++) colorsLin[i] = s2l[stored[i]];
+    if (onNewFrames) onNewFrames();
   }
 
-  const geom = new THREE.BufferGeometry();
-  geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  const colAttr = new THREE.BufferAttribute(new Uint8Array(verts * 3), 3, true);
-  colAttr.setUsage(THREE.DynamicDrawUsage);
-  geom.setAttribute('color', colAttr);
-  geom.setIndex(new THREE.BufferAttribute(indices, 1));
-  geom.computeBoundingBox();
-  const bb = geom.boundingBox;
-  const center = bb.getCenter(new THREE.Vector3());
-  const size = bb.getSize(new THREE.Vector3()).length();
-  geom.translate(-center.x, -center.y, -center.z);
-  geom.scale(1.5 / size, 1.5 / size, 1.5 / size);
-
-  const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ vertexColors: true }));
-  const scene = new THREE.Scene();
-  scene.add(mesh);
-
-  const canvas = document.createElement('canvas');
-  Object.assign(canvas.style, { position: 'absolute', inset: '0', width: '100%', height: '100%' });
-  container.style.position = 'relative';
-  container.appendChild(canvas);
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0x000000, 0);
-  canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
-
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
-  // initial camera = the reference video's (supervised) viewpoint: the
-  // pipeline's training camera is yaw 0 / elev 0, which lands on +Z after
-  // the export's Z-up -> Y-up rotation
-  const setView = (azDeg, elDeg, r = 2.6) => {
-    const az = THREE.MathUtils.degToRad(azDeg), el = THREE.MathUtils.degToRad(elDeg);
-    camera.position.set(r * Math.cos(el) * Math.sin(az), r * Math.sin(el), r * Math.cos(el) * Math.cos(az));
-  };
-  setView(0, 0);
-  window.__syncView = setView;
-  const controls = new OrbitControls(camera, container);
-  container.style.touchAction = 'pan-y';
-  container.style.cursor = 'grab';
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
-  controls.enablePan = true;
-
-  // a plain click (no drag) on the shape toggles the shared clock
-  let downX = 0, downY = 0, downT = 0;
-  container.addEventListener('pointerdown', (e) => { downX = e.clientX; downY = e.clientY; downT = performance.now(); });
-  container.addEventListener('pointerup', (e) => {
-    if (Math.hypot(e.clientX - downX, e.clientY - downY) < 5 && performance.now() - downT < 400) {
-      if (video.paused) video.play().catch(() => {}); else video.pause();
+  function buildScene() {
+    built = true;
+    const { verts, tris, frames, times } = meta;
+    const posOff = 4 + new DataView(u8.buffer).getUint32(0, true);
+    let positions;
+    if (meta.v >= 3) {
+      const posQ = new Uint16Array(u8.buffer, posOff, verts * 3);
+      positions = new Float32Array(verts * 3);
+      for (let i = 0; i < verts * 3; i++) {
+        const k = i % 3;
+        positions[i] = meta.pmin[k] + posQ[i] * meta.pscale[k];
+      }
+    } else {
+      positions = new Float32Array(u8.buffer.slice(posOff, posOff + verts * 12));
     }
-  });
+    const idxOff = posOff + (meta.v >= 3 ? verts * 6 : verts * 12);
+    const indices = new Uint16Array(u8.buffer, idxOff, tris * 3);
 
-  let lastX = -1;
-  function setColorsAt(tNorm) {
-    // bracket tNorm in the sampled times, then lerp the two frames
-    let b = 1;
-    while (b < frames - 1 && times[b] < tNorm) b++;
-    const a = b - 1;
-    const span = times[b] - times[a] || 1;
-    const alpha = Math.min(1, Math.max(0, (tNorm - times[a]) / span));
-    const x = a + alpha;
-    if (Math.abs(x - lastX) < 0.01) return;
-    lastX = x;
-    const A = colorsLin.subarray(a * verts * 3, (a + 1) * verts * 3);
-    const B = colorsLin.subarray(b * verts * 3, (b + 1) * verts * 3);
-    const out = colAttr.array;
-    for (let i = 0; i < out.length; i++) out[i] = A[i] + (B[i] - A[i]) * alpha;
-    colAttr.needsUpdate = true;
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const colAttr = new THREE.BufferAttribute(new Uint8Array(verts * 3), 3, true);
+    colAttr.setUsage(THREE.DynamicDrawUsage);
+    geom.setAttribute('color', colAttr);
+    geom.setIndex(new THREE.BufferAttribute(indices, 1));
+    geom.computeBoundingBox();
+    const bb = geom.boundingBox;
+    const center = bb.getCenter(new THREE.Vector3());
+    const size = bb.getSize(new THREE.Vector3()).length();
+    geom.translate(-center.x, -center.y, -center.z);
+    geom.scale(1.5 / size, 1.5 / size, 1.5 / size);
+
+    const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ vertexColors: true }));
+    const scene = new THREE.Scene();
+    scene.add(mesh);
+
+    const canvas = document.createElement('canvas');
+    Object.assign(canvas.style, {
+      position: 'absolute', inset: '0', width: '100%', height: '100%',
+      opacity: '0', transition: 'opacity 0.4s ease',
+    });
+    container.style.position = 'relative';
+    container.appendChild(canvas);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+    canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
+
+    const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
+    // initial camera = the reference video's (supervised) viewpoint: the
+    // pipeline's training camera is yaw 0 / elev 0, which lands on +Z
+    // after the export's Z-up -> Y-up rotation
+    const setView = (azDeg, elDeg, r = 2.6) => {
+      const az = THREE.MathUtils.degToRad(azDeg), el = THREE.MathUtils.degToRad(elDeg);
+      camera.position.set(r * Math.cos(el) * Math.sin(az), r * Math.sin(el), r * Math.cos(el) * Math.cos(az));
+    };
+    setView(0, 0);
+    window.__syncView = setView;
+    const controls = new OrbitControls(camera, container);
+    container.style.touchAction = 'pan-y';
+    container.style.cursor = 'grab';
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.enablePan = true;
+
+    // a plain click (no drag) on the shape toggles the shared clock
+    let downX = 0, downY = 0, downT = 0;
+    container.addEventListener('pointerdown', (e) => { downX = e.clientX; downY = e.clientY; downT = performance.now(); });
+    container.addEventListener('pointerup', (e) => {
+      if (Math.hypot(e.clientX - downX, e.clientY - downY) < 5 && performance.now() - downT < 400) {
+        if (video.paused) video.play().catch(() => {}); else video.pause();
+      }
+    });
+
+    let lastX = -1;
+    setColorsAt = (tNorm) => {
+      const maxF = framesReady - 1;
+      if (maxF < 0) return;
+      // bracket tNorm in the sampled times, clamped to what has decoded
+      let b = 1;
+      while (b <= maxF && times[b] < tNorm) b++;
+      if (b > maxF) b = maxF;
+      const a = Math.max(0, b - 1);
+      const span = times[b] - times[a] || 1;
+      const alpha = Math.min(1, Math.max(0, (tNorm - times[a]) / span));
+      const x = a + alpha;
+      if (Math.abs(x - lastX) < 0.01) return;
+      lastX = x;
+      const A = colorsLin.subarray(a * n, (a + 1) * n);
+      const B = colorsLin.subarray(b * n, (b + 1) * n);
+      const out = colAttr.array;
+      for (let i = 0; i < out.length; i++) out[i] = A[i] + (B[i] - A[i]) * alpha;
+      colAttr.needsUpdate = true;
+    };
+    onNewFrames = () => { lastX = -1; };   // a clamped time can now re-render
+    setColorsAt(0);
+
+    // ready: reveal the shape and start the shared clock from the beginning
+    canvas.style.opacity = '1';
+    try { video.currentTime = 0; } catch (e) {}
+    startVideo();
+
+    renderer.setAnimationLoop(() => {
+      const w = container.clientWidth, h = container.clientHeight;
+      if (!w || !h) return;
+      const pr = Math.min(window.devicePixelRatio, 2);
+      if (renderer.getPixelRatio() !== pr) renderer.setPixelRatio(pr);
+      if (canvas.width !== Math.floor(w * pr) || canvas.height !== Math.floor(h * pr)) renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      const d = video.duration;
+      if (d) setColorsAt(Math.min(1, video.currentTime / d));
+      controls.update();
+      renderer.render(scene, camera);
+    });
   }
-  setColorsAt(0);
 
-  renderer.setAnimationLoop(() => {
-    const w = container.clientWidth, h = container.clientHeight;
-    if (!w || !h) return;
-    const pr = Math.min(window.devicePixelRatio, 2);
-    if (renderer.getPixelRatio() !== pr) renderer.setPixelRatio(pr);
-    if (canvas.width !== Math.floor(w * pr) || canvas.height !== Math.floor(h * pr)) renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    const d = video.duration;
-    if (d) setColorsAt(Math.min(1, video.currentTime / d));
-    controls.update();
-    renderer.render(scene, camera);
-  });
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (value && value.length) {
+        if (!u8) {
+          const merged = new Uint8Array(pre.length + value.length);
+          merged.set(pre); merged.set(value, pre.length);
+          pre = merged;
+          tryHeader();
+        } else if (got < total) {
+          const take = Math.min(value.length, total - got);
+          u8.set(value.subarray(0, take), got);
+          got += take;
+        }
+        decodeReadyFrames();
+        if (!built && meta && framesReady >= 1) buildScene();
+      }
+      if (done) break;
+    }
+  } catch (e) {
+    if (!built) bail();                  // died before anything was shown
+  }
 })();
