@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="assets/threedle_icon.png">
-  <link href="style.css?v=8" rel="stylesheet">
+  <link href="style.css?v=9" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
     /* from https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css */
@@ -180,17 +180,18 @@
     <h2>Gallery</h2>
     <div class="vgrid vgrid-4 vhead"><div>Driving video</div><div>Novel view #1</div><div>Novel view #2</div><div>Rotating view</div></div>
     <p class="vprompt">&ldquo;Rorschach pattern forming&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/006_hand__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/008_hand__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/009_hand__novel_view_2.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/hand_rotating.mp4" type="video/mp4"></video></div>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/006_hand__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/008_hand__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/009_hand__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d"><div class="dm-grid" data-method="hand" data-nt="1" data-az="45" data-el="25"></div></div></div>
     <p class="vprompt">&ldquo;Blue paint cracks and peels&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/010_chair__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/012_chair__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/013_chair__novel_view_2.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/chair_rotating.mp4" type="video/mp4"></video></div>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/010_chair__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/012_chair__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/013_chair__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d"><div class="dm-grid" data-method="chair" data-nt="1" data-az="45" data-el="25"></div></div></div>
     <p class="vprompt">&ldquo;Rot spreads and darkens&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/014_pumpkin__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/016_pumpkin__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/017_pumpkin__novel_view_2.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/pumpkin_rotating.mp4" type="video/mp4"></video></div>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/014_pumpkin__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/016_pumpkin__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/017_pumpkin__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d"><div class="dm-grid" data-method="pumpkin" data-nt="1" data-az="45" data-el="25" data-rx="-36.4"></div></div></div>
     <p class="vprompt">&ldquo;Red cracks spreading&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/018_airplane__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/020_airplane__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/021_airplane__novel_view_2.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/airplane_rotating.mp4" type="video/mp4"></video></div>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/018_airplane__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/020_airplane__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/021_airplane__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d"><div class="dm-grid" data-method="airplane" data-nt="1" data-az="45" data-el="25"></div></div></div>
+    <p class="dm-block-label">To interact with the mesh in the rotating view, <em>Scroll</em> to zoom, hold the <em>Left Click + drag</em> to rotate, and hold the <em>Right Click + drag</em> to translate.</p>
     <p class="graybox">
-      <b>Gallery of results.</b> Four objects driven by four different effects. Each row shows the driving video and
-      our output at two novel viewpoints and under a rotating camera. The texture remains coherent even at viewpoints
-      unseen in training.
+      <b>Gallery of results.</b> Four objects driven by four different effects. Each row shows the driving video, our
+      output at two novel viewpoints, and the mesh with its final texture in an interactive rotating view. The texture
+      remains coherent even at viewpoints unseen in training.
     </p>
   </section>
   <section id="generalization">
@@ -208,9 +209,10 @@
   </section>
   <section id="applications">
     <h2>Bringing an existing texture to life</h2>
-    <div class="vgrid vgrid-4 vhead"><div>Driving video</div><div>Supervised view</div><div>Novel view #1</div><div>Novel view #2</div></div>
+    <div class="vgrid vgrid-4 vhead"><div>Driving video</div><div>Novel view #1</div><div>Novel view #2</div><div>Rotating view</div></div>
     <p class="vprompt">&ldquo;Polka dots gliding over the duck&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/055_duck__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/056_duck__supervised_view.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/057_duck__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/058_duck__novel_view_2.mp4" type="video/mp4"></video></div>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/055_duck__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/057_duck__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/058_duck__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d"><div class="dm-grid" data-method="duck" data-nt="1" data-az="45" data-el="25"></div></div></div>
+    <p class="dm-block-label">To interact with the mesh in the rotating view, <em>Scroll</em> to zoom, hold the <em>Left Click + drag</em> to rotate, and hold the <em>Right Click + drag</em> to translate.</p>
     <p class="graybox">
       Our method can operate on objects that already have a texture and make it change over time, as shown for the
       moving spots over the duck. The dots glide around the ring while the head stays clear, and the painted eyes,
@@ -389,45 +391,108 @@
   </script>
 
   <script>
-    // ---- synchronized playback for video groups --------------------
-    // Clips autoplay as each one finishes loading, so a long strip ends
-    // up with its halves on different timelines. Each group below waits
-    // until every member can play, starts them together, and re-pins
-    // them to the first video's clock so drift cannot accumulate.
+    // ---- lazy, synchronized video playback --------------------------
+    // This page carries ~60 clips but the browser's media service only
+    // sustains a couple dozen live decoders (beyond that every video in
+    // the whole browser stops loading). So each clip holds a decoder
+    // only while it is near the viewport, under a hard global budget.
+    // Clips are grouped per row/strip/section for synchronized playback:
+    // a newly mounted clip joins at its group's current playback time,
+    // and a slow re-pin loop corrects drift.
     (function () {
+      var MAX_LIVE = 22;
       var groups = [];
-      document.querySelectorAll('.vscroll').forEach(function (g) { groups.push(g.querySelectorAll('video')); });
-      document.querySelectorAll('.vgrid:not(.vhead)').forEach(function (g) {
-        if (!g.closest('#comparison')) groups.push(g.querySelectorAll('video'));
+      document.querySelectorAll('.vscroll').forEach(function (el) { groups.push({el: el, vids: el.querySelectorAll('video')}); });
+      document.querySelectorAll('.vgrid:not(.vhead)').forEach(function (el) {
+        if (!el.closest('#comparison')) groups.push({el: el, vids: el.querySelectorAll('video')});
       });
       var cmp = document.getElementById('comparison');
-      if (cmp) groups.push(cmp.querySelectorAll('video'));
+      if (cmp) groups.push({el: cmp, vids: cmp.querySelectorAll('video')});
 
-      groups.forEach(function (nodes) {
-        var vids = Array.prototype.slice.call(nodes);
-        if (vids.length < 2) return;
-        var started = false;
-        vids.forEach(function (v) { v.autoplay = false; v.pause(); v.preload = 'auto'; });
-        function ready(v) { return v.readyState >= 3; }
-        function tryStart() {
-          if (started || !vids.every(ready)) return;
-          started = true;
-          vids.forEach(function (v) { v.currentTime = 0; v.play().catch(function () {}); });
-        }
-        vids.forEach(function (v) {
-          v.addEventListener('canplay', tryStart);
-          if (ready(v)) tryStart();
+      var liveCount = 0;
+      var dead = new Set();     // clips whose file failed to load: never retried
+      var wanted = new Set();   // clips currently near the viewport
+
+      groups.forEach(function (g) {
+        g.vids = Array.prototype.slice.call(g.vids);
+        g.live = new Set();
+        g.vids.forEach(function (v) {
+          var srcEl = v.querySelector('source');
+          v.dataset.src = srcEl ? srcEl.getAttribute('src') : (v.getAttribute('src') || '');
+          if (srcEl) srcEl.remove();
+          v.removeAttribute('src');
+          v.preload = 'none';
+          v.autoplay = false;
+          v.load();
+          v.__grp = g;
         });
-        setInterval(function () {
-          if (!started) { tryStart(); return; }
-          var t = vids[0].currentTime;
-          var d = vids[0].duration || 6;
-          if (t < 0.4 || t > d - 0.4) return;   // never correct across the loop wrap
-          for (var i = 1; i < vids.length; i++) {
-            if (Math.abs(vids[i].currentTime - t) > 0.3) vids[i].currentTime = t;
-          }
-        }, 1500);
       });
+
+      function groupTime(g) {
+        for (var i = 0; i < g.vids.length; i++) {
+          var v = g.vids[i];
+          if (g.live.has(v) && !v.paused && v.readyState >= 2) return v.currentTime;
+        }
+        return null;
+      }
+
+      function mountVideo(v) {
+        if (v.__live || dead.has(v) || liveCount >= MAX_LIVE) return;
+        v.__live = true; liveCount++;
+        var g = v.__grp; g.live.add(v);
+        v.onerror = function () { dead.add(v); unmountVideo(v); };
+        v.onloadeddata = function () {
+          var t = groupTime(g);
+          if (t !== null && v.duration) v.currentTime = t % v.duration;
+          v.play().catch(function () {});
+        };
+        v.muted = true;
+        v.preload = 'auto';
+        v.src = v.dataset.src;
+        v.load();
+      }
+
+      function unmountVideo(v) {
+        if (!v.__live) return;
+        v.__live = false; liveCount--;
+        v.__grp.live.delete(v);
+        v.onerror = v.onloadeddata = null;
+        v.pause();
+        v.removeAttribute('src');
+        v.preload = 'none';
+        v.load();                         // releases the decoder
+        wanted.forEach(mountVideo);       // hand the freed slot to a waiting clip
+      }
+
+      if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            var v = e.target;
+            if (e.isIntersecting) { wanted.add(v); mountVideo(v); }
+            else { wanted.delete(v); unmountVideo(v); }
+          });
+        }, {rootMargin: '300px 0px'});
+        groups.forEach(function (g) { g.vids.forEach(function (v) { obs.observe(v); }); });
+      } else {
+        groups.forEach(function (g) { g.vids.forEach(mountVideo); });
+      }
+
+      setInterval(function () {
+        groups.forEach(function (g) {
+          var L = g.vids.filter(function (v) { return g.live.has(v) && v.readyState >= 2; });
+          if (!L.length) return;
+          var m = L[0];
+          if (m.paused) m.play().catch(function () {});
+          var t = m.currentTime;
+          var d = m.duration || 6;
+          if (t < 0.4 || t > d - 0.4) return;   // never correct across the loop wrap
+          for (var k = 1; k < L.length; k++) {
+            var v = L[k];
+            if (v.paused) { v.currentTime = t; v.play().catch(function () {}); }
+            else if (Math.abs(v.currentTime - t) > 0.3) v.currentTime = t;
+          }
+        });
+      }, 1500);
     })();
   </script>
   <script type="importmap">
@@ -438,6 +503,6 @@
     }
   }
   </script>
-  <script type="module" src="comparison.js?v=9"></script>
+  <script type="module" src="comparison.js?v=10"></script>
 </body>
 </html>

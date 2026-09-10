@@ -1079,6 +1079,29 @@ pre {
   margin-bottom: 10px;
 }
 
+/* the two views come from different renders with different aspect ratios;
+   a fixed cell height keeps the method rows of both columns level */
+.cmp-method .vgrid-2 video {
+  height: 168px;
+  object-fit: contain;
+}
+
+/* interactive rotating-view cell inside a video row: one cell filling the
+   column, at the same height the row's videos define */
+.vgrid .dm-3d {
+  position: relative;
+  min-height: 120px;
+}
+.vgrid .dm-grid {
+  grid-template-columns: 1fr;
+  height: 100%;
+  margin-bottom: 0;
+}
+.vgrid .dm-grid .dm-cell {
+  aspect-ratio: auto;
+  height: 100%;
+}
+
 .cmp-method .dm-block-label {
   margin-bottom: 0.25rem;
 }

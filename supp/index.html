@@ -51,7 +51,7 @@ video { display: block; margin: 0 auto; }
         </p>
         <hr />
         <p style="text-align:center;margin:1.2rem 0;"><a href="../index.html" style="display:inline-block;background:#263966;color:#fff;font-weight:700;padding:0.6rem 1.4rem;border-radius:10px;text-decoration:none;">&larr; Back to the project page</a></p>
-<h2 align="left">Figure 1. DynaMesh carries a video&rsquo;s evolving effect onto a 3D object as a texture that changes over time.</h2>
+<h2 align="left">DynaMesh carries a video&rsquo;s evolving effect onto a 3D object as a texture that changes over time.</h2>
         <p align="left">The reference video of the prompted effect, then our dynamic texture result that follows it frame by frame.</p>
 
         <h3 align="left">aircraft</h3> &mdash; <i>&ldquo;Continuous, Hokusai waves gushing&rdquo;</i>
@@ -62,7 +62,7 @@ video { display: block; margin: 0 auto; }
             </tbody>
         </table>
         <hr />
-        <h2 align="left">Figure 6. Flicker.</h2>
+        <h2 align="left">Flicker.</h2>
         <p align="left">A chair with moss spreading over its surface. Frozen TRELLIS.2 changes the texture abruptly from one moment to the next, while our method keeps the moss growing smoothly, as in the video.</p>
 
         <h3 align="left">chair</h3> &mdash; <i>&ldquo;Moss spreads and darkens&rdquo;</i>
@@ -76,7 +76,7 @@ video { display: block; margin: 0 auto; }
             </tbody>
         </table>
         <hr />
-        <h2 align="left">Figure 8. Qualitative comparison.</h2>
+        <h2 align="left">Qualitative comparison at the first novel view.</h2>
         <p align="left">Every method we compare against, on one reference video, at the unseen view. The baselines either flicker or degrade the geometry at that view. Only our method tracks the effect consistently and preserves the shape&rsquo;s geometry.</p>
 
         <h3 align="left">spot</h3> &mdash; <i>&ldquo;Lava effect with cracks glowing in bright orange&rdquo;</i>
@@ -98,7 +98,69 @@ video { display: block; margin: 0 auto; }
             </tbody>
         </table>
         <hr />
-        <h2 align="left">Figure 9. Failure case.</h2>
+        <h2 align="left">Additional gallery.</h2>
+        <p align="left">Four more objects, each driven by a different effect. The effect holds at viewpoints unseen in training despite being fit to a single camera.</p>
+        <h3 align="left">unicorn</h3> &mdash; <i>&ldquo;Iridescence sweeps over the surface&rdquo;</i>
+        <table width="900" border="0" align="center">
+            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
+            <tbody>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_unicorn_rainbow_ref.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_unicorn_rainbow_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_unicorn_rainbow_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_unicorn_rainbow_diagC.mp4" type="video/mp4"></video></td></tr>
+            </tbody>
+        </table>
+        <h3 align="left">goat</h3> &mdash; <i>&ldquo;Scorch spreads and chars&rdquo;</i>
+        <table width="900" border="0" align="center">
+            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
+            <tbody>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_goat_burnt_ref.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_goat_burnt_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_goat_burnt_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_goat_burnt_diagC.mp4" type="video/mp4"></video></td></tr>
+            </tbody>
+        </table>
+        <h3 align="left">fish</h3> &mdash; <i>&ldquo;Terracotta dries and lightens&rdquo;</i>
+        <table width="900" border="0" align="center">
+            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
+            <tbody>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_blub_drying_ref.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_blub_drying_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_blub_drying_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_blub_drying_diagC.mp4" type="video/mp4"></video></td></tr>
+            </tbody>
+        </table>
+        <h3 align="left">nefertiti</h3> &mdash; <i>&ldquo;Verdigris creeps over the bronze&rdquo;</i>
+        <table width="900" border="0" align="center">
+            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
+            <tbody>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_ancient_lady_effect_1_ref.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_ancient_lady_effect_1_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_ancient_lady_effect_1_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ag_ancient_lady_effect_1_diagC.mp4" type="video/mp4"></video></td></tr>
+            </tbody>
+        </table>
+        <hr />
+        <h2 align="left">Additional comparison views.</h2>
+        <p align="left">The comparison of the main page shows two novel views. Here every method is shown at the two remaining cameras, the supervised view and a third novel view.</p>
+        <h3 align="left">spot</h3> &mdash; <i>&ldquo;Lava effect with cracks glowing in bright orange&rdquo;</i>
+        <table width="600" border="0" align="center">
+            <thead><tr><th align="center">Supervised view</th><th align="center">Novel view #3</th></tr></thead>
+            <tbody>
+                <tr><td colspan="2" align="center" class="mname">DynaMesh (ours)</td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_ours_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_ours_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td colspan="2" align="center" class="mname">Frozen TRELLIS.2</td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_frozen_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_frozen_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td colspan="2" align="center" class="mname">MeshNCA</td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_meshnca_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_meshnca_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td colspan="2" align="center" class="mname">L4GM</td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_l4gm_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_l4gm_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td colspan="2" align="center" class="mname">SV4D 2.0</td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_sv4d2_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_sv4d2_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td colspan="2" align="center" class="mname">DG4D</td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_dg4d_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_dg4d_diagB.mp4" type="video/mp4"></video></td></tr>
+            </tbody>
+        </table>
+        <hr />
+        <h2 align="left">Continuing an effect across clips.</h2>
+        <p align="left">A second reference video, generated from the last frame of the first, continues the same effect, so a progression that does not fit in one clip can be carried across several. The cracks spread over the metal unicorn in the first clip and heat to glowing amber in the second.</p>
+        <h3 align="left">unicorn</h3>
+        <table width="900" border="0" align="center">
+            <thead><tr><th align="center">Reference video (clip 1)</th><th align="center">Our result (clip 1)</th><th align="center">Reference video (clip 2)</th><th align="center">Our result (clip 2)</th></tr></thead>
+            <tbody>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cont_ref1.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cont_ours1.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cont_ref2.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cont_ours2.mp4" type="video/mp4"></video></td></tr>
+            </tbody>
+        </table>
+        <hr />
+        <h2 align="left">Failure case.</h2>
         <p align="left">The cobalt pattern is defined by the global arrangement of its lines, not only by local flowers, so it comes out as intended at the supervised view but loses that arrangement at the unseen one.</p>
 
         <h3 align="left">vase</h3> &mdash; <i>&ldquo;Cobalt pattern drawing itself&rdquo;</i>

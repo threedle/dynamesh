@@ -118,15 +118,16 @@ function setupContainer(container) {
     const nT = Number(grid.dataset.nt || 4);
     const az = Number(grid.dataset.az ?? 45);
     const el = Number(grid.dataset.el ?? 25);
+    const rx = Number(grid.dataset.rx ?? 0); // upright correction for meshes whose native up-axis differs
     for (let t = 1; t <= nT; t++) {
       const div = document.createElement('div');
       div.className = 'dm-cell';
       grid.appendChild(div);
-      cells.push(makeCell(div, method, t, az, el));
+      cells.push(makeCell(div, method, t, az, el, rx));
     }
   }
 
-  function makeCell(div, method, t, azDeg, elDeg) {
+  function makeCell(div, method, t, azDeg, elDeg, rxDeg) {
     const scene = new THREE.Scene();
     // lights only matter for the gray placeholder; real cells are unlit
     scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d4cf, 1.9));
@@ -158,7 +159,11 @@ function setupContainer(container) {
     controls.update();
 
     loadAsset(`assets/comparison/${method}_t${t}.glb?v=${ASSET_V}`).then(
-      (root) => scene.add(root.clone()),
+      (root) => {
+        const inst = root.clone();
+        if (rxDeg) inst.rotation.x = THREE.MathUtils.degToRad(rxDeg);
+        scene.add(inst);
+      },
       () => {
         placeholderGeom.then((geom) => {
           const mat = new THREE.MeshStandardMaterial({ color: 0xb9b9b9, roughness: 0.85, metalness: 0.0 });
