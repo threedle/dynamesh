@@ -224,3 +224,124 @@ window.__dmCells = [];
 for (const container of document.querySelectorAll('.dm-3d')) {
   window.__dmCells.push(...setupContainer(container));
 }
+
+// ---- time-synced teaser: the 3D result follows the reference video ------
+// One mesh, constant geometry, per-frame vertex colors sampled from the
+// sequence. Every displayed frame lerps between the two nearest sampled
+// frames at the video's currentTime, so pausing or scrubbing the video
+// freezes or scrubs the texture with it (FoldingAgent-style shared clock).
+(async function initSyncTeaser() {
+  const container = document.getElementById('teaser3d');
+  const video = document.getElementById('teaserVideo');
+  if (!container || !video) return;
+
+  let buf;
+  try {
+    buf = await fetch(`assets/teaser_anim/plane_anim.bin?v=${ASSET_V}`).then((r) => {
+      if (!r.ok) throw new Error(r.status);
+      return r.arrayBuffer();
+    });
+  } catch (e) {
+    container.textContent = '';
+    return; // animation pack missing: leave the panel empty rather than broken
+  }
+
+  const headLen = new DataView(buf).getUint32(0, true);
+  const meta = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, headLen)));
+  const { verts, tris, frames, times } = meta;
+  const posOff = 4 + headLen;
+  const idxOff = posOff + verts * 12;
+  const colOff = idxOff + Math.ceil((tris * 3 * 2) / 4) * 4;
+  const positions = new Float32Array(buf, posOff, verts * 3);
+  const indices = new Uint16Array(buf, idxOff, tris * 3);
+  const colors = new Uint8Array(buf, colOff, frames * verts * 3);
+
+  // sRGB -> linear once per stored frame, so the unlit material shows the
+  // field's own values (same correction as loadAsset above)
+  const s2l = new Uint8Array(256);
+  for (let i = 0; i < 256; i++) {
+    const c = i / 255;
+    const l = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    s2l[i] = Math.round(l * 255);
+  }
+  const colorsLin = new Uint8Array(colors.length);
+  for (let i = 0; i < colors.length; i++) colorsLin[i] = s2l[colors[i]];
+
+  const geom = new THREE.BufferGeometry();
+  geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const colAttr = new THREE.BufferAttribute(new Uint8Array(verts * 3), 3, true);
+  colAttr.setUsage(THREE.DynamicDrawUsage);
+  geom.setAttribute('color', colAttr);
+  geom.setIndex(new THREE.BufferAttribute(indices, 1));
+  geom.computeBoundingBox();
+  const bb = geom.boundingBox;
+  const center = bb.getCenter(new THREE.Vector3());
+  const size = bb.getSize(new THREE.Vector3()).length();
+  geom.translate(-center.x, -center.y, -center.z);
+  geom.scale(1.5 / size, 1.5 / size, 1.5 / size);
+
+  const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ vertexColors: true }));
+  const scene = new THREE.Scene();
+  scene.add(mesh);
+
+  const canvas = document.createElement('canvas');
+  Object.assign(canvas.style, { position: 'absolute', inset: '0', width: '100%', height: '100%' });
+  container.style.position = 'relative';
+  container.appendChild(canvas);
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+  canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
+
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
+  const az = THREE.MathUtils.degToRad(45), el = THREE.MathUtils.degToRad(25), r = 2.4;
+  camera.position.set(r * Math.cos(el) * Math.sin(az), r * Math.sin(el), r * Math.cos(el) * Math.cos(az));
+  const controls = new OrbitControls(camera, container);
+  container.style.touchAction = 'pan-y';
+  container.style.cursor = 'grab';
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.enablePan = true;
+
+  // a plain click (no drag) on the shape toggles the shared clock
+  let downX = 0, downY = 0, downT = 0;
+  container.addEventListener('pointerdown', (e) => { downX = e.clientX; downY = e.clientY; downT = performance.now(); });
+  container.addEventListener('pointerup', (e) => {
+    if (Math.hypot(e.clientX - downX, e.clientY - downY) < 5 && performance.now() - downT < 400) {
+      if (video.paused) video.play().catch(() => {}); else video.pause();
+    }
+  });
+
+  let lastX = -1;
+  function setColorsAt(tNorm) {
+    // bracket tNorm in the sampled times, then lerp the two frames
+    let b = 1;
+    while (b < frames - 1 && times[b] < tNorm) b++;
+    const a = b - 1;
+    const span = times[b] - times[a] || 1;
+    const alpha = Math.min(1, Math.max(0, (tNorm - times[a]) / span));
+    const x = a + alpha;
+    if (Math.abs(x - lastX) < 0.01) return;
+    lastX = x;
+    const A = colorsLin.subarray(a * verts * 3, (a + 1) * verts * 3);
+    const B = colorsLin.subarray(b * verts * 3, (b + 1) * verts * 3);
+    const out = colAttr.array;
+    for (let i = 0; i < out.length; i++) out[i] = A[i] + (B[i] - A[i]) * alpha;
+    colAttr.needsUpdate = true;
+  }
+  setColorsAt(0);
+
+  renderer.setAnimationLoop(() => {
+    const w = container.clientWidth, h = container.clientHeight;
+    if (!w || !h) return;
+    const pr = Math.min(window.devicePixelRatio, 2);
+    if (renderer.getPixelRatio() !== pr) renderer.setPixelRatio(pr);
+    if (canvas.width !== Math.floor(w * pr) || canvas.height !== Math.floor(h * pr)) renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    const d = video.duration;
+    if (d) setColorsAt(Math.min(1, video.currentTime / d));
+    controls.update();
+    renderer.render(scene, camera);
+  });
+})();

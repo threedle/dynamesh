@@ -1097,6 +1097,44 @@ pre {
   object-fit: contain;
 }
 
+/* time-synced teaser: reference video beside the animated 3D result */
+.sync-teaser {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0.4rem 0 0.6rem;
+}
+
+.sync-panel {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.sync-panel video {
+  display: block;
+  width: 390px;
+  max-width: 44vw;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+#teaser3d {
+  position: relative;
+  width: 390px;
+  max-width: 44vw;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .sync-teaser { flex-direction: column; align-items: center; }
+  .sync-panel video, #teaser3d { max-width: 92vw; }
+}
+
 /* interactive rotating-view cell inside a video row: one cell filling the
    column, at the same height the row's videos define */
 .vgrid .dm-3d {

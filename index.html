@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="assets/threedle_icon.png">
-  <link href="style.css?v=11" rel="stylesheet">
+  <link href="style.css?v=12" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
     /* from https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css */
@@ -113,16 +113,19 @@
   </aside>
 
   <section class="teaser" aria-label="teaser">
-    <div class="imgsflex">
-      <figure class="blcent">
-        <img class="fullwidth" src="assets/teaser_strip.jpg"
-          alt="A reference video of a Hokusai wave effect unfolding on a render of an airplane.">
-      </figure>
+    <p class="vprompt" style="text-align:center">&ldquo;Continuous, Hokusai waves gushing&rdquo;</p>
+    <div class="sync-teaser">
+      <div class="sync-panel">
+        <p class="dm-block-label">Reference video</p>
+        <video id="teaserVideo" muted autoplay loop playsinline controls preload="auto" src="assets/teaser_reference.mp4"></video>
+      </div>
+      <div class="sync-panel">
+        <p class="dm-block-label">DynaMesh (ours) &mdash; time-synced 3D result</p>
+        <div id="teaser3d" aria-label="interactive 3D result, texture follows the video"></div>
+      </div>
     </div>
-    <p class="dm-block-label">To interact with the 3D models, <em>Scroll</em> to zoom, hold the <em>Left Click + drag</em> to rotate, and hold the <em>Right Click + drag</em> to translate.</p>
-    <div id="dm-teaser" class="dm-3d">
-      <div class="dm-grid dm-grid-8" data-method="plane" data-nt="8" data-az="45" data-el="25"></div>
-    </div>
+    <p class="dm-block-label">The 3D texture follows the video's clock: pause or scrub the video and the shape freezes with it.
+      <em>Scroll</em> to zoom, <em>Left Click + drag</em> to rotate, <em>Right Click + drag</em> to translate, <em>Click</em> to pause.</p>
     <p class="graybox">
       <em>DynaMesh</em> generates a dynamic appearance effect for a 3D mesh. We create a video of the desired
       effect conditioned on a text prompt and a single view of the mesh, and propagate it consistently to the
@@ -513,6 +516,6 @@
     }
   }
   </script>
-  <script type="module" src="comparison.js?v=11"></script>
+  <script type="module" src="comparison.js?v=12"></script>
 </body>
 </html>
