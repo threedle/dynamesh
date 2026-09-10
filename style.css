@@ -1098,6 +1098,10 @@ pre {
 }
 
 /* time-synced teaser: reference video beside the animated 3D result */
+.teaser {
+  margin-top: -2.2rem;
+}
+
 .sync-teaser {
   display: flex;
   gap: 18px;

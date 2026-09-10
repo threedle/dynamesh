@@ -23,7 +23,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 const ROTATE_DEG_PER_SEC = 20; // full turn in 18s; calmer than BSB's 60deg/s with this many cells
-const ASSET_V = '6'; // bump when GLBs are re-exported, so cached copies don't linger
+const ASSET_V = '7'; // bump when GLBs are re-exported, so cached copies don't linger
 
 const glbCache = new Map(); // url -> Promise<scene template>; rows sharing a file share the load
 
@@ -237,10 +237,17 @@ for (const container of document.querySelectorAll('.dm-3d')) {
 
   let buf;
   try {
-    buf = await fetch(`assets/teaser_anim/plane_anim.bin?v=${ASSET_V}`).then((r) => {
-      if (!r.ok) throw new Error(r.status);
-      return r.arrayBuffer();
-    });
+    const resp = await fetch(`assets/teaser_anim/plane_anim.bin?v=${ASSET_V}`);
+    if (!resp.ok) throw new Error(resp.status);
+    buf = await resp.arrayBuffer();
+    const head = new Uint8Array(buf, 0, 2);
+    if (head[0] === 0x1f && head[1] === 0x8b) {
+      // the pack ships gzipped (delta streams compress ~7x); decompress
+      // manually so it works whether or not the server sets an encoding
+      buf = await new Response(
+        new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip')),
+      ).arrayBuffer();
+    }
   } catch (e) {
     container.textContent = '';
     return; // animation pack missing: leave the panel empty rather than broken
@@ -254,7 +261,7 @@ for (const container of document.querySelectorAll('.dm-3d')) {
   const colOff = idxOff + Math.ceil((tris * 3 * 2) / 4) * 4;
   const positions = new Float32Array(buf, posOff, verts * 3);
   const indices = new Uint16Array(buf, idxOff, tris * 3);
-  const colors = new Uint8Array(buf, colOff, frames * verts * 3);
+  const stored = new Uint8Array(buf, colOff, frames * verts * 3);
 
   // sRGB -> linear once per stored frame, so the unlit material shows the
   // field's own values (same correction as loadAsset above)
@@ -264,8 +271,28 @@ for (const container of document.querySelectorAll('.dm-3d')) {
     const l = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     s2l[i] = Math.round(l * 255);
   }
-  const colorsLin = new Uint8Array(colors.length);
-  for (let i = 0; i < colors.length; i++) colorsLin[i] = s2l[colors[i]];
+  const n = verts * 3;
+  const colorsLin = new Uint8Array(stored.length);
+  if (meta.v >= 2) {
+    // v2: colors quantized to `bits`, frame 0 raw, later frames as deltas
+    // mod 256 — undo the deltas, expand to 8 bits (bit replication), LUT
+    const bits = meta.bits || 8;
+    const shift = 8 - bits;
+    const lutQ = new Uint8Array(1 << bits);
+    for (let i = 0; i < lutQ.length; i++) lutQ[i] = s2l[(i << shift) | (i >> (bits - shift))];
+    const mask = (1 << bits) - 1;
+    const abs = new Uint8Array(n);
+    for (let i = 0; i < n; i++) { abs[i] = stored[i] & mask; colorsLin[i] = lutQ[abs[i]]; }
+    for (let f = 1; f < frames; f++) {
+      const off = f * n;
+      for (let i = 0; i < n; i++) {
+        abs[i] = (abs[i] + stored[off + i]) & mask;
+        colorsLin[off + i] = lutQ[abs[i]];
+      }
+    }
+  } else {
+    for (let i = 0; i < stored.length; i++) colorsLin[i] = s2l[stored[i]];
+  }
 
   const geom = new THREE.BufferGeometry();
   geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -294,8 +321,15 @@ for (const container of document.querySelectorAll('.dm-3d')) {
   canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
 
   const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
-  const az = THREE.MathUtils.degToRad(45), el = THREE.MathUtils.degToRad(25), r = 2.4;
-  camera.position.set(r * Math.cos(el) * Math.sin(az), r * Math.sin(el), r * Math.cos(el) * Math.cos(az));
+  // initial camera = the reference video's (supervised) viewpoint: the
+  // pipeline's training camera is yaw 0 / elev 0, which lands on +Z after
+  // the export's Z-up -> Y-up rotation
+  const setView = (azDeg, elDeg, r = 2.6) => {
+    const az = THREE.MathUtils.degToRad(azDeg), el = THREE.MathUtils.degToRad(elDeg);
+    camera.position.set(r * Math.cos(el) * Math.sin(az), r * Math.sin(el), r * Math.cos(el) * Math.cos(az));
+  };
+  setView(0, 0);
+  window.__syncView = setView;
   const controls = new OrbitControls(camera, container);
   container.style.touchAction = 'pan-y';
   container.style.cursor = 'grab';
