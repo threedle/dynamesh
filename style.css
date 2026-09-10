@@ -1033,14 +1033,22 @@ pre {
 .vhead div {
   text-align: center;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.2rem;
   color: var(--accent);
 }
 
 .vprompt {
   font-family: "Comic Sans MS", "Comic Sans", cursive;
-  font-size: 1.0rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  white-space: nowrap;
   margin: 0.9rem 0 0.3rem;
+}
+
+/* trailing descriptor after a prompt stays small so the line never wraps */
+.vprompt .vprompt-note {
+  font-weight: normal;
+  font-size: 1rem;
 }
 
 .vscroll {

@@ -23,7 +23,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 const ROTATE_DEG_PER_SEC = 20; // full turn in 18s; calmer than BSB's 60deg/s with this many cells
-const ASSET_V = '5'; // bump when GLBs are re-exported, so cached copies don't linger
+const ASSET_V = '6'; // bump when GLBs are re-exported, so cached copies don't linger
 
 const glbCache = new Map(); // url -> Promise<scene template>; rows sharing a file share the load
 

@@ -67,34 +67,12 @@ video { display: block; margin: 0 auto; }
 
         <h3 align="left">chair</h3> &mdash; <i>&ldquo;Moss spreads and darkens&rdquo;</i>
         <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view</th></tr></thead>
+            <thead><tr><th align="center">Reference video</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
             <tbody>
                 <tr><td align="center" rowspan="4" valign="middle"><video width="200" controls autoplay muted playsinline loop><source src="videos/050_chair__view5.mp4" type="video/mp4"></video></td><td colspan="2" align="center" class="mname">DynaMesh (ours)</td></tr>
                 <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/051_chair__view6.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/052_chair__view7.mp4" type="video/mp4"></video></td></tr>
                 <tr><td colspan="2" align="center" class="mname">Frozen TRELLIS.2</td></tr>
                 <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/053_chair__view8.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/054_chair__view9.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-        <hr />
-        <h2 align="left">Qualitative comparison at the first novel view.</h2>
-        <p align="left">Every method we compare against, on one reference video, at the unseen view. The baselines either flicker or degrade the geometry at that view. Only our method tracks the effect consistently and preserves the shape&rsquo;s geometry.</p>
-
-        <h3 align="left">spot</h3> &mdash; <i>&ldquo;Lava effect with cracks glowing in bright orange&rdquo;</i>
-        <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="12" valign="middle"><video width="200" controls autoplay muted playsinline loop><source src="videos/059_spot__reference_video.mp4" type="video/mp4"></video></td><td colspan="2" align="center" class="mname">DynaMesh (ours)</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/060_spot__supervised_view.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/061_spot__novel_view.mp4" type="video/mp4"></video></td></tr>
-                <tr><td colspan="2" align="center" class="mname">Frozen TRELLIS.2</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/062_spot__view4.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/063_spot__view5.mp4" type="video/mp4"></video></td></tr>
-                <tr><td colspan="2" align="center" class="mname">MeshNCA</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/064_spot__view6.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/065_spot__view7.mp4" type="video/mp4"></video></td></tr>
-                <tr><td colspan="2" align="center" class="mname">L4GM</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/066_spot__view8.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/067_spot__view9.mp4" type="video/mp4"></video></td></tr>
-                <tr><td colspan="2" align="center" class="mname">SV4D 2.0</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/068_spot__view10.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/069_spot__view11.mp4" type="video/mp4"></video></td></tr>
-                <tr><td colspan="2" align="center" class="mname">DG4D</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/070_spot__view12.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/071_spot__view13.mp4" type="video/mp4"></video></td></tr>
             </tbody>
         </table>
         <hr />
@@ -129,24 +107,24 @@ video { display: block; margin: 0 auto; }
             </tbody>
         </table>
         <hr />
-        <h2 align="left">Additional comparison views.</h2>
-        <p align="left">The comparison of the main page shows two novel views. Here every method is shown at the two remaining cameras, the supervised view and a third novel view.</p>
-        <h3 align="left">spot</h3> &mdash; <i>&ldquo;Lava effect with cracks glowing in bright orange&rdquo;</i>
-        <table width="600" border="0" align="center">
-            <thead><tr><th align="center">Supervised view</th><th align="center">Novel view #3</th></tr></thead>
+        <h2 align="left">Comparison on a mesh with thin separated parts.</h2>
+        <p align="left">Every method on an object whose parts are thin and separated. The baselines that build their own geometry lose the leaves, so their effect is carried on a shape that is no longer the input one, whereas our method changes only appearance and keeps the underlying geometry the same.</p>
+        <h3 align="left">bulbasaur</h3> &mdash; <i>&ldquo;Petal effect with leaves turning crimson and gold&rdquo;</i>
+        <table width="800" border="0" align="center">
+            <thead><tr><th align="center">Reference video</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
             <tbody>
-                <tr><td colspan="2" align="center" class="mname">DynaMesh (ours)</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_ours_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_ours_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td align="center" rowspan="12" valign="middle"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_ref.mp4" type="video/mp4"></video></td><td colspan="2" align="center" class="mname">DynaMesh (ours)</td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_ours_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_ours_diagC.mp4" type="video/mp4"></video></td></tr>
                 <tr><td colspan="2" align="center" class="mname">Frozen TRELLIS.2</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_frozen_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_frozen_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_frozen_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_frozen_diagC.mp4" type="video/mp4"></video></td></tr>
                 <tr><td colspan="2" align="center" class="mname">MeshNCA</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_meshnca_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_meshnca_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_meshnca_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_meshnca_diagC.mp4" type="video/mp4"></video></td></tr>
                 <tr><td colspan="2" align="center" class="mname">L4GM</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_l4gm_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_l4gm_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_l4gm_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_l4gm_diagC.mp4" type="video/mp4"></video></td></tr>
                 <tr><td colspan="2" align="center" class="mname">SV4D 2.0</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_sv4d2_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_sv4d2_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_sv4d2_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_sv4d2_diagC.mp4" type="video/mp4"></video></td></tr>
                 <tr><td colspan="2" align="center" class="mname">DG4D</td></tr>
-                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_dg4d_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/cmp_dg4d_diagB.mp4" type="video/mp4"></video></td></tr>
+                <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_dg4d_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos_extra/ivy_dg4d_diagC.mp4" type="video/mp4"></video></td></tr>
             </tbody>
         </table>
         <hr />
@@ -165,7 +143,7 @@ video { display: block; margin: 0 auto; }
 
         <h3 align="left">vase</h3> &mdash; <i>&ldquo;Cobalt pattern drawing itself&rdquo;</i>
         <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view</th></tr></thead>
+            <thead><tr><th align="center">Reference video</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
             <tbody>
                 <tr><td align="center" rowspan="4" valign="middle"><video width="200" controls autoplay muted playsinline loop><source src="videos/072_vase__reference_video.mp4" type="video/mp4"></video></td><td colspan="2" align="center" class="mname">DynaMesh (ours)</td></tr>
                 <tr><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/073_vase__supervised_view.mp4" type="video/mp4"></video></td><td align="center"><video width="200" controls autoplay muted playsinline loop><source src="videos/074_vase__novel_view.mp4" type="video/mp4"></video></td></tr>
@@ -179,5 +157,125 @@ video { display: block; margin: 0 auto; }
             <td align="right">Temporal Results</td>
         </tr></table>
 </div>
+  <script>
+    // ---- lazy video playback under a decoder budget -----------------
+    // This page carries 60 clips but the browser's media service only
+    // sustains a couple dozen live decoders browser-wide (beyond that
+    // every video in every tab stops loading). So each clip holds a
+    // decoder only while it is near the viewport, under a hard global
+    // budget. Clips are grouped per figure table so a figure's views
+    // play on one shared clock.
+    (function () {
+      var MAX_LIVE = 22;
+      // one sync group per SECTION (everything under the same h2 heading),
+      // so all the tables of a section share one playback clock
+      var groups = [];
+      var h2s = Array.prototype.slice.call(document.querySelectorAll('h2'));
+      var bySection = new Map();
+      document.querySelectorAll('video').forEach(function (v) {
+        var sec = null;
+        for (var i = 0; i < h2s.length; i++) {
+          if (h2s[i].compareDocumentPosition(v) & Node.DOCUMENT_POSITION_FOLLOWING) sec = h2s[i];
+        }
+        if (!bySection.has(sec)) { var g = {vids: []}; bySection.set(sec, g); groups.push(g); }
+        bySection.get(sec).vids.push(v);
+      });
+
+      var liveCount = 0;
+      var dead = new Set();     // clips whose file failed to load: never retried
+      var wanted = new Set();   // clips currently near the viewport
+
+      groups.forEach(function (g) {
+        g.vids = Array.prototype.slice.call(g.vids);
+        g.live = new Set();
+        g.vids.forEach(function (v) {
+          var srcEl = v.querySelector('source');
+          v.dataset.src = srcEl ? srcEl.getAttribute('src') : (v.getAttribute('src') || '');
+          if (srcEl) srcEl.remove();
+          v.removeAttribute('src');
+          v.preload = 'none';
+          v.autoplay = false;
+          v.load();
+          v.__grp = g;
+        });
+      });
+
+      function groupTime(g) {
+        for (var i = 0; i < g.vids.length; i++) {
+          var v = g.vids[i];
+          if (g.live.has(v) && !v.paused && v.readyState >= 2) return v.currentTime;
+        }
+        return null;
+      }
+
+      function mountVideo(v) {
+        if (v.__live || dead.has(v) || document.hidden || liveCount >= MAX_LIVE) return;
+        v.__live = true; liveCount++;
+        var g = v.__grp; g.live.add(v);
+        v.onerror = function () { dead.add(v); unmountVideo(v); };
+        v.onloadeddata = function () {
+          var t = groupTime(g);
+          if (t !== null && v.duration) v.currentTime = t % v.duration;
+          v.play().catch(function () {});
+        };
+        v.muted = true;
+        v.preload = 'auto';
+        v.src = v.dataset.src;
+        v.load();
+      }
+
+      function unmountVideo(v) {
+        if (!v.__live) return;
+        v.__live = false; liveCount--;
+        v.__grp.live.delete(v);
+        v.onerror = v.onloadeddata = null;
+        v.pause();
+        v.removeAttribute('src');
+        v.preload = 'none';
+        v.load();                         // releases the decoder
+        wanted.forEach(mountVideo);       // hand the freed slot to a waiting clip
+      }
+
+      // a hidden tab must hold no decoders: the browser-wide pool is shared
+      // across tabs, and a backgrounded page would starve the visible one
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          groups.forEach(function (g) { g.vids.forEach(function (v) { if (v.__live) unmountVideo(v); }); });
+        } else {
+          wanted.forEach(mountVideo);
+        }
+      });
+
+      if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            var v = e.target;
+            if (e.isIntersecting) { wanted.add(v); mountVideo(v); }
+            else { wanted.delete(v); unmountVideo(v); }
+          });
+        }, {rootMargin: '300px 0px'});
+        groups.forEach(function (g) { g.vids.forEach(function (v) { obs.observe(v); }); });
+      } else {
+        groups.forEach(function (g) { g.vids.forEach(mountVideo); });
+      }
+
+      setInterval(function () {
+        groups.forEach(function (g) {
+          var L = g.vids.filter(function (v) { return g.live.has(v) && v.readyState >= 2; });
+          if (!L.length) return;
+          var m = L[0];
+          if (m.paused) m.play().catch(function () {});
+          var t = m.currentTime;
+          var d = m.duration || 6;
+          if (t < 0.4 || t > d - 0.4) return;   // never correct across the loop wrap
+          for (var k = 1; k < L.length; k++) {
+            var v = L[k];
+            if (v.paused) { v.currentTime = t; v.play().catch(function () {}); }
+            else if (Math.abs(v.currentTime - t) > 0.3) v.currentTime = t;
+          }
+        });
+      }, 1500);
+    })();
+  </script>
 </body>
 </html>

@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="assets/threedle_icon.png">
-  <link href="style.css?v=9" rel="stylesheet">
+  <link href="style.css?v=10" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
     /* from https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css */
@@ -178,8 +178,8 @@
   </section>
   <section id="gallery">
     <h2>Gallery</h2>
-    <p class="dm-block-label">To interact with the mesh in the rotating view, <em>Scroll</em> to zoom, hold the <em>Left Click + drag</em> to rotate, and hold the <em>Right Click + drag</em> to translate.</p>
-    <div class="vgrid vgrid-4 vhead"><div>Driving video</div><div>Novel view #1</div><div>Novel view #2</div><div>Rotating view</div></div>
+    <p class="dm-block-label">To interact with the rotating view, <em>Scroll</em> to zoom, <em>Left Click + drag</em> to rotate, and <em>Right Click + drag</em> to translate.</p>
+    <div class="vgrid vgrid-4 vhead"><div>Reference video</div><div>Novel view #1</div><div>Novel view #2</div><div>Rotating view</div></div>
     <p class="vprompt">&ldquo;Rorschach pattern forming&rdquo;</p>
     <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/006_hand__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/008_hand__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/009_hand__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d"><div class="dm-grid" data-method="hand" data-nt="1" data-az="45" data-el="25"></div></div></div>
     <p class="vprompt">&ldquo;Blue paint cracks and peels&rdquo;</p>
@@ -189,16 +189,16 @@
     <p class="vprompt">&ldquo;Red cracks spreading&rdquo;</p>
     <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/018_airplane__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/020_airplane__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/021_airplane__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d"><div class="dm-grid" data-method="airplane" data-nt="1" data-az="45" data-el="25"></div></div></div>
     <p class="graybox">
-      <b>Gallery of results.</b> Four objects driven by four different effects. Each row shows the driving video, our
+      <b>Gallery of results.</b> Four objects driven by four different effects. Each row shows the reference video, our
       output at two novel viewpoints, and the mesh with its final texture in an interactive rotating view. The texture
       remains coherent even at viewpoints unseen in training.
     </p>
   </section>
   <section id="generalization">
     <h2>Generalization</h2>
-    <p class="vprompt">&ldquo;Rorschach effect with spots growing&rdquo; &mdash; reference video, the training shape, then twelve unseen shapes</p>
+    <p class="vprompt">&ldquo;Rorschach effect with spots growing&rdquo; <span class="vprompt-note">&mdash; reference video, the training shape, then twelve unseen shapes</span></p>
     <div class="vscroll"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/022_rorschach_adapter__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/023_rorschach_adapter__training_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/024_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/025_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/026_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/027_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/028_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/029_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/030_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/031_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/032_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/033_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/034_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/035_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></div>
-    <p class="vprompt">&ldquo;Lava effect with cracks glowing in bright orange&rdquo; &mdash; reference video, the training shape, then twelve unseen shapes</p>
+    <p class="vprompt">&ldquo;Lava effect with cracks glowing in bright orange&rdquo; <span class="vprompt-note">&mdash; reference video, the training shape, then twelve unseen shapes</span></p>
     <div class="vscroll"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/036_lava_adapter__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/037_lava_adapter__training_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/038_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/039_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/040_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/041_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/042_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/043_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/044_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/045_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/046_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/047_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/048_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/049_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></div>
     <p class="graybox">
       <b>Generalization across shapes.</b> Per-scene adapters fit on a reference video are applied, without any
@@ -209,8 +209,8 @@
   </section>
   <section id="applications">
     <h2>Bringing an existing texture to life</h2>
-    <p class="dm-block-label">To interact with the mesh in the rotating view, <em>Scroll</em> to zoom, hold the <em>Left Click + drag</em> to rotate, and hold the <em>Right Click + drag</em> to translate.</p>
-    <div class="vgrid vgrid-4 vhead"><div>Driving video</div><div>Novel view #1</div><div>Novel view #2</div><div>Rotating view</div></div>
+    <p class="dm-block-label">To interact with the rotating view, <em>Scroll</em> to zoom, <em>Left Click + drag</em> to rotate, and <em>Right Click + drag</em> to translate.</p>
+    <div class="vgrid vgrid-4 vhead"><div>Reference video</div><div>Novel view #1</div><div>Novel view #2</div><div>Rotating view</div></div>
     <p class="vprompt">&ldquo;Polka dots gliding over the duck&rdquo;</p>
     <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/055_duck__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/057_duck__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/058_duck__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d"><div class="dm-grid" data-method="duck" data-nt="1" data-az="45" data-el="25"></div></div></div>
     <p class="graybox">
@@ -313,7 +313,17 @@
             });
         }
 
-        if ('IntersectionObserver' in window) {
+        // a hidden tab must hold no decoders: the browser-wide pool is shared
+      // across tabs, and a backgrounded page would starve the visible one
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          groups.forEach(function (g) { g.vids.forEach(function (v) { if (v.__live) unmountVideo(v); }); });
+        } else {
+          wanted.forEach(mountVideo);
+        }
+      });
+
+      if ('IntersectionObserver' in window) {
             var obs = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
                     visibility[entry.target.id] = entry.intersectionRatio;
@@ -437,7 +447,7 @@
       }
 
       function mountVideo(v) {
-        if (v.__live || dead.has(v) || liveCount >= MAX_LIVE) return;
+        if (v.__live || dead.has(v) || document.hidden || liveCount >= MAX_LIVE) return;
         v.__live = true; liveCount++;
         var g = v.__grp; g.live.add(v);
         v.onerror = function () { dead.add(v); unmountVideo(v); };
@@ -503,6 +513,6 @@
     }
   }
   </script>
-  <script type="module" src="comparison.js?v=10"></script>
+  <script type="module" src="comparison.js?v=11"></script>
 </body>
 </html>
