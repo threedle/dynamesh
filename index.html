@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="assets/threedle_icon.png">
-  <link href="style.css?v=10" rel="stylesheet">
+  <link href="style.css?v=11" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
     /* from https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css */
@@ -481,7 +481,7 @@
             if (e.isIntersecting) { wanted.add(v); mountVideo(v); }
             else { wanted.delete(v); unmountVideo(v); }
           });
-        }, {rootMargin: '300px 0px'});
+        }, {rootMargin: '300px 500px'});
         groups.forEach(function (g) { g.vids.forEach(function (v) { obs.observe(v); }); });
       } else {
         groups.forEach(function (g) { g.vids.forEach(mountVideo); });

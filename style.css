@@ -1059,9 +1059,12 @@ pre {
 }
 
 .vscroll video {
+  /* the clips are square; a fixed width keeps the strip from reflowing
+     when off-screen clips release their decoder (no intrinsic size) */
   height: 130px;
-  width: auto;
+  width: 130px;
   flex: 0 0 auto;
+  object-fit: contain;
 }
 
 /* comparison: reference on the left, two method columns of three */
