@@ -126,20 +126,17 @@ async function setupSyncCell(container) {
   // the row's videos are the clock: follow the first live one
   const row = container.closest('.vgrid');
   const rowVideos = row ? Array.from(row.querySelectorAll('video')) : [];
-  let lastX = -1;
+  // the packs carry every source frame, so the nearest one IS what the
+  // video shows; a single memcpy ~30x/s replaces a per-vertex lerp at
+  // 60 fps, which kept the render loop busy enough to stagger the spin
+  let lastA = -1;
   function setColorsAt(tNorm) {
     let b = 1;
     while (b < frames - 1 && times[b] < tNorm) b++;
-    const a = b - 1;
-    const span = times[b] - times[a] || 1;
-    const alpha = Math.min(1, Math.max(0, (tNorm - times[a]) / span));
-    const x = a + alpha;
-    if (Math.abs(x - lastX) < 0.01) return;
-    lastX = x;
-    const A = colorsLin.subarray(a * n, (a + 1) * n);
-    const B = colorsLin.subarray(b * n, (b + 1) * n);
-    const out = colAttr.array;
-    for (let i = 0; i < out.length; i++) out[i] = A[i] + (B[i] - A[i]) * alpha;
+    const a = (tNorm - times[b - 1] < times[b] - tNorm) ? b - 1 : b;
+    if (a === lastA) return;
+    lastA = a;
+    colAttr.array.set(colorsLin.subarray(a * n, (a + 1) * n));
     colAttr.needsUpdate = true;
   }
   setColorsAt(0);
@@ -346,27 +343,23 @@ async function setupSyncCell(container) {
       }
     });
 
-    let lastX = -1;
+    // the pack carries every source frame, so nearest-frame playback is
+    // exact; a memcpy ~30x/s replaces the per-vertex lerp at 60 fps
+    let lastA = -1;
     setColorsAt = (tNorm) => {
       const maxF = framesReady - 1;
       if (maxF < 0) return;
-      // bracket tNorm in the sampled times, clamped to what has decoded
       let b = 1;
       while (b <= maxF && times[b] < tNorm) b++;
       if (b > maxF) b = maxF;
-      const a = Math.max(0, b - 1);
-      const span = times[b] - times[a] || 1;
-      const alpha = Math.min(1, Math.max(0, (tNorm - times[a]) / span));
-      const x = a + alpha;
-      if (Math.abs(x - lastX) < 0.01) return;
-      lastX = x;
-      const A = colorsLin.subarray(a * n, (a + 1) * n);
-      const B = colorsLin.subarray(b * n, (b + 1) * n);
-      const out = colAttr.array;
-      for (let i = 0; i < out.length; i++) out[i] = A[i] + (B[i] - A[i]) * alpha;
+      const lo = Math.max(0, b - 1);
+      const a = (tNorm - times[lo] < times[b] - tNorm) ? lo : b;
+      if (a === lastA) return;
+      lastA = a;
+      colAttr.array.set(colorsLin.subarray(a * n, (a + 1) * n));
       colAttr.needsUpdate = true;
     };
-    onNewFrames = () => { lastX = -1; };   // a clamped time can now re-render
+    onNewFrames = () => { lastA = -1; };   // a clamped time can now re-render
     setColorsAt(0);
 
     // ready: reveal the shape and start the shared clock from the beginning

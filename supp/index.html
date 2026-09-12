@@ -272,10 +272,10 @@ video { display: block; margin: 0 auto; }
           for (var k = 1; k < L.length; k++) {
             var v = L[k];
             if (v.paused) { v.currentTime = t; v.play().catch(function () {}); }
-            else if (Math.abs(v.currentTime - t) > 0.3) v.currentTime = t;
+            else if (Math.abs(v.currentTime - t) > 0.45) v.currentTime = t;
           }
         });
-      }, 1500);
+      }, 2500);
     })();
   </script>
 </body>
