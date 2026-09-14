@@ -33,13 +33,27 @@ a:hover { color: #ff0000; text-decoration: none; }
 .reference { font-size: 80%; }
 h3 { display: inline; font-size: 1.35em; }
 /* prompts use the same face as the project page, a step smaller */
-h3 + i { font-family: "Indie Flower", cursive; font-style: normal; font-size: 1.1em; }
+h3 + i { font-family: "Indie Flower", cursive; font-style: normal; font-size: 1.3em; }
 /* additions: method names sit above their videos, and the widest table scrolls
    inside its own box so the page never scrolls sideways */
 th, td { padding: 3px 4px; }
 .mname { font-weight: bold; padding-top: 8px; }
 .scroll { overflow-x: auto; }
 video { display: block; margin: 0 auto; }
+/* small screens: tables reflow into blocks instead of scrolling sideways.
+   Column headers disappear, each method name becomes a full-width divider,
+   and the clips wrap two-up at a scaled size */
+@media (max-width: 1040px) {
+	.container { width: auto; min-height: 0; padding-left: 0.4em; padding-right: 0.4em; }
+	table, tbody { display: block; width: auto !important; }
+	thead { display: none; }
+	tr { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+	td, th { display: block; padding: 0; }
+	.mname { flex: 1 0 100%; text-align: center; padding-top: 8px; }
+	table video { width: 44vw; max-width: 200px; height: auto; }
+	h1 { font-size: 1.5em; }
+	h2 { font-size: 1.25em; }
+}
 </style>
 <div class="container">
         <h1 align="center">DynaMesh: Dynamic 3D Texture Generation</h1>

@@ -1168,6 +1168,20 @@ pre {
   .vhead div { font-size: 1.02rem; }
 }
 
+/* a labeled cell keeps its caption attached to its video, so grids that
+   fold to two columns on phones stay correctly labeled */
+.vcell {
+  min-width: 0;
+}
+
+.vcell-label {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+
 /* interactive rotating-view cell inside a video row: one cell filling the
    column, at the same height the row's videos define */
 .vgrid .dm-3d {
@@ -1192,4 +1206,6 @@ pre {
   .cmp-layout { flex-direction: column; }
   .cmp-ref { position: static; flex: none; width: 50%; }
   .cmp-cols { grid-template-columns: 1fr; }
+  /* the columns stack, so the second column's view header is a duplicate */
+  .cmp-col:nth-child(2) .vhead { display: none; }
 }

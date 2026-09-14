@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="assets/threedle_icon.png">
-  <link href="style.css?v=17" rel="stylesheet">
+  <link href="style.css?v=18" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
     /* from https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css */
@@ -247,9 +247,8 @@
   </section>
   <section id="applications">
     <h2>Bringing an existing texture to life</h2>
-    <div class="vgrid vgrid-4 vhead"><div>Reference video</div><div>Supervised view</div><div>Novel view #1</div><div>Novel view #2</div></div>
     <p class="vprompt">&ldquo;Polka dots gliding over the duck&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/055_duck__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/056_duck__supervised_view.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/057_duck__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/058_duck__novel_view_2.mp4" type="video/mp4"></video></div>
+    <div class="vgrid vgrid-4"><div class="vcell"><div class="vcell-label">Reference video</div><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/055_duck__reference_video.mp4" type="video/mp4"></video></div><div class="vcell"><div class="vcell-label">Supervised view</div><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/056_duck__supervised_view.mp4" type="video/mp4"></video></div><div class="vcell"><div class="vcell-label">Novel view #1</div><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/057_duck__novel_view_1.mp4" type="video/mp4"></video></div><div class="vcell"><div class="vcell-label">Novel view #2</div><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/058_duck__novel_view_2.mp4" type="video/mp4"></video></div></div>
     <p class="graybox">
       Our method can operate on objects that already have a texture and make it change over time, as shown for the
       moving spots over the duck. The dots glide around the ring while the head stays clear, and the painted eyes,
