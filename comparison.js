@@ -214,7 +214,9 @@ async function setupSyncStrip(strip) {
       const scene = new THREE.Scene();
       scene.add(mesh);
       const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
-      const az = THREE.MathUtils.degToRad(45), el = THREE.MathUtils.degToRad(20), r = 2.3;
+      const az = THREE.MathUtils.degToRad(Number(div.dataset.az ?? 45));
+      const el = THREE.MathUtils.degToRad(Number(div.dataset.el ?? 20));
+      const r = 2.3;
       camera.position.set(r * Math.cos(el) * Math.sin(az), r * Math.sin(el), r * Math.cos(el) * Math.cos(az));
       const controls = new OrbitControls(camera, div);
       // both pan directions stay native on touch, so phones can scroll
