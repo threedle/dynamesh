@@ -50,7 +50,7 @@ video { display: block; margin: 0 auto; }
 	tr { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
 	td, th { display: block; padding: 0; }
 	.mname { flex: 1 0 100%; text-align: center; padding-top: 8px; }
-	table video { width: 44vw; max-width: 200px; height: auto; }
+	table video { width: 44vw; max-width: 200px; height: auto; aspect-ratio: 1 / 1; background: #fff; }
 	h1 { font-size: 1.5em; }
 	h2 { font-size: 1.25em; }
 }
@@ -264,14 +264,20 @@ video { display: block; margin: 0 auto; }
       });
 
       if ('IntersectionObserver' in window) {
-        var obs = new IntersectionObserver(function (entries) {
+        // mount when a clip comes near, but only unmount once it is far
+        // away: without the gap, clips at the boundary churn on every
+        // scroll and flash while they reload
+        var obsNear = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
-            var v = e.target;
-            if (e.isIntersecting) { wanted.add(v); mountVideo(v); }
-            else { wanted.delete(v); unmountVideo(v); }
+            if (e.isIntersecting) { wanted.add(e.target); mountVideo(e.target); }
           });
         }, {rootMargin: '700px 0px'});
-        groups.forEach(function (g) { g.vids.forEach(function (v) { obs.observe(v); }); });
+        var obsFar = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) { wanted.delete(e.target); unmountVideo(e.target); }
+          });
+        }, {rootMargin: '1600px 900px'});
+        groups.forEach(function (g) { g.vids.forEach(function (v) { obsNear.observe(v); obsFar.observe(v); }); });
       } else {
         groups.forEach(function (g) { g.vids.forEach(mountVideo); });
       }

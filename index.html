@@ -515,14 +515,20 @@
       });
 
       if ('IntersectionObserver' in window) {
-        var obs = new IntersectionObserver(function (entries) {
+        // mount when a clip comes near, but only unmount once it is far
+        // away: without the gap, clips at the boundary churn on every
+        // scroll and flash while they reload
+        var obsNear = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
-            var v = e.target;
-            if (e.isIntersecting) { wanted.add(v); mountVideo(v); }
-            else { wanted.delete(v); unmountVideo(v); }
+            if (e.isIntersecting) { wanted.add(e.target); mountVideo(e.target); }
           });
         }, {rootMargin: '300px 500px'});
-        groups.forEach(function (g) { g.vids.forEach(function (v) { obs.observe(v); }); });
+        var obsFar = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) { wanted.delete(e.target); unmountVideo(e.target); }
+          });
+        }, {rootMargin: '1600px 900px'});
+        groups.forEach(function (g) { g.vids.forEach(function (v) { obsNear.observe(v); obsFar.observe(v); }); });
       } else {
         groups.forEach(function (g) { g.vids.forEach(mountVideo); });
       }
