@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="assets/threedle_icon.png">
-  <link href="style.css?v=15" rel="stylesheet">
+  <link href="style.css?v=17" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
     /* from https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css */
@@ -184,13 +184,13 @@
     <p class="dm-block-label">To interact with the rotating view, <em>Scroll</em> to zoom, <em>Left Click + drag</em> to rotate, and <em>Right Click + drag</em> to translate.</p>
     <div class="vgrid vgrid-4 vhead"><div>Reference video</div><div>Novel view #1</div><div>Novel view #2</div><div>Rotating view</div></div>
     <p class="vprompt">&ldquo;Rorschach pattern forming&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/006_hand__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/008_hand__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/009_hand__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="hand" data-az="45" data-el="25"></div></div>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/006_hand__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/008_hand__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/gal_hand_nv2.mp4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="hand" data-az="45" data-el="25"></div></div>
     <p class="vprompt">&ldquo;Blue paint cracks and peels&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/010_chair__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/012_chair__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/013_chair__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="chair" data-az="45" data-el="25"></div></div>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/010_chair__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/012_chair__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/gal_chair_nv2.mp4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="chair" data-az="45" data-el="25"></div></div>
     <p class="vprompt">&ldquo;Rot spreads and darkens&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/014_pumpkin__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/016_pumpkin__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/017_pumpkin__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="pumpkin" data-az="45" data-el="25" data-rx="-36.4"></div></div>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/014_pumpkin__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/016_pumpkin__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/gal_pumpkin_nv2.mp4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="pumpkin" data-az="45" data-el="25" data-rx="-36.4"></div></div>
     <p class="vprompt">&ldquo;Red cracks spreading&rdquo;</p>
-    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/018_airplane__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/020_airplane__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/021_airplane__novel_view_2.mp4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="airplane" data-az="45" data-el="25"></div></div>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/018_airplane__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/020_airplane__novel_view_1.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/gal_airplane_nv2.mp4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="airplane" data-az="45" data-el="25"></div></div>
     <p class="graybox">
       <b>Gallery of results.</b> Four objects driven by four different effects. Each row shows the reference video,
       our output at two novel viewpoints, and the 3D result under a rotating camera, its texture playing in sync with
@@ -199,10 +199,44 @@
   </section>
   <section id="generalization">
     <h2>Generalization</h2>
-    <p class="vprompt">&ldquo;Rorschach effect with spots growing&rdquo; <span class="vprompt-note">&mdash; reference video, the training shape, then twelve unseen shapes</span></p>
-    <div class="vscroll"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/022_rorschach_adapter__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/023_rorschach_adapter__training_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/024_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/025_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/026_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/027_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/028_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/029_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/030_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/031_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/032_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/033_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/034_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/035_rorschach_adapter__unseen_shape.mp4" type="video/mp4"></video></div>
-    <p class="vprompt">&ldquo;Lava effect with cracks glowing in bright orange&rdquo; <span class="vprompt-note">&mdash; reference video, the training shape, then twelve unseen shapes</span></p>
-    <div class="vscroll"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/036_lava_adapter__reference_video.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/037_lava_adapter__training_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/038_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/039_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/040_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/041_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/042_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/043_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/044_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/045_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/046_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/047_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/048_lava_adapter__unseen_shape.mp4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/049_lava_adapter__unseen_shape.mp4" type="video/mp4"></video></div>
+    <p class="vexplain">The reference video, the training shape, then twelve unseen shapes.</p>
+    <p class="vprompt">&ldquo;Rorschach effect with spots growing&rdquo;</p>
+    <div class="dm-syncstrip-wrap">
+    <div class="vscroll dm-syncstrip"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/022_rorschach_adapter__reference_video.mp4" type="video/mp4"></video>
+      <div class="dm-synccell" data-pack="gx_ror_train"></div>
+      <div class="dm-synccell" data-pack="gx_ror_aliens_ufo"></div>
+      <div class="dm-synccell" data-pack="gx_ror_animals_blub"></div>
+      <div class="dm-synccell" data-pack="gx_ror_animals_bob"></div>
+      <div class="dm-synccell" data-pack="gx_ror_animals_octopus"></div>
+      <div class="dm-synccell" data-pack="gx_ror_dragons_xyzrgb_dragon"></div>
+      <div class="dm-synccell" data-pack="gx_ror_furnature_chair"></div>
+      <div class="dm-synccell" data-pack="gx_ror_humanoid_mike_wazowski"></div>
+      <div class="dm-synccell" data-pack="gx_ror_statues_napoleon"></div>
+      <div class="dm-synccell" data-pack="gx_ror_thingi10k_octocat"></div>
+      <div class="dm-synccell" data-pack="gx_ror_thingi10k_wooly_sheep"></div>
+      <div class="dm-synccell" data-pack="gx_ror_vehicles_tie_fighter"></div>
+      <div class="dm-synccell" data-pack="gx_ror_teapot"></div>
+    </div>
+    </div>
+    <p class="vexplain">The reference video, the training shape, then twelve unseen shapes.</p>
+    <p class="vprompt">&ldquo;Lava effect with cracks glowing in bright orange&rdquo;</p>
+    <div class="dm-syncstrip-wrap">
+    <div class="vscroll dm-syncstrip"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/036_lava_adapter__reference_video.mp4" type="video/mp4"></video>
+      <div class="dm-synccell" data-pack="gx_lava_train"></div>
+      <div class="dm-synccell" data-pack="gx_lava_aliens_ufo"></div>
+      <div class="dm-synccell" data-pack="gx_lava_animals_blub"></div>
+      <div class="dm-synccell" data-pack="gx_lava_animals_bob"></div>
+      <div class="dm-synccell" data-pack="gx_lava_animals_octopus"></div>
+      <div class="dm-synccell" data-pack="gx_lava_dragons_xyzrgb_dragon"></div>
+      <div class="dm-synccell" data-pack="gx_lava_furnature_chair"></div>
+      <div class="dm-synccell" data-pack="gx_lava_humanoid_mike_wazowski"></div>
+      <div class="dm-synccell" data-pack="gx_lava_statues_napoleon"></div>
+      <div class="dm-synccell" data-pack="gx_lava_thingi10k_octocat"></div>
+      <div class="dm-synccell" data-pack="gx_lava_thingi10k_wooly_sheep"></div>
+      <div class="dm-synccell" data-pack="gx_lava_vehicles_tie_fighter"></div>
+      <div class="dm-synccell" data-pack="gx_lava_teapot"></div>
+    </div>
+    </div>
     <p class="graybox">
       <b>Generalization across shapes.</b> Per-scene adapters fit on a reference video are applied, without any
       retraining, to meshes never seen during fitting. Both effects clearly propagate on the new shapes according to
@@ -515,6 +549,6 @@
     }
   }
   </script>
-  <script type="module" src="comparison.js?v=20"></script>
+  <script type="module" src="comparison.js?v=22"></script>
 </body>
 </html>

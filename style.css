@@ -1051,6 +1051,29 @@ pre {
   font-size: 1rem;
 }
 
+/* time-synced generalization strips: video clock + many scissor cells */
+.dm-syncstrip-wrap {
+  position: relative;
+}
+
+.dm-synccell {
+  width: 130px;
+  height: 130px;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+/* section explanation line above a prompt, in the body face */
+.vexplain {
+  font-size: 1.15rem;
+  margin: 0.9rem 0 0;
+}
+
+.vexplain + .vprompt {
+  margin-top: 0.1rem;
+}
+
 .vscroll {
   display: flex;
   gap: 6px;
@@ -1137,6 +1160,12 @@ pre {
 @media (max-width: 700px) {
   .sync-teaser { flex-direction: column; align-items: center; }
   .sync-panel video, #teaser3d { max-width: 92vw; }
+
+  /* phones: video rows pair up two-by-two, prompts wrap */
+  .vgrid-4 { grid-template-columns: repeat(2, 1fr); }
+  .vprompt { white-space: normal; font-size: 1.3rem; }
+  .vexplain { font-size: 1.05rem; }
+  .vhead div { font-size: 1.02rem; }
 }
 
 /* interactive rotating-view cell inside a video row: one cell filling the

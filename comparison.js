@@ -26,23 +26,20 @@ const ASSET_V = '9'; // bump when GLBs are re-exported, so cached copies don't l
   cells.forEach((c) => io.observe(c));
 })();
 
-async function setupSyncCell(container) {
-  let buf;
-  try {
-    const resp = await fetch(`assets/teaser_anim/${container.dataset.pack}_anim.bin?v=${ASSET_V}`);
-    if (!resp.ok) throw new Error(resp.status);
-    buf = await resp.arrayBuffer();
-    const head = new Uint8Array(buf, 0, 2);
-    if (head[0] === 0x1f && head[1] === 0x8b) {
-      buf = await new Response(
-        new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip')),
-      ).arrayBuffer();
-    }
-  } catch (e) { return; }
-
+// fetch + parse a v3 animation pack into geometry-ready arrays
+async function loadPackParsed(name) {
+  const resp = await fetch(`assets/teaser_anim/${name}_anim.bin?v=${ASSET_V}`);
+  if (!resp.ok) throw new Error(resp.status);
+  let buf = await resp.arrayBuffer();
+  const head = new Uint8Array(buf, 0, 2);
+  if (head[0] === 0x1f && head[1] === 0x8b) {
+    buf = await new Response(
+      new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip')),
+    ).arrayBuffer();
+  }
   const headLen = new DataView(buf).getUint32(0, true);
   const meta = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, headLen)));
-  const { verts, tris, frames, times } = meta;
+  const { verts, tris, frames } = meta;
   const posOff = 4 + headLen;
   const n = verts * 3;
   const posQ = new Uint16Array(buf, posOff, n);
@@ -76,7 +73,13 @@ async function setupSyncCell(container) {
       colorsLin[off + i] = lutQ[absQ[i]];
     }
   }
+  return { meta, positions, indices, colorsLin, n };
+}
 
+// build a mesh + nearest-frame color setter from a parsed pack
+function makePackMesh(parsed, rxDeg, scale) {
+  const { meta, positions, indices, colorsLin, n } = parsed;
+  const { frames, times } = meta;
   const geom = new THREE.BufferGeometry();
   geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   const colAttr = new THREE.BufferAttribute(new Uint8Array(n), 3, true);
@@ -88,11 +91,27 @@ async function setupSyncCell(container) {
   const center = bb.getCenter(new THREE.Vector3());
   const size = bb.getSize(new THREE.Vector3()).length();
   geom.translate(-center.x, -center.y, -center.z);
-  geom.scale(1.35 / size, 1.35 / size, 1.35 / size);
-
+  geom.scale(scale / size, scale / size, scale / size);
   const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ vertexColors: true }));
-  const rx = Number(container.dataset.rx ?? 0);
-  if (rx) mesh.rotation.x = THREE.MathUtils.degToRad(rx);
+  if (rxDeg) mesh.rotation.x = THREE.MathUtils.degToRad(rxDeg);
+  let lastA = -1;
+  function setFrame(tNorm) {
+    let b = 1;
+    while (b < frames - 1 && times[b] < tNorm) b++;
+    const a = (tNorm - times[b - 1] < times[b] - tNorm) ? b - 1 : b;
+    if (a === lastA) return;
+    lastA = a;
+    colAttr.array.set(colorsLin.subarray(a * n, (a + 1) * n));
+    colAttr.needsUpdate = true;
+  }
+  setFrame(0);
+  return { mesh, setFrame };
+}
+
+async function setupSyncCell(container) {
+  let parsed;
+  try { parsed = await loadPackParsed(container.dataset.pack); } catch (e) { return; }
+  const { mesh, setFrame } = makePackMesh(parsed, Number(container.dataset.rx ?? 0), 1.35);
   const scene = new THREE.Scene();
   scene.add(mesh);
 
@@ -118,33 +137,16 @@ async function setupSyncCell(container) {
   controls.enablePan = true;
   controls.autoRotate = true;
   controls.autoRotateSpeed = ROTATE_DEG_PER_SEC / 6;
-  // autoRotate steps a fixed angle per update() call, so uneven frame
-  // rates would make the spin surge and stall; passing the real elapsed
-  // time keeps the angular speed constant
+  // real elapsed time keeps the angular speed constant across frame-rate dips
   const spinClock = new THREE.Clock();
 
   // the row's videos are the clock: follow the first live one
   const row = container.closest('.vgrid');
   const rowVideos = row ? Array.from(row.querySelectorAll('video')) : [];
-  // the packs carry every source frame, so the nearest one IS what the
-  // video shows; a single memcpy ~30x/s replaces a per-vertex lerp at
-  // 60 fps, which kept the render loop busy enough to stagger the spin
-  let lastA = -1;
-  function setColorsAt(tNorm) {
-    let b = 1;
-    while (b < frames - 1 && times[b] < tNorm) b++;
-    const a = (tNorm - times[b - 1] < times[b] - tNorm) ? b - 1 : b;
-    if (a === lastA) return;
-    lastA = a;
-    colAttr.array.set(colorsLin.subarray(a * n, (a + 1) * n));
-    colAttr.needsUpdate = true;
-  }
-  setColorsAt(0);
 
   renderer.setAnimationLoop(() => {
-    // skip everything while the cell is off screen, so scrolled-away
-    // viewers cost nothing; cap the accumulated delta so the rotation
-    // resumes gently instead of jumping
+    // skip everything while the cell is off screen; cap the accumulated
+    // delta so the rotation resumes gently instead of jumping
     const rect = container.getBoundingClientRect();
     if (rect.bottom < 0 || rect.top > window.innerHeight) { spinClock.getDelta(); return; }
     const w = container.clientWidth, h = container.clientHeight;
@@ -156,12 +158,113 @@ async function setupSyncCell(container) {
     camera.updateProjectionMatrix();
     for (const v of rowVideos) {
       if (v.readyState >= 2 && v.duration && !v.paused) {
-        setColorsAt(Math.min(1, v.currentTime / v.duration));
+        setFrame(Math.min(1, v.currentTime / v.duration));
         break;
       }
     }
     controls.update(Math.min(spinClock.getDelta(), 0.1));
     renderer.render(scene, camera);
+  });
+}
+
+// ---- time-synced rotating strips (generalization) -----------------------
+// A strip shows the reference video followed by MANY shapes (the training
+// shape and every unseen one). One renderer per strip draws all its cells
+// with a scissor test, since a context per cell would blow the browser's
+// WebGL context cap; each cell still has its own OrbitControls.
+(function initSyncStrips() {
+  const strips = document.querySelectorAll('.dm-syncstrip');
+  if (!strips.length) return;
+  if (!('IntersectionObserver' in window)) { strips.forEach(setupSyncStrip); return; }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { io.unobserve(e.target); setupSyncStrip(e.target); }
+    });
+  }, { rootMargin: '400px 0px' });
+  strips.forEach((st) => io.observe(st));
+})();
+
+async function setupSyncStrip(strip) {
+  const wrap = strip.parentElement;           // .dm-syncstrip-wrap
+  const video = strip.querySelector('video'); // the reference clip is the clock
+  const cellDivs = Array.from(strip.querySelectorAll('.dm-synccell'));
+  if (!cellDivs.length) return;
+
+  // the canvas lives INSIDE the scrolled content, spanning its full width,
+  // so a horizontal flick moves canvas and cells together natively — a
+  // wrapper-pinned canvas repositions by measurement and lags a frame
+  // behind fast scrolls, letting meshes slide out of their white cells
+  const canvas = document.createElement('canvas');
+  Object.assign(canvas.style, {
+    position: 'absolute', left: '0', top: '0',
+    pointerEvents: 'none', zIndex: '5',
+  });
+  strip.style.position = 'relative';
+  strip.appendChild(canvas);
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+  renderer.setScissorTest(true);
+  canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
+
+  const cells = [];
+  cellDivs.forEach((div) => {
+    loadPackParsed(div.dataset.pack).then((parsed) => {
+      const { mesh, setFrame } = makePackMesh(parsed, Number(div.dataset.rx ?? 0), 1.4);
+      const scene = new THREE.Scene();
+      scene.add(mesh);
+      const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
+      const az = THREE.MathUtils.degToRad(45), el = THREE.MathUtils.degToRad(20), r = 2.3;
+      camera.position.set(r * Math.cos(el) * Math.sin(az), r * Math.sin(el), r * Math.cos(el) * Math.cos(az));
+      const controls = new OrbitControls(camera, div);
+      // both pan directions stay native on touch, so phones can scroll
+      // the strip; rotation remains available with a mouse
+      div.style.touchAction = 'pan-x pan-y';
+      div.style.cursor = 'grab';
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.enablePan = true;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = ROTATE_DEG_PER_SEC / 6;
+      cells.push({ div, scene, camera, controls, setFrame });
+    }, () => {});
+  });
+
+  const spinClock = new THREE.Clock();
+  renderer.setAnimationLoop(() => {
+    const wrapRect = wrap.getBoundingClientRect();
+    if (wrapRect.bottom < 0 || wrapRect.top > window.innerHeight) { spinClock.getDelta(); return; }
+    const w = strip.scrollWidth, h = strip.clientHeight;
+    if (!w || !h) return;
+    const pr = Math.min(window.devicePixelRatio, 2);
+    if (renderer.getPixelRatio() !== pr) renderer.setPixelRatio(pr);
+    if (canvas.width !== Math.floor(w * pr) || canvas.height !== Math.floor(h * pr)) {
+      renderer.setSize(w, h, false);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+    }
+    const dt = Math.min(spinClock.getDelta(), 0.1);
+    const t = (video && video.duration && video.readyState >= 2 && !video.paused)
+      ? Math.min(1, video.currentTime / video.duration) : null;
+    renderer.setScissorTest(false);
+    renderer.clear();
+    renderer.setScissorTest(true);
+    const canvasRect = canvas.getBoundingClientRect();
+    for (const cell of cells) {
+      const r = cell.div.getBoundingClientRect();
+      // skip cells outside the strip's visible viewport
+      if (r.right < wrapRect.left || r.left > wrapRect.right) { continue; }
+      if (t !== null) cell.setFrame(t);
+      cell.controls.update(dt);
+      const width = r.width, height = r.height;
+      const left = r.left - canvasRect.left;
+      const bottom = h - (r.bottom - canvasRect.top);
+      cell.camera.aspect = width / height;
+      cell.camera.updateProjectionMatrix();
+      renderer.setViewport(left, bottom, width, height);
+      renderer.setScissor(left, bottom, width, height);
+      renderer.render(cell.scene, cell.camera);
+    }
   });
 }
 
