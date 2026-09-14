@@ -199,6 +199,7 @@
   </section>
   <section id="generalization">
     <h2>Generalization</h2>
+    <p class="dm-block-label">To interact with the rotating view, <em>Scroll</em> to zoom, <em>Left Click + drag</em> to rotate, and <em>Right Click + drag</em> to translate.</p>
     <p class="vexplain">The reference video, the training shape, then twelve unseen shapes.</p>
     <p class="vprompt">&ldquo;Rorschach effect with spots growing&rdquo;</p>
     <div class="dm-syncstrip-wrap">
@@ -438,7 +439,12 @@
     (function () {
       var MAX_LIVE = 22;
       var groups = [];
-      document.querySelectorAll('.vscroll').forEach(function (el) { groups.push({el: el, vids: el.querySelectorAll('video')}); });
+      document.querySelectorAll('.vscroll').forEach(function (el) {
+        // a sync strip's reference video is the clock for its 3D cells:
+        // it plays natively and is never mounted or unmounted here
+        if (el.classList.contains('dm-syncstrip')) return;
+        groups.push({el: el, vids: el.querySelectorAll('video')});
+      });
       document.querySelectorAll('.vgrid:not(.vhead)').forEach(function (el) {
         if (!el.closest('#comparison')) groups.push({el: el, vids: el.querySelectorAll('video')});
       });
@@ -549,6 +555,6 @@
     }
   }
   </script>
-  <script type="module" src="comparison.js?v=22"></script>
+  <script type="module" src="comparison.js?v=23"></script>
 </body>
 </html>
