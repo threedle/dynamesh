@@ -217,6 +217,24 @@ video { display: block; margin: 0 auto; }
         });
       });
 
+      // the whole page holds only ~9 MB of video, so fetch every clip's
+      // bytes up front (a few at a time, in page order) and give mounts a
+      // blob URL: the decoder budget is unchanged, but a mounting clip no
+      // longer waits on the network
+      var fetchQueue = [];
+      groups.forEach(function (g) { g.vids.forEach(function (v) { if (v.dataset.src) fetchQueue.push(v); }); });
+      var fetchNext = 0;
+      function pumpFetch() {
+        if (fetchNext >= fetchQueue.length) return;
+        var v = fetchQueue[fetchNext++];
+        fetch(v.dataset.src)
+          .then(function (r) { if (!r.ok) throw new Error(r.status); return r.blob(); })
+          .then(function (b) { v.__blob = URL.createObjectURL(b); })
+          .catch(function () {})
+          .then(pumpFetch);
+      }
+      for (var pf = 0; pf < 4; pf++) pumpFetch();
+
       function groupTime(g) {
         for (var i = 0; i < g.vids.length; i++) {
           var v = g.vids[i];
@@ -237,7 +255,7 @@ video { display: block; margin: 0 auto; }
         };
         v.muted = true;
         v.preload = 'auto';
-        v.src = v.dataset.src;
+        v.src = v.__blob || v.dataset.src;
         v.load();
       }
 
