@@ -231,6 +231,11 @@ async function setupSyncStrip(strip) {
   });
 
   const spinClock = new THREE.Clock();
+  // browsers pause offscreen autoplay videos, so the reference clip cannot
+  // be the only clock: sync to it while it plays, and freewheel from the
+  // last known time while it is paused, so every cell keeps animating and
+  // looping no matter how far the strip is scrolled
+  let clockT = 0, clockWall = performance.now();
   renderer.setAnimationLoop(() => {
     const wrapRect = wrap.getBoundingClientRect();
     if (wrapRect.bottom < 0 || wrapRect.top > window.innerHeight) { spinClock.getDelta(); return; }
@@ -244,8 +249,16 @@ async function setupSyncStrip(strip) {
       canvas.style.height = h + 'px';
     }
     const dt = Math.min(spinClock.getDelta(), 0.1);
-    const t = (video && video.duration && video.readyState >= 2 && !video.paused)
-      ? Math.min(1, video.currentTime / video.duration) : null;
+    const now = performance.now();
+    const dur = (video && video.duration) || 6;
+    let t;
+    if (video && video.duration && video.readyState >= 2 && !video.paused) {
+      t = Math.min(1, video.currentTime / video.duration);
+      clockT = t; clockWall = now;
+    } else {
+      if (video && video.paused && video.readyState >= 2) video.play().catch(() => {});
+      t = (clockT + (now - clockWall) / 1000 / dur) % 1;
+    }
     renderer.setScissorTest(false);
     renderer.clear();
     renderer.setScissorTest(true);
