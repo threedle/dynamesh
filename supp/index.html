@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DynaMesh Supplementary Results</title>
-<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
 </head>
 <body>
 <style>
@@ -32,8 +31,14 @@ a:visited { color: #4488ff; text-decoration: underline; }
 a:hover { color: #ff0000; text-decoration: none; }
 .reference { font-size: 80%; }
 h3 { display: inline; font-size: 1.35em; }
-/* prompts use the same face as the project page, a step smaller */
-h3 + i { font-family: "Indie Flower", cursive; font-style: normal; font-size: 1.3em; }
+/* prompts use the same face as the project page */
+.vprompt {
+	font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-align: center;
+	margin: 20px 0 6px;
+}
 /* additions: method names sit above their videos, and the widest table scrolls
    inside its own box so the page never scrolls sideways */
 th, td { padding: 3px 4px; }
@@ -57,32 +62,15 @@ video { display: block; margin: 0 auto; }
 </style>
 <div class="container">
         <h1 align="center">DynaMesh: Dynamic 3D Texture Generation</h1>
-        <h2 align="center">More Results</h2>
+        <h2 align="center">Additional Results</h2>
         <hr />
-        <h2 align="center">Temporal Results</h2>
-        <p align="left">
-            This page displays each result as a video, so the
-            temporal effect and the behavior at unseen viewpoints can be seen. Sections follow the
-            figures of the paper, and within each one every result is shown as the reference video
-            alongside views of the temporal 3D results. All clips loop.
-        </p>
+        <p align="left">We show more results of our method.</p>
         <hr />
         <p style="text-align:center;margin:1.2rem 0;"><a href="../index.html" style="display:inline-block;background:#263966;color:#fff;font-weight:700;padding:0.6rem 1.4rem;border-radius:10px;text-decoration:none;">&larr; Back to the project page</a></p>
-<h2 align="left">DynaMesh carries a video&rsquo;s evolving effect onto a 3D object as a texture that changes over time.</h2>
-        <p align="left">The reference video of the prompted effect, then our dynamic texture result that follows it frame by frame.</p>
-
-        <h3 align="left">aircraft</h3> &mdash; <i>&ldquo;Continuous, Hokusai waves gushing&rdquo;</i>
-        <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th><th align="center">Novel view (rotating)</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="1" valign="middle"><video width="200" autoplay muted playsinline loop><source src="videos/001_aircraft__reference_video.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos/002_aircraft__supervised_view.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos/003_aircraft__novel_view_1.mp4" type="video/mp4"></video></td><td align="center" rowspan="1" valign="middle"><video width="200" autoplay muted playsinline loop><source src="videos/004_aircraft__novel_view_2.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos/005_aircraft__novel_view_rotating.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-        <hr />
-        <h2 align="left">Flicker.</h2>
+<h2 align="left">Flicker.</h2>
         <p align="left">A chair with moss spreading over its surface. Frozen TRELLIS.2 changes the texture abruptly from one moment to the next, while our method keeps the moss growing smoothly, as in the video.</p>
 
-        <h3 align="left">chair</h3> &mdash; <i>&ldquo;Moss spreads and darkens&rdquo;</i>
+        <p class="vprompt">&ldquo;Moss spreads and darkens&rdquo;</p>
         <table width="800" border="0" align="center">
             <thead><tr><th align="center">Reference video</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
             <tbody>
@@ -95,28 +83,28 @@ video { display: block; margin: 0 auto; }
         <hr />
         <h2 align="left">Additional gallery.</h2>
         <p align="left">Four more objects, each driven by a different effect. The effect holds at viewpoints unseen in training despite being fit to a single camera.</p>
-        <h3 align="left">unicorn</h3> &mdash; <i>&ldquo;Iridescence sweeps over the surface&rdquo;</i>
+        <p class="vprompt">&ldquo;Iridescence sweeps over the surface&rdquo;</p>
         <table width="900" border="0" align="center">
             <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
             <tbody>
                 <tr><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_unicorn_rainbow_ref.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_unicorn_rainbow_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_unicorn_rainbow_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_unicorn_rainbow_diagC.mp4" type="video/mp4"></video></td></tr>
             </tbody>
         </table>
-        <h3 align="left">goat</h3> &mdash; <i>&ldquo;Scorch spreads and chars&rdquo;</i>
+        <p class="vprompt">&ldquo;Scorch spreads and chars&rdquo;</p>
         <table width="900" border="0" align="center">
             <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
             <tbody>
                 <tr><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_goat_burnt_ref.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_goat_burnt_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_goat_burnt_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_goat_burnt_diagC.mp4" type="video/mp4"></video></td></tr>
             </tbody>
         </table>
-        <h3 align="left">fish</h3> &mdash; <i>&ldquo;Terracotta dries and lightens&rdquo;</i>
+        <p class="vprompt">&ldquo;Terracotta dries and lightens&rdquo;</p>
         <table width="900" border="0" align="center">
             <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
             <tbody>
                 <tr><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_blub_drying_ref.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_blub_drying_train.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_blub_drying_diagA.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/ag_blub_drying_diagC.mp4" type="video/mp4"></video></td></tr>
             </tbody>
         </table>
-        <h3 align="left">nefertiti</h3> &mdash; <i>&ldquo;Verdigris creeps over the bronze&rdquo;</i>
+        <p class="vprompt">&ldquo;Verdigris creeps over the bronze&rdquo;</p>
         <table width="900" border="0" align="center">
             <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
             <tbody>
@@ -126,7 +114,7 @@ video { display: block; margin: 0 auto; }
         <hr />
         <h2 align="left">Comparison on a mesh with thin separated parts.</h2>
         <p align="left">Every method on an object whose parts are thin and separated. The baselines that build their own geometry lose the leaves, so their effect is carried on a shape that is no longer the input one, whereas our method changes only appearance and keeps the underlying geometry the same.</p>
-        <h3 align="left">bulbasaur</h3> &mdash; <i>&ldquo;Petal effect with leaves turning crimson and gold&rdquo;</i>
+        <p class="vprompt">&ldquo;Petal effect with leaves turning crimson and gold&rdquo;</p>
         <table width="900" border="0" align="center">
             <thead><tr><th align="center">Reference video</th><th align="center">Supervised view</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
             <tbody>
@@ -147,25 +135,10 @@ video { display: block; margin: 0 auto; }
         <hr />
         <h2 align="left">Continuing an effect across clips.</h2>
         <p align="left">A second reference video, generated from the last frame of the first, continues the same effect, so a progression that does not fit in one clip can be carried across several. The cracks spread over the metal unicorn in the first clip and heat to glowing amber in the second.</p>
-        <h3 align="left">unicorn</h3>
-        <table width="900" border="0" align="center">
+                <table width="900" border="0" align="center">
             <thead><tr><th align="center">Reference video (clip 1)</th><th align="center">Our result (clip 1)</th><th align="center">Reference video (clip 2)</th><th align="center">Our result (clip 2)</th></tr></thead>
             <tbody>
                 <tr><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/cont_ref1.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/cont_ours1.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/cont_ref2.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos_extra/cont_ours2.mp4" type="video/mp4"></video></td></tr>
-            </tbody>
-        </table>
-        <hr />
-        <h2 align="left">Failure case.</h2>
-        <p align="left">The cobalt pattern is defined by the global arrangement of its lines, not only by local flowers, so it comes out as intended at the supervised view but loses that arrangement at the unseen one.</p>
-
-        <h3 align="left">vase</h3> &mdash; <i>&ldquo;Cobalt pattern drawing itself&rdquo;</i>
-        <table width="800" border="0" align="center">
-            <thead><tr><th align="center">Reference video</th><th align="center">Novel view #1</th><th align="center">Novel view #2</th></tr></thead>
-            <tbody>
-                <tr><td align="center" rowspan="4" valign="middle"><video width="200" autoplay muted playsinline loop><source src="videos/072_vase__reference_video.mp4" type="video/mp4"></video></td><td colspan="2" align="center" class="mname">DynaMesh (ours)</td></tr>
-                <tr><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos/073_vase__supervised_view.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos/074_vase__novel_view.mp4" type="video/mp4"></video></td></tr>
-                <tr><td colspan="2" align="center" class="mname">Frozen TRELLIS.2</td></tr>
-                <tr><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos/075_vase__view4.mp4" type="video/mp4"></video></td><td align="center"><video width="200" autoplay muted playsinline loop><source src="videos/076_vase__view5.mp4" type="video/mp4"></video></td></tr>
             </tbody>
         </table>
         <hr />

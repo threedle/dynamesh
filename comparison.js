@@ -9,6 +9,33 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const ROTATE_DEG_PER_SEC = 20; // full turn in 18s; calmer than BSB's 60deg/s with this many cells
 const ASSET_V = '9'; // bump when GLBs are re-exported, so cached copies don't linger
 
+// small overlay button that puts a viewer's camera back where it started
+function addResetButton(container, camera, controls) {
+  const home = camera.position.clone();
+  const homeTarget = controls.target.clone();
+  const btn = document.createElement('button');
+  btn.className = 'dm-reset';
+  btn.type = 'button';
+  btn.title = 'Reset view';
+  btn.setAttribute('aria-label', 'Reset view');
+  btn.innerHTML = '&#x21bb;';
+  // the container itself listens for drags (OrbitControls) and clicks (the
+  // teaser's play toggle): none of that may fire from the button
+  for (const ev of ['pointerdown', 'pointerup', 'mousedown', 'touchstart']) {
+    btn.addEventListener(ev, (e) => e.stopPropagation());
+  }
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    camera.position.copy(home);
+    controls.target.copy(homeTarget);
+    camera.zoom = 1;
+    camera.updateProjectionMatrix();
+    controls.update();
+  });
+  if (!container.style.position) container.style.position = 'relative';
+  container.appendChild(btn);
+}
+
 // ---- time-synced rotating cells (gallery) -------------------------------
 // Each .dm-sync[data-pack] cell shows the object's 3D result with its
 // vertex colors playing in sync with the row's videos, under the same
@@ -137,6 +164,7 @@ async function setupSyncCell(container) {
   controls.enablePan = true;
   controls.autoRotate = true;
   controls.autoRotateSpeed = ROTATE_DEG_PER_SEC / 6;
+  addResetButton(container, camera, controls);
   // real elapsed time keeps the angular speed constant across frame-rate dips
   const spinClock = new THREE.Clock();
 
@@ -228,6 +256,7 @@ async function setupSyncStrip(strip) {
       controls.enablePan = true;
       controls.autoRotate = true;
       controls.autoRotateSpeed = ROTATE_DEG_PER_SEC / 6;
+      addResetButton(div, camera, controls);
       cells.push({ div, scene, camera, controls, setFrame });
     }, () => {});
   });
@@ -451,6 +480,10 @@ async function setupSyncStrip(strip) {
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.enablePan = true;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = ROTATE_DEG_PER_SEC / 6;
+    addResetButton(container, camera, controls);
+    const spinClock = new THREE.Clock();
 
     // a plain click (no drag) on the shape toggles the shared clock
     let downX = 0, downY = 0, downT = 0;
@@ -498,7 +531,7 @@ async function setupSyncStrip(strip) {
       camera.updateProjectionMatrix();
       const d = video.duration;
       if (d) setColorsAt(Math.min(1, video.currentTime / d));
-      controls.update();
+      controls.update(Math.min(spinClock.getDelta(), 0.1));
       renderer.render(scene, camera);
     });
   }

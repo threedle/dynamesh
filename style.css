@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Manrope:wght@700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
 
 :root {
   --buttonshadowsz: 0px 4px 0px 0px;
@@ -1038,7 +1038,7 @@ pre {
 }
 
 .vprompt {
-  font-family: "Indie Flower", "Comic Sans MS", cursive;
+  font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive;
   font-size: 1.45rem;
   font-weight: bold;
   white-space: nowrap;
@@ -1209,3 +1209,25 @@ pre {
   /* the columns stack, so the second column's view header is a duplicate */
   .cmp-col:nth-child(2) .vhead { display: none; }
 }
+
+/* reset-view button on every interactive 3D cell */
+.dm-reset {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  z-index: 10;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #c9cfdd;
+  background: rgba(255, 255, 255, 0.88);
+  color: #445;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.dm-reset:hover { background: #fff; color: #000; border-color: #99a3bb; }
