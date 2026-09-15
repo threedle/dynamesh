@@ -1212,6 +1212,7 @@ pre {
 
 /* reset-view button on every interactive 3D cell */
 .dm-reset {
+  transform: rotate(90deg);
   position: absolute;
   right: 6px;
   bottom: 6px;
