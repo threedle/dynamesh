@@ -57,6 +57,7 @@ function addStage(scene, mesh) {
   ground.position.y = wbb.min.y - 0.005;
   ground.receiveShadow = true;
   scene.add(ground);
+  scene.position.y = 0.17;
 }
 
 // small overlay button that puts a viewer's camera back where it started
@@ -191,7 +192,7 @@ function makePackMesh(parsed, rxDeg, scale) {
 async function setupSyncCell(container) {
   let parsed;
   try { parsed = await loadPackParsed(container.dataset.pack); } catch (e) { return; }
-  const { mesh, setFrame } = makePackMesh(parsed, Number(container.dataset.rx ?? 0), 1.35);
+  const { mesh, setFrame } = makePackMesh(parsed, Number(container.dataset.rx ?? 0), 1.22);
   const scene = new THREE.Scene();
   scene.add(mesh);
   addStage(scene, mesh);
@@ -296,7 +297,7 @@ async function setupSyncStrip(strip) {
   const cells = [];
   cellDivs.forEach((div) => {
     loadPackParsed(div.dataset.pack).then((parsed) => {
-      const { mesh, setFrame } = makePackMesh(parsed, Number(div.dataset.rx ?? 0), 1.4);
+      const { mesh, setFrame } = makePackMesh(parsed, Number(div.dataset.rx ?? 0), 1.26);
       const scene = new THREE.Scene();
       scene.add(mesh);
       addStage(scene, mesh);
@@ -505,7 +506,7 @@ async function setupSyncStrip(strip) {
     const center = bb.getCenter(new THREE.Vector3());
     const size = bb.getSize(new THREE.Vector3()).length();
     geom.translate(-center.x, -center.y, -center.z);
-    geom.scale(1.5 / size, 1.5 / size, 1.5 / size);
+    geom.scale(1.38 / size, 1.38 / size, 1.38 / size);
     geom.computeVertexNormals();
 
     const mesh = new THREE.Mesh(geom, new THREE.MeshStandardMaterial({
