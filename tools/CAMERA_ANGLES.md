@@ -66,6 +66,34 @@ Transfers (el0 except noted): ror train (spot) az180; lava train (skull)
   teapot az150 e10 **--rotx 90**.
 Teaser (live viewer only): training view, pack `plane`.
 
+## Figure cameras (empirically locked per figure, blender az/el)
+
+Gallery + supp gallery: webpage cameras, canonical frames 10/57/104/150.
+Supp comparison (ivysaur, Page-6): row1 = diagC (az75 e30), row2 = diagA
+  (az255 e25), frames 30/70/110/150; frozen row2 is the strip at x>0.
+Flicker: both blocks = chairmoss nv2 az240 e25; left = frozen (054)
+  frames 21/61/101/150, right = ours (052) frames 21/62/102/150; zoom
+  insets share one crop box per row (template-matched, kept old ring).
+Main comparison (spot): ours/frozen ~az210-230 e25-35 (refining),
+  meshnca ~az240 e15; frames ours 19/35/74/120, frozen 76/81/113/146.
+Spot second view: ours/frozen az40 e25, meshnca ~az30-60 e25;
+  frames ours 1/21/61/100, frozen 1/78/119/145.
+System figure: spot at ~az140 e25 (its own mirror-side view); panels
+  gray f1 / f41 / f68 / f99.
+Extended-texture supp (cont unicorn): view1 az205 e15, view2 az25 e20;
+  clip1(blue,sx_cont2) frames 30/70/110/150, clip2(amber,sx_cont1)
+  frames 30/65/91/132.
+Existing texture (duck): duck A = nv1 camera (az230 e-4 roll43.5,
+  NO_FLOOR), duck B = az60 e0; frames 102/118/134/150; strips are
+  pre-composited 4-slot images (bbox slots at fixed segment gaps).
+Teaser (plane vx_planeF): row1 ~az220 e20, row2 ~az130 e25, film strip
+  az180 e0 (frame-matching pending; plane deforms so IoU needs
+  frame-aligned comparison). Black-background panels stay untouched.
+Failure (vase sx_vase, white object: threshold 240+, NO_FLOOR sweeps):
+  ours + frozen at two views, in-image lean — pending sweep match.
+NOT COVERED by existing exports: generalization figure (ror horse /
+  robot / armadillo objects), meshnca-supp figure (4 separate NCA runs).
+
 ## Pipeline camera families (Raj's conventions)
 
 train = y0 e0 · diagA = y45 e25 · diagB = y135 e-20 · diagC = y225 e30.
