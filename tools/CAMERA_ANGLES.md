@@ -41,14 +41,15 @@ Gallery (main): hand sup az0 e0, nv1 az50 e15, nv2 az230 e15.
 Chair: sup az175 e0, nv1 az220 e25, nv2 az310 e-20 **NO_FLOOR CAM_FILL=3.0**.
 Pumpkin: sup az190 e0 (121f), nv1 az190 e25, nv2 az134 e25.
 Airplane: sup az185 e0, nv1 az240 e25, nv2 az145 e25.
-Duck (provenance `slot_cameras.json` + FIG_EXISTING_TEXTURE_V2/README):
-  sup = train **pipeline y0 e0 -> az210 e0**;
-  nv1 = `view_bob_spots_27m_d01` **pipeline y50 e-8 -> az260 e-8 with
-  `--roll 43.5` and NO_FLOOR=1** (the d-series views are dutch-angled; the
-  raw orbital camera plus +43.5 clockwise image roll reproduces the figure
-  panel and approximates the original page clip; the rolled low camera puts
-  the floor horizon diagonally across frame, so render floorless);
-  nv2 = `view_bob_spots_27m_sideH` **pipeline y210 e0 -> az60 e0**.
+Duck (empirical, silhouette-locked against the original clips — the
+  manifest params for this object do NOT map through the az offset; Raj's
+  duck cameras also carry extra elevation):
+  sup = **az210 el10** (old 056 = train render; el10 matched IoU .81-.83);
+  nv1 = **az230 el-4 `--roll 43.5` NO_FLOOR=1** (az230 el-4 with no roll
+  reproduces the original 057/d01 render at IoU 0.971; the figure's duck A
+  = that view rotated 43.5 deg clockwise in-image, IoU 0.958 — the user
+  wants the figure look: head right, facing the bottom-right corner);
+  nv2 = **az60 e0** (sideH; user-approved 2026-09-16).
 Spot comparison: ALL THREE geometry methods (ours, frozen, meshnca) share
   novel az225 e25 and nv2 az45 e30 (meshnca measured empirically: az240/az60
   minus the user's final -15 tweak lands exactly on the ours/frozen yaws).
