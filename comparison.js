@@ -23,7 +23,9 @@ function addStage(scene, mesh) {
   sun.position.set(0, 6, 0);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
-  sun.shadow.radius = 6;
+  sun.shadow.radius = 16;
+  sun.shadow.blurSamples = 16;
+  sun.shadow.bias = -0.0004;
   const s = 2.2;
   sun.shadow.camera.left = -s; sun.shadow.camera.right = s;
   sun.shadow.camera.top = s; sun.shadow.camera.bottom = -s;
@@ -34,10 +36,19 @@ function addStage(scene, mesh) {
   scene.add(fill);
   scene.add(new THREE.AmbientLight(0xffffff, 0.7));
   scene.add(new THREE.HemisphereLight(0xffffff, 0xb8bcc4, 2.4));
-  const ground = new THREE.Mesh(
-    new THREE.CircleGeometry(4, 48),
-    new THREE.ShadowMaterial({ opacity: 0.22 }),
-  );
+  const groundMat = new THREE.ShadowMaterial({ opacity: 0.3 });
+  // the received shadow fades with distance from the contact point, like
+  // the Cycles clips' penumbra, instead of ending as a uniform block
+  groundMat.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec2 vPlanePos;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvPlanePos = position.xy;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', '#include <common>\nvarying vec2 vPlanePos;')
+      .replace('#include <dithering_fragment>',
+        'gl_FragColor.a *= 1.0 - smoothstep(0.45, 1.7, length(vPlanePos));\n#include <dithering_fragment>');
+  };
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(4, 48), groundMat);
   ground.rotation.x = -Math.PI / 2;
   // the mesh may carry a fixed rotation (data-rx): place the floor under
   // its world-space lowest point
@@ -193,7 +204,7 @@ async function setupSyncCell(container) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.VSMShadowMap;
   canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
 
   const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
@@ -278,7 +289,7 @@ async function setupSyncStrip(strip) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.VSMShadowMap;
   renderer.setScissorTest(true);
   canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
 
@@ -515,7 +526,7 @@ async function setupSyncStrip(strip) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.VSMShadowMap;
     canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
 
     const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
