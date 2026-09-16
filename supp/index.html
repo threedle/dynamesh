@@ -216,8 +216,34 @@ video { display: block; margin: 0 auto; }
         return null;
       }
 
+      function viewDist(v) {
+        var r = v.getBoundingClientRect();
+        return Math.abs((r.top + r.bottom) / 2 - window.innerHeight / 2);
+      }
+      function releaseVideo(v) {          // unmount without the re-mount cascade
+        if (!v.__live) return;
+        v.__live = false; liveCount--;
+        v.__grp.live.delete(v);
+        v.onerror = v.onloadeddata = null;
+        v.pause();
+        v.removeAttribute('src');
+        v.preload = 'none';
+        v.load();
+      }
       function mountVideo(v) {
-        if (v.__live || dead.has(v) || document.hidden || liveCount >= MAX_LIVE) return;
+        if (v.__live || dead.has(v) || document.hidden) return;
+        if (liveCount >= MAX_LIVE) {
+          // the budget is spent: steal the decoder of the live clip
+          // farthest from the viewport, else sections past the budget
+          // (bulbasaur, continuation) never load at all
+          var far = null, fd = -1;
+          groups.forEach(function (g) { g.live.forEach(function (o) {
+            var d = viewDist(o); if (d > fd) { fd = d; far = o; }
+          }); });
+          if (!far || viewDist(v) >= fd - 100) return;
+          releaseVideo(far);
+        }
+        if (liveCount >= MAX_LIVE) return;
         v.__live = true; liveCount++;
         var g = v.__grp; g.live.add(v);
         v.onerror = function () { dead.add(v); unmountVideo(v); };
@@ -233,14 +259,7 @@ video { display: block; margin: 0 auto; }
       }
 
       function unmountVideo(v) {
-        if (!v.__live) return;
-        v.__live = false; liveCount--;
-        v.__grp.live.delete(v);
-        v.onerror = v.onloadeddata = null;
-        v.pause();
-        v.removeAttribute('src');
-        v.preload = 'none';
-        v.load();                         // releases the decoder
+        releaseVideo(v);                  // releases the decoder
         wanted.forEach(mountVideo);       // hand the freed slot to a waiting clip
       }
 
@@ -274,6 +293,7 @@ video { display: block; margin: 0 auto; }
       }
 
       setInterval(function () {
+        wanted.forEach(mountVideo);
         groups.forEach(function (g) {
           var L = g.vids.filter(function (v) { return g.live.has(v) && v.readyState >= 2; });
           if (!L.length) return;

@@ -1077,8 +1077,28 @@ pre {
 .vscroll {
   display: flex;
   gap: 6px;
-  overflow-x: auto;
+  overflow-x: scroll;
   padding-bottom: 6px;
+  /* a permanent, clickable scrollbar: macOS overlay scrollbars hide
+     until a drag starts, which makes the strips look unscrollable.
+     NOTE: setting the standard scrollbar-width makes Chrome ignore the
+     ::-webkit-scrollbar rules below, so it stays unset here. */
+}
+.vscroll::-webkit-scrollbar {
+  height: 12px;
+  display: block;
+}
+.vscroll::-webkit-scrollbar-track {
+  background: #e8ebf2;
+  border-radius: 7px;
+}
+.vscroll::-webkit-scrollbar-thumb {
+  background: #8f9ab5;
+  border-radius: 7px;
+  border: 2px solid #e8ebf2;
+}
+.vscroll::-webkit-scrollbar-thumb:hover {
+  background: #6c7893;
 }
 
 .vscroll video {

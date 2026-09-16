@@ -15,11 +15,13 @@ const ASSET_V = '9'; // bump when GLBs are re-exported, so cached copies don't l
 // not cast), so the live viewers use the same setup: a shadow-casting
 // directional "sun", a non-casting side fill, ambient, and an invisible
 // ground plane that shows only the received shadow.
-function addStage(scene, mesh) {
+function addStage(scene, mesh, opts) {
+  const lift = opts && opts.lift !== undefined ? opts.lift : 0.17;
+  const bright = opts && opts.bright !== undefined ? opts.bright : 1;
   mesh.castShadow = true;
   mesh.geometry.computeBoundingBox();
   const bb = mesh.geometry.boundingBox;
-  const sun = new THREE.DirectionalLight(0xfff2ea, 6.5);
+  const sun = new THREE.DirectionalLight(0xfff2ea, 6.5 * bright);
   sun.position.set(0, 6, 0);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
@@ -31,11 +33,11 @@ function addStage(scene, mesh) {
   sun.shadow.camera.top = s; sun.shadow.camera.bottom = -s;
   sun.shadow.camera.near = 0.5; sun.shadow.camera.far = 12;
   scene.add(sun);
-  const fill = new THREE.DirectionalLight(0xd6cdd6, 3.2);
+  const fill = new THREE.DirectionalLight(0xd6cdd6, 3.2 * bright);
   fill.position.set(6, 2, 1);           // the blend's side panel: light, no cast
   scene.add(fill);
-  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xb8bcc4, 2.4));
+  scene.add(new THREE.AmbientLight(0xffffff, 0.7 * bright));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xb8bcc4, 2.4 * bright));
   const groundMat = new THREE.ShadowMaterial({ opacity: 0.3 });
   // the received shadow fades with distance from the contact point, like
   // the Cycles clips' penumbra, instead of ending as a uniform block
@@ -57,7 +59,7 @@ function addStage(scene, mesh) {
   ground.position.y = wbb.min.y - 0.005;
   ground.receiveShadow = true;
   scene.add(ground);
-  scene.position.y = 0.17;
+  scene.position.y = lift;
 }
 
 // small overlay button that puts a viewer's camera back where it started
@@ -514,7 +516,7 @@ async function setupSyncStrip(strip) {
     }));
     const scene = new THREE.Scene();
     scene.add(mesh);
-    addStage(scene, mesh);
+    addStage(scene, mesh, { lift: 0, bright: 0.72 });
 
     const canvas = document.createElement('canvas');
     Object.assign(canvas.style, {
