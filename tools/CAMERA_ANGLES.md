@@ -43,13 +43,15 @@ Pumpkin: sup az190 e0 (121f), nv1 az190 e25, nv2 az134 e25.
 Airplane: sup az185 e0, nv1 az240 e25, nv2 az145 e25.
 Duck (provenance `slot_cameras.json` + FIG_EXISTING_TEXTURE_V2/README):
   sup = train **pipeline y0 e0 -> az210 e0**;
-  nv1 = `view_bob_spots_27m_d01` **pipeline y50 e-8 -> az260 e-8** plus the
-  figure's **image roll -43.5 deg** (README: rotation applied so the duck's
-  base is level; use the driver's `--roll`);
+  nv1 = `view_bob_spots_27m_d01` **pipeline y50 e-8 -> az260 e-8 with
+  `--roll 43.5` and NO_FLOOR=1** (the d-series views are dutch-angled; the
+  raw orbital camera plus +43.5 clockwise image roll reproduces the figure
+  panel and approximates the original page clip; the rolled low camera puts
+  the floor horizon diagonally across frame, so render floorless);
   nv2 = `view_bob_spots_27m_sideH` **pipeline y210 e0 -> az60 e0**.
-Spot comparison: ours/frozen novel az225 e25, nv2 az45 e30; meshnca pair
-  tuned by review — novel az225 e25, nv2 az75 e30 (started az240/az60,
-  user asked +-15 toward/away from camera).
+Spot comparison: ALL THREE geometry methods (ours, frozen, meshnca) share
+  novel az225 e25 and nv2 az45 e30 (meshnca measured empirically: az240/az60
+  minus the user's final -15 tweak lands exactly on the ours/frozen yaws).
 Duck row / flicker chairmoss: nv1 az195 e0 & az195 e0 (frozen same),
   nv2 az240 e25 (both methods).
 Additional gallery (train/diagA/diagC = pipeline y0e0 / y45e25 / y225e30):
