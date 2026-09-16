@@ -1,0 +1,152 @@
+{
+ "1": {
+  "slot": "002_aircraft__supervised_view",
+  "source": "view_plane_waves_from_frame_150_27m_train",
+  "mae": 6.77,
+  "margin": 7.29
+ },
+ "2": {
+  "slot": "003_aircraft__novel_view_1",
+  "source": "view_plane_waves_from_frame_150_27m_diagA",
+  "mae": 8.11,
+  "margin": 7.96
+ },
+ "3": {
+  "slot": "004_aircraft__novel_view_2",
+  "source": "view_plane_waves_from_frame_150_27m_diagC",
+  "mae": 13.49,
+  "margin": 1.85
+ },
+ "4": {
+  "slot": "005_aircraft__novel_view_rotating",
+  "source": "view_plane_waves_from_frame_150_27m_diagB",
+  "mae": 13.7,
+  "margin": 0.05
+ },
+ "6": {
+  "slot": "007_hand__supervised_view",
+  "source": "panel_hand_rorschach_mcfm_y0",
+  "mae": 7.5,
+  "margin": 7.9
+ },
+ "7": {
+  "slot": "008_hand__novel_view_1",
+  "source": "panel_hand_rorschach_mcfm_y90",
+  "mae": 17.72,
+  "margin": 0.04
+ },
+ "8": {
+  "slot": "009_hand__novel_view_2",
+  "source": "panel_hand_rorschach_mcfm_y180",
+  "mae": 14.01,
+  "margin": 1.52
+ },
+ "10": {
+  "slot": "011_chair__supervised_view",
+  "source": "view_chair_real_wooden_crack_27m_train",
+  "mae": 2.14,
+  "margin": 12.64
+ },
+ "11": {
+  "slot": "012_chair__novel_view_1",
+  "source": "view_chair_real_wooden_crack_27m_diagA",
+  "mae": 2.14,
+  "margin": 8.78
+ },
+ "12": {
+  "slot": "013_chair__novel_view_2",
+  "source": "view_chair_real_wooden_crack_27m_diagB",
+  "mae": 2.2,
+  "margin": 19.19
+ },
+ "14": {
+  "slot": "015_pumpkin__supervised_view",
+  "source": "panel_pumpkin_rot_mcfm_y0",
+  "mae": 7.95,
+  "margin": 8.17
+ },
+ "15": {
+  "slot": "016_pumpkin__novel_view_1",
+  "source": "panel_pumpkin_rot_mcfm_y0",
+  "mae": 3.85,
+  "margin": 18.58
+ },
+ "16": {
+  "slot": "017_pumpkin__novel_view_2",
+  "source": "panel_pumpkin_rot_mcfm_y0",
+  "mae": 14.85,
+  "margin": 0.66
+ },
+ "18": {
+  "slot": "019_airplane__supervised_view",
+  "source": "view_airplane_red_cracks_27m_train",
+  "mae": 1.62,
+  "margin": 9.61
+ },
+ "19": {
+  "slot": "020_airplane__novel_view_1",
+  "source": "view_airplane_red_cracks_27m_diagA",
+  "mae": 1.84,
+  "margin": 13.4
+ },
+ "20": {
+  "slot": "021_airplane__novel_view_2",
+  "source": "view_airplane_red_cracks_27m_diagB",
+  "mae": 1.86,
+  "margin": 11.73
+ },
+ "50": {
+  "slot": "051_chair__view6",
+  "source": "view_chair_moss_27m_train",
+  "mae": 2.02,
+  "margin": 13.66
+ },
+ "51": {
+  "slot": "052_chair__view7",
+  "source": "view_chair_moss_27m_diagA",
+  "mae": 2.18,
+  "margin": 9.29
+ },
+ "55": {
+  "slot": "056_duck__supervised_view",
+  "source": "view_bob_spots_27m_train",
+  "mae": 2.12,
+  "margin": 12.68
+ },
+ "56": {
+  "slot": "057_duck__novel_view_1",
+  "source": "view_bob_spots_27m_d01",
+  "mae": 1.83,
+  "margin": 6.01
+ },
+ "57": {
+  "slot": "058_duck__novel_view_2",
+  "source": "view_bob_spots_27m_sideH",
+  "mae": 1.83,
+  "margin": 9.33
+ },
+ "59": {
+  "slot": "060_spot__supervised_view",
+  "source": "panel_spot_lava_mcfm_y0",
+  "mae": 14.82,
+  "margin": 3.34
+ },
+ "60": {
+  "slot": "061_spot__novel_view",
+  "source": "panel_spot_lava_mcfm_y90",
+  "mae": 25.92,
+  "margin": 8.77
+ },
+ "72": {
+  "slot": "073_vase__supervised_view",
+  "source": "panel_vase_floral_mcfm_y0",
+  "mae": 1.7,
+  "margin": 12.97
+ },
+ "73": {
+  "slot": "074_vase__novel_view",
+  "source": "panel_vase_floral_mcfm_y180",
+  "mae": 1.51,
+  "margin": 13.23
+ }
+}
