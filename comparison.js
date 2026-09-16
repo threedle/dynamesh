@@ -9,6 +9,45 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const ROTATE_DEG_PER_SEC = 20; // full turn in 18s; calmer than BSB's 60deg/s with this many cells
 const ASSET_V = '9'; // bump when GLBs are re-exported, so cached copies don't linger
 
+// ---- lit stage -----------------------------------------------------------
+// The clips are now rendered through the paper's Blender scene (sun from
+// above casting a real shadow, a big soft side fill that lights but does
+// not cast), so the live viewers use the same setup: a shadow-casting
+// directional "sun", a non-casting side fill, ambient, and an invisible
+// ground plane that shows only the received shadow.
+function addStage(scene, mesh) {
+  mesh.castShadow = true;
+  mesh.geometry.computeBoundingBox();
+  const bb = mesh.geometry.boundingBox;
+  const sun = new THREE.DirectionalLight(0xfff2ea, 6.5);
+  sun.position.set(0, 6, 0);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.radius = 6;
+  const s = 2.2;
+  sun.shadow.camera.left = -s; sun.shadow.camera.right = s;
+  sun.shadow.camera.top = s; sun.shadow.camera.bottom = -s;
+  sun.shadow.camera.near = 0.5; sun.shadow.camera.far = 12;
+  scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xd6cdd6, 3.2);
+  fill.position.set(6, 2, 1);           // the blend's side panel: light, no cast
+  scene.add(fill);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xb8bcc4, 2.4));
+  const ground = new THREE.Mesh(
+    new THREE.CircleGeometry(4, 48),
+    new THREE.ShadowMaterial({ opacity: 0.22 }),
+  );
+  ground.rotation.x = -Math.PI / 2;
+  // the mesh may carry a fixed rotation (data-rx): place the floor under
+  // its world-space lowest point
+  mesh.updateMatrixWorld(true);
+  const wbb = bb.clone().applyMatrix4(mesh.matrixWorld);
+  ground.position.y = wbb.min.y - 0.005;
+  ground.receiveShadow = true;
+  scene.add(ground);
+}
+
 // small overlay button that puts a viewer's camera back where it started
 function addResetButton(container, camera, controls) {
   const home = camera.position.clone();
@@ -119,7 +158,10 @@ function makePackMesh(parsed, rxDeg, scale) {
   const size = bb.getSize(new THREE.Vector3()).length();
   geom.translate(-center.x, -center.y, -center.z);
   geom.scale(scale / size, scale / size, scale / size);
-  const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ vertexColors: true }));
+  geom.computeVertexNormals();
+  const mesh = new THREE.Mesh(geom, new THREE.MeshStandardMaterial({
+    vertexColors: true, roughness: 0.8, metalness: 0.3,
+  }));
   if (rxDeg) mesh.rotation.x = THREE.MathUtils.degToRad(rxDeg);
   let lastA = -1;
   function setFrame(tNorm) {
@@ -141,6 +183,7 @@ async function setupSyncCell(container) {
   const { mesh, setFrame } = makePackMesh(parsed, Number(container.dataset.rx ?? 0), 1.35);
   const scene = new THREE.Scene();
   scene.add(mesh);
+  addStage(scene, mesh);
 
   const canvas = document.createElement('canvas');
   Object.assign(canvas.style, { position: 'absolute', inset: '0', width: '100%', height: '100%' });
@@ -149,6 +192,8 @@ async function setupSyncCell(container) {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
 
   const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
@@ -232,6 +277,8 @@ async function setupSyncStrip(strip) {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setScissorTest(true);
   canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
 
@@ -241,6 +288,7 @@ async function setupSyncStrip(strip) {
       const { mesh, setFrame } = makePackMesh(parsed, Number(div.dataset.rx ?? 0), 1.4);
       const scene = new THREE.Scene();
       scene.add(mesh);
+      addStage(scene, mesh);
       const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
       const az = THREE.MathUtils.degToRad(Number(div.dataset.az ?? 45));
       const el = THREE.MathUtils.degToRad(Number(div.dataset.el ?? 20));
@@ -447,10 +495,14 @@ async function setupSyncStrip(strip) {
     const size = bb.getSize(new THREE.Vector3()).length();
     geom.translate(-center.x, -center.y, -center.z);
     geom.scale(1.5 / size, 1.5 / size, 1.5 / size);
+    geom.computeVertexNormals();
 
-    const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ vertexColors: true }));
+    const mesh = new THREE.Mesh(geom, new THREE.MeshStandardMaterial({
+      vertexColors: true, roughness: 0.8, metalness: 0.3,
+    }));
     const scene = new THREE.Scene();
     scene.add(mesh);
+    addStage(scene, mesh);
 
     const canvas = document.createElement('canvas');
     Object.assign(canvas.style, {
@@ -462,6 +514,8 @@ async function setupSyncStrip(strip) {
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     canvas.addEventListener('webglcontextlost', (e) => e.preventDefault());
 
     const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
