@@ -158,7 +158,15 @@ if A.obj_roll:
          @ Matrix.Translation(-center))
     mesh.matrix_world = R @ mesh.matrix_world
     bpy.context.view_layer.update()
-    zmin = min((mesh.matrix_world @ Vector(c)).z for c in mesh.bound_box)
+    # true vertex minimum: the transformed bounding-box corners overestimate
+    # the extent under rotation and leave the mesh hovering above its shadow
+    import numpy as _np
+    _n = len(mesh.data.vertices)
+    _co = _np.empty(_n * 3, dtype=_np.float64)
+    mesh.data.vertices.foreach_get('co', _co)
+    _co = _co.reshape(-1, 3)
+    _mw = _np.array(mesh.matrix_world)
+    zmin = float((_co @ _mw[:3, :3].T + _mw[:3, 3]).min(axis=0)[2])
     mesh.location.z -= zmin
     bpy.context.view_layer.update()
     look = Vector((0.0, 0.0, (mesh.matrix_world @ (0.125 * sum((Vector(c) for c in mesh.bound_box), Vector()))).z))
