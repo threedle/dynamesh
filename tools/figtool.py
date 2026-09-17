@@ -110,7 +110,7 @@ def fade_shadow(new, core, r0=0.30, r1=0.85):
     out = a * wmap + 255.0 * (1 - wmap)
     return Image.fromarray(out.astype(np.uint8))
 
-RENDER_DIM = 0.6      # the webpage viewers run at bright 0.6; dimming a
+RENDER_DIM = 1.0      # the webpage viewers run at bright 0.6; dimming a
                       # render by the same factor means scaling the light
                       # each object pixel reflects by 0.6 while the white
                       # background stays white
