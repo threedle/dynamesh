@@ -201,6 +201,13 @@ if os.environ.get('NO_SIDE_SHADOW') and 'light' in objs:
     bpy.data.objects['light'].visible_shadow = False
 if os.environ.get('SUN_ANGLE'):
     bpy.data.objects['Sun'].data.angle = float(os.environ['SUN_ANGLE'])
+if os.environ.get('SUN_TILT'):
+    # "tilt rotz" degrees: lean the sun off vertical so the shadow escapes
+    # sideways — needed for top-down cameras where the object hides its own
+    # straight-down shadow. Shadow extends toward world (-sin rotz, cos rotz).
+    _t, _rz = (float(x) for x in os.environ['SUN_TILT'].split())
+    bpy.data.objects['Sun'].rotation_euler = (math.radians(_t), 0.0,
+                                              math.radians(_rz))
 if os.environ.get('CAM_FILL'):
     # a non-casting fill aligned with the camera: brightens exactly what
     # this view sees (for cameras that face the sun-shaded undersides)

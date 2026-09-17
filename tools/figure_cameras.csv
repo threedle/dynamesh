@@ -25,7 +25,7 @@ supp_comparison_ivysaur,DG4D strip (panels 0-3),-,-,,,,,,BASELINE - NEVER RE-REN
 flicker,frozen chairs,sx_chairmoss,frozen,230,25,,CAM_FILL=4.0,"21,61,101,150",locked APPLIED
 flicker,ours chairs,sx_chairmoss,adapted,230,25,,CAM_FILL=4.0,"21,62,102,150",locked APPLIED
 flicker,zoom insets,same as chairs,-,230,25,crop box (92.75/187 r46) per row applied via bbox transfer,,same as chairs,locked APPLIED
-existing_texture,duck A strip,sx_duck,adapted,230,-4,--roll 43.5,CAM_FILL=4.0 NO_FLOOR=1,"102,118,134,150",locked APPLIED
+existing_texture,duck A strip,sx_duck,adapted,230,-4,--obj-roll 43.5 (render dir fo_duck_A),CAM_FILL=4.0,"102,118,134,150",locked APPLIED (floor shadow)
 existing_texture,duck B strip,sx_duck,adapted,30,15,,CAM_FILL=4.0,"102,118,134,150",locked APPLIED (webpage nv2)
 extended_texture_cont,clip1 view1,sx_cont2,adapted,205,15,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED
 extended_texture_cont,clip1 view2,sx_cont2,adapted,25,20,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED
