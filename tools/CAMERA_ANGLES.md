@@ -16,24 +16,25 @@ yaw/elev live in `out/job_manifest.json` on the cluster.
 
 ## Per-object Blender offsets (pipeline y0 -> blender az)
 
+**The offset is 180 for almost every trimesh export** (verified 2026-09-16
+by silhouette-matching against the original clips: unicorn, blub, goat
+~184, lady2, ivysaur ~185, meshnca-ivysaur, duck (d01 y50 -> az230), spot).
+Earlier per-object offsets (150/170/190/210...) were mirror-twin sweep
+errors — do NOT reuse them. Deviations that remain real:
+
 | object (export dir) | offset |
 |---|---|
 | hand (sx_hand) | 0 |
-| chair gallery (sx_chair, wooden crack) | 175 |
-| pumpkin (sx_pumpkin) | 190 |
-| airplane red cracks (sx_airplane) | 195 |
-| spot lava (sx_spot) | 180 |
-| duck / bob_spots (sx_duck) | 210 |
-| ivysaur (sx_ivysaur) | 210 |
-| blub (sx_blub) | 190 |
-| unicorn rainbow (sx_unicorn) | 150 |
-| goat burnt (sx_goat) | 170 |
-| nefertiti effect_2 (sx_lady2) | 150 |
-| cont unicorn 1 = sx_cont2 / 2 = sx_cont1 | 150 |
-| chair moss (sx_chairmoss) | 195 (nv1 az195 e0, nv2 az240 e25 measured directly) |
-| meshnca spot (meshnca_export/spot_lava) | see measured clip cameras below |
-| meshnca ivysaur | 210 |
+| chair gallery (sx_chair, wooden crack) | ~175 (user-approved views) |
+| pumpkin (sx_pumpkin) | ~190 (user-approved views) |
+| airplane red cracks (sx_airplane) | ~195 (user-approved views) |
+| chair moss (sx_chairmoss) | nv1 az195 e0, nv2 az240 e25 (measured directly) |
+| cont unicorn (sx_cont1/2) | figure views measured directly (az205/az25) |
+| meshnca spot | final views measured directly (novel az215 e25, nv2 az45 e30) |
 | transfers (gx_ror_* / gx_lava_*) | per-shape blender az below |
+
+Raj's train renders also carry 0-10 deg extra downward tilt (el 5-10)
+for some objects; always confirm el against the original clip.
 
 ## Webpage clip cameras (blender az/el unless noted)
 
@@ -44,7 +45,8 @@ Airplane: sup az185 e0, nv1 az240 e25, nv2 az145 e25.
 Duck (empirical, silhouette-locked against the original clips — the
   manifest params for this object do NOT map through the az offset; Raj's
   duck cameras also carry extra elevation):
-  sup = **az210 el10** (old 056 = train render; el10 matched IoU .81-.83);
+  sup = **az190 el5** (refined 2026-09-16, IoU .87; the earlier az210 el10
+  shipped briefly and was superseded);
   nv1 = **az230 el-4 `--roll 43.5` NO_FLOOR=1** (az230 el-4 with no roll
   reproduces the original 057/d01 render at IoU 0.971; the figure's duck A
   = that view rotated 43.5 deg clockwise in-image, IoU 0.958 — the user
@@ -82,8 +84,9 @@ Supp gallery (frame-matched in the original domain, err <=0.017):
   unicorn diagA+diagC rows frames 45/80/115/150; blub diagA+diagC
   45/80/115/150; goat diagA+diagC 30/60/90/120; lady train 24/44/63/83,
   lady row2 = diagB-like back view (az~315 e-20 NO_FLOOR, being refined).
-Supp comparison (ivysaur, Page-6): row1 = diagC (az75 e30), row2 = diagA
-  (az255 e25), frames 30/70/110/150; frozen row2 is the strip at x>0.
+Supp comparison (ivysaur, Page-6): row1 = diagC (az45 e30), row2 = diagA
+  (az225 e25) — corrected with the universal-180 offset; frames
+  30/70/110/150; frozen row2 is the strip at x>0.
 Flicker: both blocks = chairmoss nv2 az240 e25; left = frozen (054)
   frames 21/61/101/150, right = ours (052) frames 21/62/102/150; zoom
   insets share one crop box per row (template-matched, kept old ring).
