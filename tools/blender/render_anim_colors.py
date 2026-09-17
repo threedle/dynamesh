@@ -41,6 +41,7 @@ ap.add_argument('--scale', type=float, default=1.55)
 ap.add_argument('--rotz', type=float, default=0.0, help='extra object yaw, degrees')
 ap.add_argument('--rotx', type=float, default=0.0, help='extra object pitch, degrees (uprights Y-up-native meshes)')
 ap.add_argument('--roll', type=float, default=0.0, help='camera roll about the view axis, degrees (positive rotates the image clockwise)')
+ap.add_argument('--obj-roll', type=float, default=0.0, help='rotate the OBJECT about the camera view axis instead of the camera, then re-drop it to the floor: gives the rolled composition while the floor and its shadow stay level')
 ap.add_argument('--resolution', nargs=2, type=int, default=[768, 768])
 ap.add_argument('--samples', type=int, default=50)
 ap.add_argument('--light-angle', type=float, default=0.1745329201221466)
@@ -149,6 +150,22 @@ cam.location = look + Vector((-A.dist * math.cos(el) * math.sin(az),
                               A.dist * math.cos(el) * math.cos(az),
                               A.dist * math.sin(el)))
 direction = look - cam.location
+if A.obj_roll:
+    from mathutils import Matrix
+    axis = direction.normalized()
+    center = mesh.matrix_world @ (0.125 * sum((Vector(c) for c in mesh.bound_box), Vector()))
+    R = (Matrix.Translation(center) @ Matrix.Rotation(math.radians(A.obj_roll), 4, axis)
+         @ Matrix.Translation(-center))
+    mesh.matrix_world = R @ mesh.matrix_world
+    bpy.context.view_layer.update()
+    zmin = min((mesh.matrix_world @ Vector(c)).z for c in mesh.bound_box)
+    mesh.location.z -= zmin
+    bpy.context.view_layer.update()
+    look = Vector((0.0, 0.0, (mesh.matrix_world @ (0.125 * sum((Vector(c) for c in mesh.bound_box), Vector()))).z))
+    cam.location = look + Vector((-A.dist * math.cos(el) * math.sin(az),
+                                  A.dist * math.cos(el) * math.cos(az),
+                                  A.dist * math.sin(el)))
+    direction = look - cam.location
 cam_quat = direction.to_track_quat('-Z', 'Y')
 if A.roll:
     # roll about the view axis: rotating the camera by -roll about the
