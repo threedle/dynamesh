@@ -82,6 +82,13 @@ Teaser (live viewer only): training view, pack `plane`.
 
 ## Figure cameras (empirically locked per figure, blender az/el)
 
+XML filenames in ~/Downloads/draw.io_xml_files/ (renamed 2026-09-17):
+gallery.xml, supp_gallery.xml, supp_comparison.xml, flicker.xml,
+existing_texture.xml, extended_texture.xml, comparison.xml,
+spot_second_view.xml, system.xml, failure.xml, generalization.xml,
+meshnca_ablation.xml, technique.xml; the teaser keeps its original
+name (owned by another session).
+
 **THE AUTHORITATIVE SHEET IS [`figure_cameras.csv`](figure_cameras.csv)** —
 one row per figure panel-row with export dir, pattern, az, el, extra
 flags, env knobs, frame indices, and status (including which rows are
