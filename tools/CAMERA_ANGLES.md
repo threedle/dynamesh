@@ -111,8 +111,8 @@ Generalization figure (all silhouette-locked, frames 10/55/100/145,
   fill 3.0): ror block = spot(gx_ror_train) az85 e10, alien(gx_ror_alien,
   exported from run 72244c6e + data/alien_glow mesh) az150 e15,
   monster(gx_ror_monster, data/monster_lava_2 mesh) az180 e15,
-  teapot(gx_ror_teapot) az180 e25 (weak match .67 — spout/handle
-  ambiguity); lava block = skull(gx_lava_train) az325 e30, sheep az210
+  teapot(gx_ror_teapot) az180 e5 with `--rotx 90` (upright fix, match
+  .86); lava block = skull(gx_lava_train) az325 e30, sheep az210
   e15, chair az90 e15, dragon az0 e15. Row1 of the figure is SPOT (the
   training shape), not a horse.
 MeshNCA-ablation supp figure: 4 rows = MeshNCA results
