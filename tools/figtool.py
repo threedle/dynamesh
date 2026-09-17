@@ -110,6 +110,15 @@ def fade_shadow(new, core, r0=0.30, r1=0.85):
     out = a * wmap + 255.0 * (1 - wmap)
     return Image.fromarray(out.astype(np.uint8))
 
+RENDER_GAMMA = 0.84   # match the approved webpage dim on figure panels
+
+def apply_gamma(img, g=None):
+    g = RENDER_GAMMA if g is None else g
+    if abs(g - 1.0) < 1e-3:
+        return img
+    lut = [round(((i / 255.0) ** (1.0 / g)) * 255) for i in range(256)]
+    return img.point(lut * 3)
+
 def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
     """Place the new render onto the old panel's canvas.
 
@@ -120,7 +129,7 @@ def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
     inside the canvas. Shadows are therefore never clipped, neither by
     the crop nor by the panel border."""
     old = Image.open(old_path).convert('RGB')
-    new = Image.open(new_path).convert('RGB')
+    new = apply_gamma(Image.open(new_path).convert('RGB'))
     ob = obj_bbox(old)
     core = obj_bbox(new)                       # the object proper
     new = fade_shadow(new, core)               # taper long shadows so the
