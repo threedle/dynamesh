@@ -74,13 +74,19 @@ def swap(xml_path, index_path):
     open(xml_path, 'w').write(raw)
     print(f'swapped {n} panels in {xml_path}')
 
-def obj_bbox(im, thr=185):
+def obj_bbox(im, thr=185, min_count=3):
+    """Bounding box of non-background pixels, ignoring rows/columns with
+    fewer than `min_count` qualifying pixels (stray denoiser dots)."""
     a = np.asarray(im.convert('RGB')).astype(int)
     m = a.min(axis=2) < thr
-    ys, xs = np.where(m)
-    if len(ys) == 0:
-        return None
-    return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
+    rows = np.where(m.sum(axis=1) >= min_count)[0]
+    cols = np.where(m.sum(axis=0) >= min_count)[0]
+    if len(rows) == 0 or len(cols) == 0:
+        ys, xs = np.where(m)
+        if len(ys) == 0:
+            return None
+        return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
+    return cols.min(), rows.min(), cols.max() + 1, rows.max() + 1
 
 def fade_shadow(new, core, r0=0.30, r1=0.85):
     """Fade the cast shadow toward white with distance from the object's
