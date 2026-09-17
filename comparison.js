@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const ROTATE_DEG_PER_SEC = 20; // full turn in 18s; calmer than BSB's 60deg/s with this many cells
-const ASSET_V = '11'; // bump when GLBs are re-exported, so cached copies don't linger
+const ASSET_V = '12'; // bump when GLBs are re-exported, so cached copies don't linger
 
 // ---- lit stage -----------------------------------------------------------
 // The clips are now rendered through the paper's Blender scene (sun from
