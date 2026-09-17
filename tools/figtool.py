@@ -82,6 +82,27 @@ def obj_bbox(im, thr=185):
         return None
     return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
 
+def fade_shadow(new, core, r0=0.30, r1=0.85):
+    """Fade the cast shadow toward white with distance from the object's
+    bbox, so long soft shadows taper out on their own instead of forcing
+    the object smaller or getting cut by the panel border. Only grayish
+    pixels outside the core bbox are touched."""
+    a = np.asarray(new.convert('RGB')).astype(np.float32)
+    H, W = a.shape[:2]
+    x0, y0, x1, y1 = core
+    size = max(x1 - x0, y1 - y0)
+    ys, xs = np.mgrid[0:H, 0:W].astype(np.float32)
+    dx = np.maximum(np.maximum(x0 - xs, xs - x1), 0)
+    dy = np.maximum(np.maximum(y0 - ys, ys - y1), 0)
+    d = np.sqrt(dx * dx + dy * dy) / max(size, 1)
+    w = np.clip((r1 - d) / max(r1 - r0, 1e-6), 0, 1)      # 1 near object, 0 far
+    mn = a.min(axis=2); mx = a.max(axis=2)
+    shadow = (mn < 250) & ((mx - mn) < 28) & (mn > 90)
+    shadow[y0:y1, x0:x1] = False
+    wmap = np.where(shadow, w, 1.0)[..., None]
+    out = a * wmap + 255.0 * (1 - wmap)
+    return Image.fromarray(out.astype(np.uint8))
+
 def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
     """Place the new render onto the old panel's canvas.
 
@@ -95,7 +116,8 @@ def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
     new = Image.open(new_path).convert('RGB')
     ob = obj_bbox(old)
     core = obj_bbox(new)                       # the object proper
-    full = obj_bbox(new, thr=shadow_thr)       # object + entire soft shadow
+    new = fade_shadow(new, core)               # taper long shadows so the
+    full = obj_bbox(new, thr=shadow_thr)       # object keeps full size
     if full is None:
         full = core
     canvas = Image.new('RGB', old.size, 'white')
@@ -120,6 +142,18 @@ def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
     px = min(max(px, margin), W - margin - crop.width)
     py = min(max(py, margin), H - margin - crop.height)
     canvas.paste(crop, (px, py))
+    # border fade: any grayish shadow pixel near a canvas edge ramps to
+    # white so nothing ever ends in a hard line at the border
+    a = np.asarray(canvas).astype(np.float32)
+    Hc, Wc = a.shape[:2]
+    band = max(6, int(0.06 * min(Wc, Hc)))
+    ys, xs = np.mgrid[0:Hc, 0:Wc].astype(np.float32)
+    dedge = np.minimum(np.minimum(xs, Wc - 1 - xs), np.minimum(ys, Hc - 1 - ys))
+    w = np.clip(dedge / band, 0, 1)
+    mn = a.min(axis=2); mx = a.max(axis=2)
+    sh = (mn < 250) & ((mx - mn) < 28) & (mn > 90)
+    wmap = np.where(sh, w, 1.0)[..., None]
+    canvas = Image.fromarray((a * wmap + 255.0 * (1 - wmap)).astype(np.uint8))
     canvas.save(out_path, quality=92)
 
 if __name__ == '__main__':
