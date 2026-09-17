@@ -41,6 +41,7 @@ ap.add_argument('--scale', type=float, default=1.55)
 ap.add_argument('--rotz', type=float, default=0.0, help='extra object yaw, degrees')
 ap.add_argument('--rotx', type=float, default=0.0, help='extra object pitch, degrees (uprights Y-up-native meshes)')
 ap.add_argument('--roll', type=float, default=0.0, help='camera roll about the view axis, degrees (positive rotates the image clockwise)')
+ap.add_argument('--lift', type=float, default=0.0, help='raise the mesh above the floor by this much after any drop (loosens the shadow contact)')
 ap.add_argument('--obj-roll', type=float, default=0.0, help='rotate the OBJECT about the camera view axis instead of the camera, then re-drop it to the floor: gives the rolled composition while the floor and its shadow stay level')
 ap.add_argument('--resolution', nargs=2, type=int, default=[768, 768])
 ap.add_argument('--samples', type=int, default=50)
@@ -168,6 +169,7 @@ if A.obj_roll:
     _mw = _np.array(mesh.matrix_world)
     zmin = float((_co @ _mw[:3, :3].T + _mw[:3, 3]).min(axis=0)[2])
     mesh.location.z -= zmin
+    mesh.location.z += A.lift
     bpy.context.view_layer.update()
     look = Vector((0.0, 0.0, (mesh.matrix_world @ (0.125 * sum((Vector(c) for c in mesh.bound_box), Vector()))).z))
     cam.location = look + Vector((-A.dist * math.cos(el) * math.sin(az),
