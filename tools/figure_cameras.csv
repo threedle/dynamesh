@@ -1,12 +1,12 @@
 figure,row,export_dir,pattern,az,el,extra,env,frames,status
-gallery,hand nv1,sx_hand,adapted,50,15,,CAM_FILL=4.0,"10,57,104,150",locked
-gallery,hand nv2,sx_hand,adapted,230,15,,CAM_FILL=4.0,"10,57,104,150",locked
-gallery,chair nv1,sx_chair,adapted,220,25,,CAM_FILL=4.0,"10,57,104,150",locked
-gallery,chair nv2,sx_chair,adapted,310,-20,,CAM_FILL=4.0 NO_FLOOR=1,"10,57,104,150",locked
-gallery,pumpkin nv1,sx_pumpkin,adapted,190,25,,CAM_FILL=4.0,"8,46,84,121",locked
-gallery,pumpkin nv2,sx_pumpkin,adapted,134,25,,CAM_FILL=4.0,"8,46,84,121",locked
-gallery,airplane nv1,sx_airplane,adapted,240,25,,CAM_FILL=4.0,"10,57,104,150",locked
-gallery,airplane nv2,sx_airplane,adapted,145,25,,CAM_FILL=4.0,"10,57,104,150",locked
+gallery,hand nv1,sx_hand,adapted,50,15,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
+gallery,hand nv2,sx_hand,adapted,230,15,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
+gallery,chair nv1,sx_chair,adapted,220,25,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
+gallery,chair nv2,sx_chair,adapted,310,-20,,CAM_FILL=4.0 NO_FLOOR=1,"10,57,104,150",locked APPLIED
+gallery,pumpkin nv1,sx_pumpkin,adapted,190,25,,CAM_FILL=4.0,"8,46,84,121",locked APPLIED
+gallery,pumpkin nv2,sx_pumpkin,adapted,134,25,,CAM_FILL=4.0,"8,46,84,121",locked APPLIED
+gallery,airplane nv1,sx_airplane,adapted,240,25,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
+gallery,airplane nv2,sx_airplane,adapted,145,25,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
 supp_gallery,unicorn diagA,sx_unicorn,adapted,225,25,,CAM_FILL=4.0,"45,80,115,150",locked
 supp_gallery,unicorn diagC,sx_unicorn,adapted,40,30,,CAM_FILL=4.0,"45,80,115,150",locked
 supp_gallery,blub diagA,sx_blub,adapted,225,25,,CAM_FILL=4.0,"45,80,115,150",locked
@@ -14,48 +14,48 @@ supp_gallery,blub diagC,sx_blub,adapted,35,30,,CAM_FILL=4.0,"45,80,115,150",lock
 supp_gallery,goat diagA,sx_goat,adapted,225,25,,CAM_FILL=4.0,"30,60,90,120",locked
 supp_gallery,goat diagC,sx_goat,adapted,40,30,,CAM_FILL=4.0,"30,60,90,120",locked
 supp_gallery,lady train,sx_lady2,adapted,180,0,,CAM_FILL=4.0,"24,44,63,83",locked
-supp_gallery,lady back view,sx_lady2,adapted,330,-15,,CAM_FILL=4.0 NO_FLOOR=1,"24,44,63,83",locked
+supp_gallery,lady back view,sx_lady2,adapted,330,-5,,CAM_FILL=4.0 NO_FLOOR=1,"24,44,63,83",locked
 supp_comparison_ivysaur,ours diagC,sx_ivysaur,adapted,45,30,,CAM_FILL=4.0,"30,70,110,150",locked
-supp_comparison_ivysaur,ours diagA,sx_ivysaur,adapted,,25,,CAM_FILL=4.0,"30,70,110,150",USER PICKING (candidates az205-265)
+supp_comparison_ivysaur,ours diagA,sx_ivysaur,adapted,200,25,,CAM_FILL=4.0,"30,70,110,150",locked
 supp_comparison_ivysaur,frozen diagC,sx_ivysaur,frozen,45,30,,CAM_FILL=4.0,"30,70,110,150",locked
 supp_comparison_ivysaur,frozen diagA,sx_ivysaur,frozen,225,25,,CAM_FILL=4.0,"30,70,110,150",locked
 supp_comparison_ivysaur,meshnca diagC,meshnca_export/ivysaur_petal,meshnca,45,30,,CAM_FILL=4.0,"30,70,110,150",locked
 supp_comparison_ivysaur,meshnca diagA,meshnca_export/ivysaur_petal,meshnca,225,25,,CAM_FILL=4.0,"30,70,110,150",locked
 supp_comparison_ivysaur,DG4D strip (panels 0-3),-,-,,,,,,BASELINE - NEVER RE-RENDER
-flicker,frozen chairs,sx_chairmoss,frozen,230,25,,CAM_FILL=4.0,"21,61,101,150",locked
-flicker,ours chairs,sx_chairmoss,adapted,230,25,,CAM_FILL=4.0,"21,62,102,150",locked
-flicker,zoom insets,same as chairs,-,230,25,crop box (92.75/187 r46) per row applied via bbox transfer,,same as chairs,locked
-existing_texture,duck A strip,sx_duck,adapted,230,-4,--roll 43.5,CAM_FILL=4.0 NO_FLOOR=1,"102,118,134,150",locked
-existing_texture,duck B strip,sx_duck,adapted,60,0,,CAM_FILL=4.0,"102,118,134,150",locked
-extended_texture_cont,clip1 view1,sx_cont2,adapted,205,15,,CAM_FILL=4.0,"30,70,110,150",locked
-extended_texture_cont,clip1 view2,sx_cont2,adapted,25,20,,CAM_FILL=4.0,"30,70,110,150",locked
-extended_texture_cont,clip2 view1,sx_cont1,adapted,205,15,,CAM_FILL=4.0,"30,65,91,132",locked
-extended_texture_cont,clip2 view2,sx_cont1,adapted,25,20,,CAM_FILL=4.0,"30,65,91,132",locked
-main_comparison,ours,sx_spot,adapted,225,25,,CAM_FILL=4.0,"19,55,105,150",locked
-main_comparison,frozen,sx_spot,frozen,225,25,,CAM_FILL=4.0,"76,95,125,150",locked
-main_comparison,meshnca,meshnca_export/spot_lava,meshnca,230,25,,CAM_FILL=4.0,"19,55,105,150",locked
+flicker,frozen chairs,sx_chairmoss,frozen,230,25,,CAM_FILL=4.0,"21,61,101,150",locked APPLIED
+flicker,ours chairs,sx_chairmoss,adapted,230,25,,CAM_FILL=4.0,"21,62,102,150",locked APPLIED
+flicker,zoom insets,same as chairs,-,230,25,crop box (92.75/187 r46) per row applied via bbox transfer,,same as chairs,locked APPLIED
+existing_texture,duck A strip,sx_duck,adapted,230,-4,--roll 43.5,CAM_FILL=4.0 NO_FLOOR=1,"102,118,134,150",locked APPLIED
+existing_texture,duck B strip,sx_duck,adapted,60,0,,CAM_FILL=4.0,"102,118,134,150",locked APPLIED
+extended_texture_cont,clip1 view1,sx_cont2,adapted,205,15,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED
+extended_texture_cont,clip1 view2,sx_cont2,adapted,25,20,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED
+extended_texture_cont,clip2 view1,sx_cont1,adapted,205,15,,CAM_FILL=4.0,"30,65,91,132",locked APPLIED
+extended_texture_cont,clip2 view2,sx_cont1,adapted,25,20,,CAM_FILL=4.0,"30,65,91,132",locked APPLIED
+main_comparison,ours,sx_spot,adapted,225,25,,CAM_FILL=4.0,"19,55,105,150",locked APPLIED
+main_comparison,frozen,sx_spot,frozen,225,25,,CAM_FILL=4.0,"76,95,125,150",locked APPLIED
+main_comparison,meshnca,meshnca_export/spot_lava,meshnca,230,25,,CAM_FILL=4.0,"19,55,105,150",locked APPLIED
 main_comparison,"L4GM, SV4D, DG4D rows",-,-,,,,,,BASELINES - NEVER RE-RENDER
-spot_second_view,ours,sx_spot,adapted,40,25,,CAM_FILL=4.0,"1,50,105,150",locked
-spot_second_view,frozen,sx_spot,frozen,40,25,,CAM_FILL=4.0,"1,85,125,150",locked
-spot_second_view,meshnca,meshnca_export/spot_lava,meshnca,50,30,,CAM_FILL=4.0,"1,50,105,150",locked
+spot_second_view,ours,sx_spot,adapted,40,25,,CAM_FILL=4.0,"1,50,105,150",locked APPLIED
+spot_second_view,frozen,sx_spot,frozen,40,25,,CAM_FILL=4.0,"1,85,125,150",locked APPLIED
+spot_second_view,meshnca,meshnca_export/spot_lava,meshnca,50,30,,CAM_FILL=4.0,"1,50,105,150",locked APPLIED
 spot_second_view,baseline rows,-,-,,,,,,BASELINES - NEVER RE-RENDER
 system,spot renders (4 panels),sx_spot,adapted,135,25,,CAM_FILL=4.0,"1,65,99,150",locked (face right)
 failure_vase,ours viewA,sx_vase,adapted,180,15,,CAM_FILL=4.0,"30,70,110,150",locked
 failure_vase,frozen viewA,sx_vase,frozen,180,15,,CAM_FILL=4.0,"30,70,110,150",locked
-failure_vase,ours viewB,sx_vase,adapted,0,15,,CAM_FILL=4.0,"30,70,110,150",locked (viewA rotated 180)
-failure_vase,frozen viewB,sx_vase,frozen,0,15,,CAM_FILL=4.0,"30,70,110,150",locked (viewA rotated 180)
+failure_vase,ours viewB,sx_vase,adapted,155,15,,CAM_FILL=4.0,"30,70,110,150",locked (mouth visible like viewA)
+failure_vase,frozen viewB,sx_vase,frozen,155,15,,CAM_FILL=4.0,"30,70,110,150",locked (mouth visible like viewA)
 generalization,spot (train shape),gx_ror_train,adapted,85,10,,CAM_FILL=4.0,"40,70,100,145",locked
 generalization,alien,gx_ror_alien,adapted,150,15,,CAM_FILL=4.0,"40,70,100,145",locked
 generalization,monster,gx_ror_monster,adapted,180,15,,CAM_FILL=4.0,"40,70,100,145",locked
 generalization,teapot,gx_ror_teapot,adapted,180,12,--rotx 90,CAM_FILL=4.0,"40,70,100,145",locked
-generalization,skull,gx_lava_train,adapted,145,30,,CAM_FILL=4.0,"8,15,35,65",locked (flipped 180 per review)
-generalization,sheep,gx_lava_thingi10k_wooly_sheep,adapted,210,15,,CAM_FILL=4.0,"8,15,35,65",locked
-generalization,chair,gx_lava_furnature_chair,adapted,90,15,,CAM_FILL=4.0,"8,15,35,65",locked
-generalization,dragon,gx_lava_dragons_xyzrgb_dragon,adapted,0,15,,CAM_FILL=4.0,"8,15,35,65",locked
-meshnca_ablation,target f16 run,meshnca_export_abl_spot_lava_f016/spot_lava,meshnca,225,25,,CAM_FILL=4.0,"16,53,98,150",locked
-meshnca_ablation,target f53 run,meshnca_export_abl_spot_lava_f053/spot_lava,meshnca,225,25,,CAM_FILL=4.0,"16,53,98,150",locked
-meshnca_ablation,target f98 run,meshnca_export_abl_spot_lava_f098/spot_lava,meshnca,225,25,,CAM_FILL=4.0,"16,53,98,150",locked
-meshnca_ablation,full target run,meshnca_export/spot_lava,meshnca,225,25,,CAM_FILL=4.0,"16,53,98,150",locked
+generalization,skull,gx_lava_train,adapted,145,30,,CAM_FILL=4.0,"8,15,28,65",locked (flipped 180 per review)
+generalization,sheep,gx_lava_thingi10k_wooly_sheep,adapted,210,15,,CAM_FILL=4.0,"8,15,28,65",locked
+generalization,chair,gx_lava_furnature_chair,adapted,90,15,,CAM_FILL=4.0,"8,15,28,65",locked
+generalization,dragon,gx_lava_dragons_xyzrgb_dragon,adapted,0,15,,CAM_FILL=4.0,"8,15,28,65",locked
+meshnca_ablation,target f16 run,meshnca_export_abl_spot_lava_f016/spot_lava,meshnca,225,25,,CAM_FILL=4.0,"16,53,98,150",locked APPLIED
+meshnca_ablation,target f53 run,meshnca_export_abl_spot_lava_f053/spot_lava,meshnca,225,25,,CAM_FILL=4.0,"16,53,98,150",locked APPLIED
+meshnca_ablation,target f98 run,meshnca_export_abl_spot_lava_f098/spot_lava,meshnca,225,25,,CAM_FILL=4.0,"16,53,98,150",locked APPLIED
+meshnca_ablation,full target run,meshnca_export/spot_lava,meshnca,225,25,,CAM_FILL=4.0,"16,53,98,150",locked APPLIED
 meshnca_ablation,left target panels,-,-,,,,,,TARGETS - NEVER RE-RENDER
 technique,whole figure,-,-,,,,,,NO MESH RENDERS - UNCHANGED
 teaser,rows + strip,vx_planeF / vx_planeT,adapted,,,r1 ~az220 e20 / r2 ~az130 e25 / strip az180 e0 (approximate),,,OWNED BY ANOTHER SESSION - DO NOT TOUCH
