@@ -56,6 +56,11 @@ FRAMES=1:150,AZ=230,EL=-4,SCALE=1.0,RES="768 768",EXTRA="--roll 43.5" \
 - Env knobs (add to `--export`): `NO_FLOOR=1` (floorless/no shadow — use
   when the camera is below the floor plane or rolled), `CAM_FILL=<x>`
   (3.0 standard), `SUN_ANGLE`. `NO_SIDE_SHADOW=1` is already in the sbatch.
+  `SUN_TILT="tilt rotz"` (degrees) leans the sun off vertical — required for
+  top-down cameras (el ≳ 60) where the object hides its own straight-down
+  shadow; the shadow extends toward world `(-sin rotz, cos rotz)`. For a
+  camera at az 0, `rotz 0` throws it toward the image bottom, `rotz -45`
+  bottom-left, `rotz 45` bottom-right.
 - `EXTRA` flags: `--pattern frozen_f{:04d}.ply` / `meshnca_f{:04d}.ply`,
   `--roll <deg>` (positive = image clockwise), `--rotx/--rotz` (object),
   `--spin 360` (turntable), `--dist` (default 3.2).
