@@ -47,12 +47,14 @@ Duck (empirical, silhouette-locked against the original clips — the
   duck cameras also carry extra elevation):
   sup = **az190 el5** (refined 2026-09-16, IoU .87; the earlier az210 el10
   shipped briefly and was superseded);
-  nv1 = **az230 el-4 `--roll 43.5` NO_FLOOR=1** (az230 el-4 with no roll
-  reproduces the original 057/d01 render at IoU 0.971; the figure's duck A
-  = that view rotated 43.5 deg clockwise in-image, IoU 0.958 — the user
-  wants the figure look: head right, facing the bottom-right corner);
-  nv2 (webpage) = **az30 el55 CAM_FILL=3.0** (final per user 2026-09-17;
-  figure duck B stays az60 e0); both webpage novels use CAM_FILL=3.0.
+  nv1 (webpage) = **az230 el-4 `--obj-roll 43.5` CAM_FILL=3.0** — the
+  mesh is rolled about the view axis instead of the camera, so the rolled
+  composition (head right, facing bottom-right) keeps a LEVEL floor and a
+  real cast shadow. (The figure duck A strip still uses the camera-roll
+  variant --roll 43.5 NO_FLOOR to match the shadowless figure panel.)
+  nv2 (webpage) = **az30 el15 CAM_FILL=3.0** (the el15_az30 tile of
+  dynamesh_duck_view_picker.png, final per user 2026-09-17; figure duck B
+  stays az60 e0).
 Spot comparison: ALL THREE geometry methods (ours, frozen, meshnca) share
   novel az225 e25 and nv2 az45 e30 (meshnca measured empirically: az240/az60
   minus the user's final -15 tweak lands exactly on the ours/frozen yaws).
