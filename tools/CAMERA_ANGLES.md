@@ -49,16 +49,25 @@ Duck (empirical, silhouette-locked against the original clips — the
   reproduces the original 057/d01 render at IoU 0.971; the figure's duck A
   = that view rotated 43.5 deg clockwise in-image, IoU 0.958 — the user
   wants the figure look: head right, facing the bottom-right corner);
-  nv2 = **az60 e0** (sideH; user-approved 2026-09-16).
+  nv2 (webpage) = **az350 el55 CAM_FILL=3.0** (previous el55 family, face rotated toward camera per user; figure duck B stays az60 e0); novel views brightened with CAM_FILL=3.0.
 Spot comparison: ALL THREE geometry methods (ours, frozen, meshnca) share
   novel az225 e25 and nv2 az45 e30 (meshnca measured empirically: az240/az60
   minus the user's final -15 tweak lands exactly on the ours/frozen yaws).
 Duck row / flicker chairmoss: nv1 az195 e0 & az195 e0 (frozen same),
   nv2 az240 e25 (both methods).
-Additional gallery (train/diagA/diagC = pipeline y0e0 / y45e25 / y225e30):
-  unicorn az150/az195 e25/az15 e30; goat az170/az215 e25/az35 e30;
-  blub az190/az235 e25/az55 e30; lady2 az150/az195 e25/az15 e30.
-Ivysaur (all three methods): train az210 e0, diagA az255 e25, diagC az75 e30.
+Additional gallery + ivysaur — CORRECTED 2026-09-16 by silhouette-matching
+  against the original clips in git history (the old per-object offsets
+  were mirror-twin errors; the true offset is a UNIVERSAL 180 for all of
+  these objects, with Raj's train views carrying 0-5 deg extra tilt):
+  unicorn train az180 e0 / diagA az225 e25 / diagC az40 e30;
+  blub train az180 e5 / az225 e25 / az35 e30;
+  goat train az184 e5 / az225 e25 / az40 e30;
+  lady2 train az180 e0 / az225 e25 / az45 e30;
+  ivysaur (ours+frozen) train az185 e0 / az225 e25 / az45 e30;
+  meshnca-ivysaur train az180 e5 / az225 e25 / az45 e30;
+  duck sup az190 e5.
+  (IoU vs originals: bulky objects hit .96-.97; thin-featured ones cap at
+  .73-.87 with the view still visually exact — see 00_view_match_check.png.)
 Cont: both sup az150 e0, encode with crop=564:564:94:107 (zoom to match refs).
 Transfers (el0 except noted): ror train (spot) az180; lava train (skull)
   az210; ufo 270, blub 240, bob 210, octopus 240, dragon 210, chair 230,
@@ -68,7 +77,11 @@ Teaser (live viewer only): training view, pack `plane`.
 
 ## Figure cameras (empirically locked per figure, blender az/el)
 
-Gallery + supp gallery: webpage cameras, canonical frames 10/57/104/150.
+Gallery: webpage cameras, canonical frames 10/57/104/150.
+Supp gallery (frame-matched in the original domain, err <=0.017):
+  unicorn diagA+diagC rows frames 45/80/115/150; blub diagA+diagC
+  45/80/115/150; goat diagA+diagC 30/60/90/120; lady train 24/44/63/83,
+  lady row2 = diagB-like back view (az~315 e-20 NO_FLOOR, being refined).
 Supp comparison (ivysaur, Page-6): row1 = diagC (az75 e30), row2 = diagA
   (az255 e25), frames 30/70/110/150; frozen row2 is the strip at x>0.
 Flicker: both blocks = chairmoss nv2 az240 e25; left = frozen (054)
