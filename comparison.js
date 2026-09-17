@@ -197,7 +197,7 @@ async function setupSyncCell(container) {
   const { mesh, setFrame } = makePackMesh(parsed, Number(container.dataset.rx ?? 0), 1.22);
   const scene = new THREE.Scene();
   scene.add(mesh);
-  addStage(scene, mesh, { bright: 0.72 });
+  addStage(scene, mesh, { bright: 0.6 });
 
   const canvas = document.createElement('canvas');
   Object.assign(canvas.style, { position: 'absolute', inset: '0', width: '100%', height: '100%' });
@@ -303,7 +303,7 @@ async function setupSyncStrip(strip) {
       const scene = new THREE.Scene();
       scene.add(mesh);
       // the rorschach transfer strip reads too bright at full stage light
-      addStage(scene, mesh, { bright: div.dataset.pack.startsWith('gx_ror') ? 0.72 : 1 });
+      addStage(scene, mesh, { bright: div.dataset.pack.startsWith('gx_ror') ? 0.6 : 1 });
       const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 20);
       const az = THREE.MathUtils.degToRad(Number(div.dataset.az ?? 45));
       const el = THREE.MathUtils.degToRad(Number(div.dataset.el ?? 20));
