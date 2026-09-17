@@ -134,3 +134,13 @@ with a full-rect document-order composite, not the web viewer.
 Also: `figtool.align` now smoothsteps both the distance fade and the border
 fade and blur-extends the penumbra (`soften_shadow`) so Cycles' compact
 umbra edge never reads as a straight cutoff line at figure scale.
+
+## Video baselines carry NO shadow (2026-09-17)
+
+A shadow is evidence of geometry: L4GM, SV4D 2.0 and DG4D output video, so
+their panels must sit on plain white. The original figures had gray floor
+shadows baked into those panels; they were scrubbed (component analysis:
+low-saturation gray regions outside/below the object silhouette whitened,
+object pixels untouched) in comparison.xml and supp_comparison.xml — all 36
+video-baseline panels. Mesh methods (ours, Frozen TRELLIS.2, MeshNCA) keep
+their real Cycles shadows. Reference film strips untouched.
