@@ -82,11 +82,16 @@ def obj_bbox(im, thr=185):
         return None
     return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
 
-def align(old_path, new_path, out_path, mode='bbox'):
+def align(old_path, new_path, out_path, mode='bbox', margin=3):
+    """Place the new render onto the old panel's canvas, matched to the old
+    object's bbox, then shrink/shift as needed so the WHOLE render content
+    (object plus its cast shadow) stays inside the canvas — a shadow must
+    never be clipped by the panel border."""
     old = Image.open(old_path).convert('RGB')
     new = Image.open(new_path).convert('RGB')
     ob = obj_bbox(old); nb = obj_bbox(new)
     canvas = Image.new('RGB', old.size, 'white')
+    W, H = old.size
     ox0, oy0, ox1, oy1 = ob
     obj = new.crop(nb)
     ow, oh = ox1 - ox0, oy1 - oy0
@@ -96,9 +101,15 @@ def align(old_path, new_path, out_path, mode='bbox'):
         s = oh / obj.height
     else:
         s = min(ow / obj.width, oh / obj.height)
+    # never larger than what fits fully inside the canvas
+    s = min(s, (W - 2 * margin) / obj.width, (H - 2 * margin) / obj.height)
     obj = obj.resize((max(1, round(obj.width * s)), max(1, round(obj.height * s))), Image.LANCZOS)
     cx, cy = (ox0 + ox1) / 2, (oy0 + oy1) / 2
-    canvas.paste(obj, (round(cx - obj.width / 2), round(cy - obj.height / 2)))
+    px = round(cx - obj.width / 2)
+    py = round(cy - obj.height / 2)
+    px = min(max(px, margin), W - margin - obj.width)
+    py = min(max(py, margin), H - margin - obj.height)
+    canvas.paste(obj, (px, py))
     canvas.save(out_path, quality=92)
 
 if __name__ == '__main__':
