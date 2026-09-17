@@ -105,12 +105,39 @@ def fade_shadow(new, core, r0=0.30, r1=0.85):
     dx = np.maximum(np.maximum(x0 - xs, xs - x1), 0)
     dy = np.maximum(np.maximum(y0 - ys, ys - y1), 0)
     d = np.sqrt(dx * dx + dy * dy) / max(size, 1)
-    w = np.clip((r1 - d) / max(r1 - r0, 1e-6), 0, 1)      # 1 near object, 0 far
+    t = np.clip((r1 - d) / max(r1 - r0, 1e-6), 0, 1)      # 1 near object, 0 far
+    w = t * t * (3.0 - 2.0 * t)                           # smoothstep: zero slope
+                                                          # at the white end, so the
+                                                          # taper never reads as a line
     mn = a.min(axis=2); mx = a.max(axis=2)
     shadow = (mn < 250) & ((mx - mn) < 28) & (mn > 90)
     shadow[y0:y1, x0:x1] = False
     wmap = np.where(shadow, w, 1.0)[..., None]
     out = a * wmap + 255.0 * (1 - wmap)
+    return Image.fromarray(out.astype(np.uint8))
+
+def soften_shadow(new, core, radius_frac=0.035, strength=0.9):
+    """Blur-extend the cast shadow's outer penumbra. Cycles shadows under a
+    tight sun end their umbra over just a few pixels, which reads as a hard
+    cutoff at figure scale; taking the max of the shadow darkness and its
+    Gaussian blur grows a smooth halo past the original edge. The object
+    (core bbox) is left untouched."""
+    from PIL import ImageFilter
+    a = np.asarray(new.convert('RGB')).astype(np.float32)
+    H, W = a.shape[:2]
+    x0, y0, x1, y1 = core
+    mn = a.min(axis=2); mx = a.max(axis=2)
+    colorless = (mx - mn) < 28
+    src = np.where(colorless, 255.0 - a.mean(axis=2), 0.0)
+    src[y0:y1, x0:x1] = 0.0
+    r = max(3, int(radius_frac * max(x1 - x0, y1 - y0)))
+    blur = np.asarray(Image.fromarray(src.astype(np.uint8), 'L')
+                      .filter(ImageFilter.GaussianBlur(r))).astype(np.float32)
+    dark = np.maximum(src, blur * strength)
+    apply = colorless.copy()
+    apply[y0:y1, x0:x1] = False
+    out = a.copy()
+    out[apply] = np.clip(255.0 - dark[apply], 0, 255)[:, None]
     return Image.fromarray(out.astype(np.uint8))
 
 RENDER_DIM = 1.0      # the webpage viewers run at bright 0.6; dimming a
@@ -127,7 +154,7 @@ def apply_gamma(img, dim=None):
     s = dim + (1.0 - dim) * w
     return Image.fromarray(np.clip(a * s, 0, 255).astype(np.uint8))
 
-def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
+def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250, obj_thr=185, fade=True):
     """Place the new render onto the old panel's canvas.
 
     The OBJECT (dark/colored pixels) is size-matched to the old panel's
@@ -138,10 +165,13 @@ def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
     the crop nor by the panel border."""
     old = Image.open(old_path).convert('RGB')
     new = apply_gamma(Image.open(new_path).convert('RGB'))
-    ob = obj_bbox(old)
-    core = obj_bbox(new)                       # the object proper
-    new = fade_shadow(new, core)               # taper long shadows so the
-    full = obj_bbox(new, thr=shadow_thr)       # object keeps full size
+    ob = obj_bbox(old, thr=obj_thr)
+    core = obj_bbox(new, thr=obj_thr)          # the object proper
+    if fade:
+        new = fade_shadow(new, core)           # taper long shadows so the
+    if core is not None:                       # object keeps full size
+        new = soften_shadow(new, core)         # smooth the penumbra's end
+    full = obj_bbox(new, thr=shadow_thr)
     if full is None:
         full = core
     canvas = Image.new('RGB', old.size, 'white')
@@ -173,7 +203,8 @@ def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
     band = max(6, int(0.06 * min(Wc, Hc)))
     ys, xs = np.mgrid[0:Hc, 0:Wc].astype(np.float32)
     dedge = np.minimum(np.minimum(xs, Wc - 1 - xs), np.minimum(ys, Hc - 1 - ys))
-    w = np.clip(dedge / band, 0, 1)
+    t = np.clip(dedge / band, 0, 1)
+    w = t * t * (3.0 - 2.0 * t)
     mn = a.min(axis=2); mx = a.max(axis=2)
     sh = (mn < 250) & ((mx - mn) < 28) & (mn > 90)
     wmap = np.where(sh, w, 1.0)[..., None]

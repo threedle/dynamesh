@@ -3,8 +3,8 @@ gallery,hand nv1,sx_hand,adapted,50,15,,CAM_FILL=4.0,"10,57,104,150",locked APPL
 gallery,hand nv2,sx_hand,adapted,230,15,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
 gallery,chair nv1,sx_chair,adapted,220,25,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
 gallery,chair nv2,sx_chair,adapted,310,-20,,CAM_FILL=4.0 NO_FLOOR=1,"10,57,104,150",locked APPLIED
-gallery,pumpkin nv1,sx_pumpkin,adapted,190,25,,CAM_FILL=4.0,"8,46,84,121",locked APPLIED
-gallery,pumpkin nv2,sx_pumpkin,adapted,134,25,,CAM_FILL=4.0,"8,46,84,121",locked APPLIED
+gallery,pumpkin nv1,sx_pumpkin,adapted,190,25,,CAM_FILL=4.0,"60,76,84,121",locked APPLIED (cols1-2 re-picked to match video strip)
+gallery,pumpkin nv2,sx_pumpkin,adapted,134,25,,CAM_FILL=4.0,"60,76,84,121",locked APPLIED (cols1-2 re-picked to match video strip)
 gallery,airplane nv1,sx_airplane,adapted,240,25,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
 gallery,airplane nv2,sx_airplane,adapted,145,25,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
 supp_gallery,unicorn diagA,sx_unicorn,adapted,225,25,,CAM_FILL=4.0,"45,80,115,150",locked APPLIED
@@ -14,7 +14,7 @@ supp_gallery,blub diagC,sx_blub,adapted,35,30,,CAM_FILL=4.0,"45,80,115,150",lock
 supp_gallery,goat diagA,sx_goat,adapted,225,25,,CAM_FILL=4.0,"30,60,90,120",locked APPLIED
 supp_gallery,goat diagC,sx_goat,adapted,40,30,,CAM_FILL=4.0,"30,60,90,120",locked APPLIED
 supp_gallery,lady train,sx_lady2,adapted,180,0,,CAM_FILL=4.0,"24,44,63,83",locked APPLIED
-supp_gallery,lady back view,sx_lady2,adapted,330,5,,CAM_FILL=4.0 NO_FLOOR=1,"24,44,63,83",locked APPLIED
+supp_gallery,lady back view,sx_lady2,adapted,330,5,,CAM_FILL=4.0,"24,44,63,83",locked APPLIED (floor shadow, dir fl_lady_dB_floor)
 supp_comparison_ivysaur,ours diagC,sx_ivysaur,adapted,45,30,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED
 supp_comparison_ivysaur,ours diagA,sx_ivysaur,adapted,200,25,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED
 supp_comparison_ivysaur,frozen diagC,sx_ivysaur,frozen,45,30,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED

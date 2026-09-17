@@ -110,3 +110,27 @@ frames and baseline panels are untouched.
 - The live WebGL viewers (comparison.js) have their own lighting — packs
   need `computeVertexNormals()`, r160 physical lights need ~π-scaled
   intensities.
+
+## draw.io PDF export ignores clipPath (2026-09-17)
+
+The PDF exporter draws every image cell as its FULL opaque rectangle in
+document order — `clipPath=inset(...)` is honored by the web viewer but NOT
+by the PDF export. Any panel whose (unclipped) white padding overlaps the
+panel above therefore covers that panel's shadow with a hard edge in the PDF
+while the viewer looks fine ("it's not a crop thing").
+
+Fix applied to gallery / supp_gallery / supp_comparison / extended_texture /
+flicker / generalization: bake the crop into the payload — crop the bitmap to
+its clip window + content bbox (thr 252, 2 px margin), remap mxGeometry (the
+cell rect equals the clip WINDOW, and inset percentages are relative to the
+full image extent, not the cell), and delete the clipPath. Where content
+genuinely overlaps a neighbor's shadow (extended_texture lower rows, flicker
+round insets) the occluder is converted to PNG with a 240→252 luminance alpha
+ramp so the shadow behind composites through. Film-strip artwork is left
+clipped (its overlaps are the intended frame design). Audit + bake code lives
+in the session scratchpad and reruns from figtool-style extraction; verify
+with a full-rect document-order composite, not the web viewer.
+
+Also: `figtool.align` now smoothsteps both the distance fade and the border
+fade and blur-extends the penumbra (`soften_shadow`) so Cycles' compact
+umbra edge never reads as a straight cutoff line at figure scale.
