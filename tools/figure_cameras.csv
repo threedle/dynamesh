@@ -42,8 +42,8 @@ spot_second_view,baseline rows,-,-,,,,,,BASELINES - NEVER RE-RENDER
 system,spot renders (4 panels),sx_spot,adapted,225,25,,CAM_FILL=4.0,"1,65,85,99",locked
 failure_vase,ours viewA,sx_vase,adapted,180,15,,CAM_FILL=4.0,"30,70,110,150",locked
 failure_vase,frozen viewA,sx_vase,frozen,180,15,,CAM_FILL=4.0,"30,70,110,150",locked
-failure_vase,ours viewB,sx_vase,adapted,,15,,CAM_FILL=4.0,"30,70,110,150",MATCHING (el15 az sweep running)
-failure_vase,frozen viewB,sx_vase,frozen,,15,,CAM_FILL=4.0,"30,70,110,150",MATCHING (el15 az sweep running)
+failure_vase,ours viewB,sx_vase,adapted,325,15,,CAM_FILL=4.0,"30,70,110,150",locked
+failure_vase,frozen viewB,sx_vase,frozen,325,15,,CAM_FILL=4.0,"30,70,110,150",locked
 generalization,spot (train shape),gx_ror_train,adapted,85,10,,CAM_FILL=4.0,"20,40,70,145",locked
 generalization,alien,gx_ror_alien,adapted,150,15,,CAM_FILL=4.0,"20,40,70,145",locked
 generalization,monster,gx_ror_monster,adapted,180,15,,CAM_FILL=4.0,"20,40,70,145",locked
