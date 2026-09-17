@@ -110,14 +110,19 @@ def fade_shadow(new, core, r0=0.30, r1=0.85):
     out = a * wmap + 255.0 * (1 - wmap)
     return Image.fromarray(out.astype(np.uint8))
 
-RENDER_GAMMA = 0.84   # match the approved webpage dim on figure panels
+RENDER_DIM = 0.6      # the webpage viewers run at bright 0.6; dimming a
+                      # render by the same factor means scaling the light
+                      # each object pixel reflects by 0.6 while the white
+                      # background stays white
 
-def apply_gamma(img, g=None):
-    g = RENDER_GAMMA if g is None else g
-    if abs(g - 1.0) < 1e-3:
+def apply_gamma(img, dim=None):
+    dim = RENDER_DIM if dim is None else dim
+    if abs(dim - 1.0) < 1e-3:
         return img
-    lut = [round(((i / 255.0) ** (1.0 / g)) * 255) for i in range(256)]
-    return img.point(lut * 3)
+    a = np.asarray(img.convert('RGB')).astype(np.float32)
+    w = (a.min(axis=2, keepdims=True) / 255.0) ** 6   # 1 at pure white bg
+    s = dim + (1.0 - dim) * w
+    return Image.fromarray(np.clip(a * s, 0, 255).astype(np.uint8))
 
 def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
     """Place the new render onto the old panel's canvas.
