@@ -82,34 +82,44 @@ def obj_bbox(im, thr=185):
         return None
     return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
 
-def align(old_path, new_path, out_path, mode='bbox', margin=3):
-    """Place the new render onto the old panel's canvas, matched to the old
-    object's bbox, then shrink/shift as needed so the WHOLE render content
-    (object plus its cast shadow) stays inside the canvas — a shadow must
-    never be clipped by the panel border."""
+def align(old_path, new_path, out_path, mode='bbox', margin=3, shadow_thr=250):
+    """Place the new render onto the old panel's canvas.
+
+    The OBJECT (dark/colored pixels) is size-matched to the old panel's
+    object bbox, but the pasted crop is the FULL non-white footprint —
+    object plus the entire soft shadow (threshold `shadow_thr`, near
+    white) — and the scale is reduced until that whole footprint fits
+    inside the canvas. Shadows are therefore never clipped, neither by
+    the crop nor by the panel border."""
     old = Image.open(old_path).convert('RGB')
     new = Image.open(new_path).convert('RGB')
-    ob = obj_bbox(old); nb = obj_bbox(new)
+    ob = obj_bbox(old)
+    core = obj_bbox(new)                       # the object proper
+    full = obj_bbox(new, thr=shadow_thr)       # object + entire soft shadow
+    if full is None:
+        full = core
     canvas = Image.new('RGB', old.size, 'white')
     W, H = old.size
     ox0, oy0, ox1, oy1 = ob
-    obj = new.crop(nb)
+    cw, ch = core[2] - core[0], core[3] - core[1]
     ow, oh = ox1 - ox0, oy1 - oy0
     if mode == 'width':
-        s = ow / obj.width
+        s = ow / cw
     elif mode == 'height':
-        s = oh / obj.height
+        s = oh / ch
     else:
-        s = min(ow / obj.width, oh / obj.height)
-    # never larger than what fits fully inside the canvas
-    s = min(s, (W - 2 * margin) / obj.width, (H - 2 * margin) / obj.height)
-    obj = obj.resize((max(1, round(obj.width * s)), max(1, round(obj.height * s))), Image.LANCZOS)
-    cx, cy = (ox0 + ox1) / 2, (oy0 + oy1) / 2
-    px = round(cx - obj.width / 2)
-    py = round(cy - obj.height / 2)
-    px = min(max(px, margin), W - margin - obj.width)
-    py = min(max(py, margin), H - margin - obj.height)
-    canvas.paste(obj, (px, py))
+        s = min(ow / cw, oh / ch)
+    fw, fh = full[2] - full[0], full[3] - full[1]
+    s = min(s, (W - 2 * margin) / fw, (H - 2 * margin) / fh)
+    crop = new.crop(full).resize((max(1, round(fw * s)), max(1, round(fh * s))), Image.LANCZOS)
+    # position: object's core center lands on the old object center
+    ccx = (core[0] + core[2]) / 2 - full[0]
+    ccy = (core[1] + core[3]) / 2 - full[1]
+    px = round((ox0 + ox1) / 2 - ccx * s)
+    py = round((oy0 + oy1) / 2 - ccy * s)
+    px = min(max(px, margin), W - margin - crop.width)
+    py = min(max(py, margin), H - margin - crop.height)
+    canvas.paste(crop, (px, py))
     canvas.save(out_path, quality=92)
 
 if __name__ == '__main__':
