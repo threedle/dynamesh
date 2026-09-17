@@ -42,8 +42,8 @@ spot_second_view,baseline rows,-,-,,,,,,BASELINES - NEVER RE-RENDER
 system,spot renders (4 panels),sx_spot,adapted,135,25,,CAM_FILL=4.0,"1,65,99,150",locked (face right)
 failure_vase,ours viewA,sx_vase,adapted,180,15,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED
 failure_vase,frozen viewA,sx_vase,frozen,180,15,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED
-failure_vase,ours viewB,sx_vase,adapted,155,15,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED (180-deg vertical turn of original, faces right)
-failure_vase,frozen viewB,sx_vase,frozen,155,15,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED (180-deg vertical turn of original, faces right)
+failure_vase,ours viewB,sx_vase,adapted,330,15,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED (handle right)
+failure_vase,frozen viewB,sx_vase,frozen,330,15,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED (handle right)
 generalization,spot (train shape),gx_ror_train,adapted,85,10,,CAM_FILL=4.0,"40,70,100,145",locked APPLIED
 generalization,alien,gx_ror_alien,adapted,150,15,,CAM_FILL=4.0,"40,70,100,145",locked APPLIED
 generalization,monster,gx_ror_monster,adapted,180,15,,CAM_FILL=4.0,"40,70,100,145",locked APPLIED
