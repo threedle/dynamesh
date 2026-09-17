@@ -80,6 +80,12 @@ Teaser (live viewer only): training view, pack `plane`.
 
 ## Figure cameras (empirically locked per figure, blender az/el)
 
+**THE AUTHORITATIVE SHEET IS [`figure_cameras.csv`](figure_cameras.csv)** —
+one row per figure panel-row with export dir, pattern, az, el, extra
+flags, env knobs, frame indices, and status (including which rows are
+baselines/targets that must NEVER be re-rendered). Always read and
+update the CSV first; the prose below is history and context.
+
 Gallery: webpage cameras, canonical frames 10/57/104/150.
 Supp gallery (frame-matched in the original domain, err <=0.017):
   unicorn diagA+diagC rows frames 45/80/115/150; blub diagA+diagC
