@@ -51,7 +51,8 @@ Duck (empirical, silhouette-locked against the original clips — the
   reproduces the original 057/d01 render at IoU 0.971; the figure's duck A
   = that view rotated 43.5 deg clockwise in-image, IoU 0.958 — the user
   wants the figure look: head right, facing the bottom-right corner);
-  nv2 (webpage) = **az350 el55 CAM_FILL=3.0** (previous el55 family, face rotated toward camera per user; figure duck B stays az60 e0); novel views brightened with CAM_FILL=3.0.
+  nv2 (webpage) = **az30 el55 CAM_FILL=3.0** (final per user 2026-09-17;
+  figure duck B stays az60 e0); both webpage novels use CAM_FILL=3.0.
 Spot comparison: ALL THREE geometry methods (ours, frozen, meshnca) share
   novel az225 e25 and nv2 az45 e30 (meshnca measured empirically: az240/az60
   minus the user's final -15 tweak lands exactly on the ours/frozen yaws).
