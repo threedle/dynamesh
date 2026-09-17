@@ -47,9 +47,12 @@ def find_b64(raw, md5, length):
     raise KeyError(md5)
 
 def to_b64(path):
-    img = Image.open(path).convert('RGB')
+    img = Image.open(path)
     buf = io.BytesIO()
-    img.save(buf, 'JPEG', quality=90)
+    if img.mode == 'RGBA':
+        img.save(buf, 'PNG', optimize=True)
+    else:
+        img.convert('RGB').save(buf, 'JPEG', quality=90)
     return base64.b64encode(buf.getvalue()).decode()
 
 def swap(xml_path, index_path):
