@@ -299,7 +299,11 @@ async function setupSyncStrip(strip) {
   const cells = [];
   cellDivs.forEach((div) => {
     loadPackParsed(div.dataset.pack).then((parsed) => {
-      const { mesh, setFrame } = makePackMesh(parsed, Number(div.dataset.rx ?? 0), 1.26);
+      // training-shape cells render their static mesh larger than the
+      // rotating neighbors; scale them down and raise them to match
+      const isTrain = div.dataset.pack.endsWith('_train');
+      const { mesh, setFrame } = makePackMesh(parsed, Number(div.dataset.rx ?? 0), isTrain ? 0.92 : 1.26);
+      if (isTrain) mesh.position.y += 0.22;
       const scene = new THREE.Scene();
       scene.add(mesh);
       // the rorschach transfer strip reads too bright at full stage light
