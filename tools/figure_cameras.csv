@@ -59,5 +59,5 @@ meshnca_ablation,full target run,meshnca_export/spot_lava,meshnca,225,25,,CAM_FI
 meshnca_ablation,left target panels,-,-,,,,,,TARGETS - NEVER RE-RENDER
 technique,whole figure,-,-,,,,,,NO MESH RENDERS - UNCHANGED
 teaser,rows + strip,vx_planeF / vx_planeT,adapted,,,r1 ~az220 e20 / r2 ~az130 e25 / strip az180 e0 (approximate),,,OWNED BY ANOTHER SESSION - DO NOT TOUCH
-supp_page,ag unicorn NV2 clip,sx_unicorn,adapted,15,30,--obj-roll -25 (dir ag2_unicorn_diagC_rm25),CAM_FILL=3.0,1:150,shipped v4
+supp_page,ag unicorn NV2 clip,sx_unicorn,adapted,15,30,,CAM_FILL=3.0,1:150,shipped (no roll; user reverted the -25 obj-roll)
 supp_page,ag lady NV2 clip,sx_lady2,adapted,330,5,(dir ag2_lady_diagC_floor),CAM_FILL=3.0,1:150,shipped v4 (floor shadow)
