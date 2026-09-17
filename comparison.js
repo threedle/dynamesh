@@ -197,7 +197,7 @@ async function setupSyncCell(container) {
   const { mesh, setFrame } = makePackMesh(parsed, Number(container.dataset.rx ?? 0), 1.22);
   const scene = new THREE.Scene();
   scene.add(mesh);
-  addStage(scene, mesh, { bright: 0.85 });
+  addStage(scene, mesh, { bright: 0.72 });
 
   const canvas = document.createElement('canvas');
   Object.assign(canvas.style, { position: 'absolute', inset: '0', width: '100%', height: '100%' });
@@ -516,7 +516,7 @@ async function setupSyncStrip(strip) {
     }));
     const scene = new THREE.Scene();
     scene.add(mesh);
-    addStage(scene, mesh, { lift: 0, bright: 0.62 });
+    addStage(scene, mesh, { lift: 0, bright: 0.52 });
 
     const canvas = document.createElement('canvas');
     Object.assign(canvas.style, {
