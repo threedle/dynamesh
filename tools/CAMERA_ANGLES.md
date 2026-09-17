@@ -87,15 +87,16 @@ Supp gallery (frame-matched in the original domain, err <=0.017):
   lady row2 = diagB-like back view (az~315 e-20 NO_FLOOR, being refined).
 Supp comparison (ivysaur, Page-6): row1 = diagC (az45 e30), row2 = diagA
   (az225 e25) — corrected with the universal-180 offset; frames
-  30/70/110/150; frozen row2 is the strip at x>0.
-Flicker: both blocks = chairmoss az250 e25 (rotated +10 per review); left = frozen (054)
+  30/70/110/150; frozen row2 is the strip at x>0. The OTHER x>0 strip (panels 0-3) is
+  DG4D output — a baseline, NEVER re-render it.
+Flicker: both blocks = chairmoss az230 e25 (armrest sweeps right); left = frozen (054)
   frames 21/61/101/150, right = ours (052) frames 21/62/102/150; zoom
   insets share one crop box per row (template-matched, kept old ring).
 Main comparison (spot): ours/frozen ~az210-230 e25-35 (refining),
   meshnca ~az240 e15; frames ours 19/55/105/150, frozen 76/95/125/150 (pushed later per review).
 Spot second view: ours/frozen az40 e25, meshnca ~az30-60 e25;
   frames ours 1/50/105/150, frozen 1/85/125/150.
-System figure: spot at ~az140 e25 (its own mirror-side view); panels gray f1 / f65 / f85 / f99.
+System figure: spot at az225 e25 (same camera as the comparison figures, per review); panels gray f1 / f65 / f85 / f99.
 Extended-texture supp (cont unicorn): view1 az205 e15, view2 az25 e20;
   clip1(blue,sx_cont2) frames 30/70/110/150, clip2(amber,sx_cont1)
   frames 30/65/91/132.
@@ -106,13 +107,14 @@ Teaser (plane vx_planeF): row1 ~az220 e20, row2 ~az130 e25, film strip
   az180 e0 (frame-matching pending; plane deforms so IoU needs
   frame-aligned comparison). Black-background panels stay untouched.
 Failure (vase sx_vase, white object: threshold 240+, NO_FLOOR sweeps):
-  viewA az180 e15, viewB az330 e25 (raised per review), frames 30/70/110/150.
-Generalization figure (all silhouette-locked, frames 10/55/100/145,
-  fill 3.0): ror block = spot(gx_ror_train) az85 e10, alien(gx_ror_alien,
+  viewA az180 e15; frozen viewB az330 e25; OURS viewB az335 e35 (the adapted mesh leans differently, needs its own higher camera); frames 30/70/110/150.
+Generalization figure (all silhouette-locked, frames 20/40/70/145 —
+  first frame must already show effect, early frames clustered because the
+  effect settles fast; fill 4.0): ror block = spot(gx_ror_train) az85 e10, alien(gx_ror_alien,
   exported from run 72244c6e + data/alien_glow mesh) az150 e15,
   monster(gx_ror_monster, data/monster_lava_2 mesh) az180 e15,
   teapot(gx_ror_teapot) az180 e12 with `--rotx 90` (upright fix, match
-  .86); lava block = skull(gx_lava_train) az325 e30, sheep az210
+  .86); lava block = skull(gx_lava_train) az145 e30 (flipped 180 per review, faces right), sheep az210
   e15, chair az90 e15, dragon az0 e15. Row1 of the figure is SPOT (the
   training shape), not a horse.
 MeshNCA-ablation supp figure: 4 rows = MeshNCA results
