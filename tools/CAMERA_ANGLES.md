@@ -107,8 +107,22 @@ Teaser (plane vx_planeF): row1 ~az220 e20, row2 ~az130 e25, film strip
   frame-aligned comparison). Black-background panels stay untouched.
 Failure (vase sx_vase, white object: threshold 240+, NO_FLOOR sweeps):
   ours + frozen at two views, in-image lean — pending sweep match.
-NOT COVERED by existing exports: generalization figure (ror horse /
-  robot / armadillo objects), meshnca-supp figure (4 separate NCA runs).
+Generalization figure (all silhouette-locked, frames 10/55/100/145,
+  fill 3.0): ror block = spot(gx_ror_train) az85 e10, alien(gx_ror_alien,
+  exported from run 72244c6e + data/alien_glow mesh) az150 e15,
+  monster(gx_ror_monster, data/monster_lava_2 mesh) az180 e15,
+  teapot(gx_ror_teapot) az180 e25 (weak match .67 — spout/handle
+  ambiguity); lava block = skull(gx_lava_train) az325 e30, sheep az210
+  e15, chair az90 e15, dragon az0 e15. Row1 of the figure is SPOT (the
+  training shape), not a horse.
+MeshNCA-ablation supp figure: 4 rows = MeshNCA results
+  abl_spot_lava_f016 / f053 / f098 / ours_spot_lava (target-frame
+  ablation; exports meshnca_export_abl_* + meshnca_export/spot_lava),
+  all at az225 e25 (match .90), columns = frames 16/53/98/150 (the
+  export default). Left target panels stay untouched.
+Supp gallery corrections: unicorn+blub rows are diagA+diagC (frames
+  45/80/115/150); lady row2 = back view az330 e-15 NO_FLOOR (match caps
+  at .82), frames 24/44/63/83.
 
 ## Pipeline camera families (Raj's conventions)
 
