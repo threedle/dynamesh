@@ -1,7 +1,31 @@
 # DynaMesh render handoff — where every camera and render lives
 
-Written 2026-09-18 as a colleague handoff. Everything below is committed,
-pushed, or archived; nothing lives only in a chat session.
+Written 2026-09-18 as a handoff for a colleague or a fresh Claude session.
+Everything below is committed, pushed, or archived; nothing lives only in a
+chat session. Read this file, then `SHADOW_PIPELINE.md` (the how-to) and
+`figure_cameras.csv` (the what), before touching any figure or render.
+
+## Working protocol (user-mandated, learned the hard way)
+
+1. Cluster access: `ssh uchicago` (alias for guanc@fe.ai.cs.uchicago.edu).
+   Write ONLY under `/net/projects/ranalab/guanc/`; rajhansini's tree is
+   read-only. Exclude node r003 (bad GPU; already in the sbatch headers).
+2. Never re-render reference videos or the video baselines (SV4D 2.0, L4GM,
+   DG4D) — and their panels carry NO shadow (shadow = evidence of geometry).
+   Mesh methods (ours, Frozen TRELLIS.2, MeshNCA) get real Cycles shadows.
+3. Before changing any figure view: silhouette-match against the current
+   panel, render at the matched camera, and put a labeled before/after PNG in
+   `~/Downloads/dynamesh_figures_before_after/` for Guan to approve BEFORE
+   overwriting the XML. When any visual choice is uncertain, render labeled,
+   NUMBERED candidates into that folder and let Guan pick.
+4. Record every camera/frame change in `figure_cameras.csv` in the same
+   commit as the change.
+5. Webpage changes must reach mobile: it is the same responsive build, so
+   bump the `?v=` cache-buster on every changed asset URL, and grep the repo
+   for other pages referencing the file.
+6. Judge renders only from `render_clip.sbatch` output (render_sweep lacks
+   NO_SIDE_SHADOW) and only visually — full sheets, never metrics or single
+   frames.
 
 ## Camera angles (the authoritative records)
 
