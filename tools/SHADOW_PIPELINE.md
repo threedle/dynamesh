@@ -144,3 +144,12 @@ low-saturation gray regions outside/below the object silhouette whitened,
 object pixels untouched) in comparison.xml and supp_comparison.xml — all 36
 video-baseline panels. Mesh methods (ours, Frozen TRELLIS.2, MeshNCA) keep
 their real Cycles shadows. Reference film strips untouched.
+
+## Render archive split (2026-09-18)
+
+`$B/clips/` now holds ONLY the canonical figure sources (see
+`clips_archive_NOT_IN_FINAL_FIGURES/README.md` for the keep list) plus the
+webpage clip dirs. All 266 superseded generations, view sweeps and failed
+candidates were verified against the panels embedded in the current figure
+XMLs and moved to `$B/clips_archive_NOT_IN_FINAL_FIGURES/`, each family
+explained in that folder's README.
