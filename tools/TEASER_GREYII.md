@@ -61,8 +61,13 @@ render as the nose-down "diving" look the user independently described.
 
 **FINAL choices:**
 - **row 1 — `AZ=160 EL=10 SCALE=1.55`**, floor on.
-- **row 2 — `AZ=295 EL=-10 SCALE=1.40`**, floor on. This is Diagonal B's azimuth
-  lifted 10 degrees. See the floor note below for why it is not el-20.
+- **row 2 — `AZ=240 EL=20 SCALE=1.40 --rotx 180 --obj-roll -120`**, floor on
+  (re-picked 2026-09-19 to match a MeshLab reference: nose up-right, long wing
+  up-left, top side visible). The X-flip turns the below-floor viewing
+  direction of the belly-down composition into an above-floor camera, so the
+  floor shadow survives; renders in `$B/teaser_row2_v2/`. The webpage viewer
+  mirrors this with a mesh quaternion (comparison.js, X-flip + +120 roll about
+  the yaw80/el20 view axis) and opens at that view.
 
 ### Floor / shadow constraint (do not re-derive this)
 

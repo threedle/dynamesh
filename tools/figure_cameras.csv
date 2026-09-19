@@ -2,7 +2,7 @@ figure,row,export_dir,pattern,az,el,extra,env,frames,status
 gallery,hand nv1,sx_hand,adapted,50,15,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
 gallery,hand nv2,sx_hand,adapted,230,15,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
 gallery,chair nv1,sx_chair,adapted,220,25,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
-gallery,chair nv2,sx_chair,adapted,310,-20,,CAM_FILL=4.0 NO_FLOOR=1,"10,57,104,150",locked APPLIED
+gallery,chair nv2,sx_chair,adapted,310,-10,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED (floor shadow, dir fp_chair_nv2_el10)
 gallery,pumpkin nv1,sx_pumpkin,adapted,190,25,,CAM_FILL=4.0,"60,76,84,121",locked APPLIED (cols1-2 re-picked to match video strip)
 gallery,pumpkin nv2,sx_pumpkin,adapted,134,25,,CAM_FILL=4.0,"60,76,84,121",locked APPLIED (cols1-2 re-picked to match video strip)
 gallery,airplane nv1,sx_airplane,adapted,240,25,,CAM_FILL=4.0,"10,57,104,150",locked APPLIED
@@ -58,6 +58,7 @@ meshnca_ablation,target f98 run,meshnca_export_abl_spot_lava_f098/spot_lava,mesh
 meshnca_ablation,full target run,meshnca_export/spot_lava,meshnca,225,25,,CAM_FILL=4.0,"16,53,98,150",locked APPLIED
 meshnca_ablation,left target panels,-,-,,,,,,TARGETS - NEVER RE-RENDER
 technique,whole figure,-,-,,,,,,NO MESH RENDERS - UNCHANGED
-teaser,rows + strip,vx_planeF / vx_planeT,adapted,,,r1 ~az220 e20 / r2 ~az130 e25 / strip az180 e0 (approximate),,,OWNED BY ANOTHER SESSION - DO NOT TOUCH
+teaser,row 1,px_greyII,adapted,160,10,SCALE=1.55,CAM_FILL=3.0,"70,90,105,130,150,230,300,450",locked APPLIED (Grey-II)
+teaser,row 2,px_greyII,adapted,240,20,--rotx 180 --obj-roll -120 SCALE=1.40 (dir teaser_row2_v2),CAM_FILL=3.0,"70,90,105,130,150,230,300,450",locked APPLIED (user pick 2026-09-19; matches MeshLab reference)
 supp_page,ag unicorn NV2 clip,sx_unicorn,adapted,15,30,,CAM_FILL=3.0,1:150,shipped (no roll; user reverted the -25 obj-roll)
 supp_page,ag lady NV2 clip,sx_lady2,adapted,330,5,(dir ag2_lady_diagC_floor),CAM_FILL=3.0,1:150,shipped v4 (floor shadow)
