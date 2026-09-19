@@ -201,6 +201,11 @@ if os.environ.get('NO_SIDE_SHADOW') and 'light' in objs:
     bpy.data.objects['light'].visible_shadow = False
 if os.environ.get('SUN_ANGLE'):
     bpy.data.objects['Sun'].data.angle = float(os.environ['SUN_ANGLE'])
+if os.environ.get('SHADOW_ONLY'):
+    # the mesh keeps casting but the camera cannot see it: the render is the
+    # bare floor with the full cast shadow (nothing self-occluded), for
+    # compositing a level shadow under an exact-silhouette 2D-rotated object
+    mesh.visible_camera = False
 if os.environ.get('SUN_TILT'):
     # "tilt rotz" degrees: lean the sun off vertical so the shadow escapes
     # sideways — needed for top-down cameras where the object hides its own
