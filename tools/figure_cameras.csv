@@ -64,3 +64,5 @@ supp_page,ag unicorn NV2 clip,sx_unicorn,adapted,15,30,,CAM_FILL=3.0,1:150,shipp
 supp_page,ag lady NV2 clip,sx_lady2,adapted,330,5,(dir ag2_lady_diagC_floor),CAM_FILL=3.0,1:150,shipped v4 (floor shadow)
 supp_page,ivy NV2 clips (3 methods),sx_ivysaur / meshnca_export,mixed,75,30,+15 in-image rotation of shipped clips,CAM_FILL=3.0,1:150,shipped v3
 supp_page,ag unicorn NV2 clip,sx_unicorn,adapted,15,30,+10 in-image rotation of shipped clip,CAM_FILL=3.0,1:150,shipped v7 (supersedes earlier row)
+supp_page,ivy NV1 frozen clip,sx_ivysaur,frozen,195,25,(matched to ours by silhouette IoU; dir wp_ivy_frz_diagA),CAM_FILL=3.0,1:150,shipped v3
+supp_page,ivy NV1 meshnca clip,meshnca_export/ivysaur_petal,meshnca,195,25,(dir wp_ivy_mn_diagA),CAM_FILL=3.0,1:150,shipped v3
