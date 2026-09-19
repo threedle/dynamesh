@@ -518,6 +518,17 @@ async function setupSyncStrip(strip) {
     const mesh = new THREE.Mesh(geom, new THREE.MeshStandardMaterial({
       vertexColors: true, roughness: 0.8, metalness: 0.3,
     }));
+    // match the paper teaser's second view: flip the plane about X (its
+    // baked Kling tilt hides the top side otherwise), then roll it about
+    // the yaw80/el20 view axis; the stage re-seats the floor underneath
+    {
+      const az = THREE.MathUtils.degToRad(80), el = THREE.MathUtils.degToRad(20);
+      const viewAxis = new THREE.Vector3(
+        Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az)).normalize();
+      const q = new THREE.Quaternion().setFromAxisAngle(viewAxis, THREE.MathUtils.degToRad(120));
+      q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI));
+      mesh.quaternion.copy(q);
+    }
     const scene = new THREE.Scene();
     scene.add(mesh);
     addStage(scene, mesh, { lift: 0, bright: 0.52 });
@@ -544,7 +555,7 @@ async function setupSyncStrip(strip) {
       const az = THREE.MathUtils.degToRad(azDeg), el = THREE.MathUtils.degToRad(elDeg);
       camera.position.set(r * Math.cos(el) * Math.sin(az), r * Math.sin(el), r * Math.cos(el) * Math.cos(az));
     };
-    setView(0, 0);
+    setView(80, 20);
     window.__syncView = setView;
     const controls = new OrbitControls(camera, container);
     container.style.touchAction = 'pan-y';
