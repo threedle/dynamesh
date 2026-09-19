@@ -66,3 +66,4 @@ supp_page,ivy NV2 clips (3 methods),sx_ivysaur / meshnca_export,mixed,75,30,+15 
 supp_page,ag unicorn NV2 clip,sx_unicorn,adapted,15,30,+10 in-image rotation of shipped clip,CAM_FILL=3.0,1:150,shipped v7 (supersedes earlier row)
 supp_page,ivy NV1 frozen clip,sx_ivysaur,frozen,195,25,(matched to ours by silhouette IoU; dir wp_ivy_frz_diagA),CAM_FILL=3.0,1:150,shipped v3
 supp_page,ivy NV1 meshnca clip,meshnca_export/ivysaur_petal,meshnca,195,25,(dir wp_ivy_mn_diagA),CAM_FILL=3.0,1:150,shipped v3
+supp_page,cont unicorn turntables (clip1/clip2),sx_cont2 / sx_cont1,adapted,150,15,--rotx -12 --spin 360 (upright base; dirs wp_cont1/2_spin_up),CAM_FILL=2.0,1:150,shipped v3
