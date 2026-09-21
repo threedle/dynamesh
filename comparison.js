@@ -197,7 +197,9 @@ async function setupSyncCell(container) {
   const { mesh, setFrame } = makePackMesh(parsed, Number(container.dataset.rx ?? 0), 1.22);
   const scene = new THREE.Scene();
   scene.add(mesh);
-  addStage(scene, mesh, { bright: 0.6 });
+  // data-lift drops the whole stage so the object lines up with the row's
+  // video panels (they frame the object lower than the default stage lift)
+  addStage(scene, mesh, { bright: 0.6, lift: Number(container.dataset.lift ?? 0.17) });
 
   const canvas = document.createElement('canvas');
   Object.assign(canvas.style, { position: 'absolute', inset: '0', width: '100%', height: '100%' });
