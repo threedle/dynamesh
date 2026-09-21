@@ -15,11 +15,11 @@ supp_gallery,goat diagA,sx_goat,adapted,225,25,,CAM_FILL=4.0,"30,60,90,120",lock
 supp_gallery,goat diagC,sx_goat,adapted,40,30,,CAM_FILL=4.0,"30,60,90,120",locked APPLIED
 supp_gallery,lady train,sx_lady2,adapted,180,0,,CAM_FILL=4.0,"24,44,63,83",locked APPLIED
 supp_gallery,lady back view,sx_lady2,adapted,330,5,,CAM_FILL=4.0,"24,44,63,83",locked APPLIED (floor shadow, dir fl_lady_dB_floor)
-supp_comparison_ivysaur,ours diagC,sx_ivysaur,adapted,45,30,+15 in-image rotation (2026-09-19),CAM_FILL=4.0,"30,70,110,150",locked APPLIED
+supp_comparison_ivysaur,ours diagC,sx_ivysaur,adapted,75,15,--rotx -20 --rotz 30 (dir fz_ivyC_*; user pick 2026-09-20),CAM_FILL=4.0,"30,70,110,150",locked APPLIED
 supp_comparison_ivysaur,ours diagA,sx_ivysaur,adapted,200,25,,CAM_FILL=4.0,"30,70,110,150",locked APPLIED
-supp_comparison_ivysaur,frozen diagC,sx_ivysaur,frozen,45,30,+15 in-image rotation (2026-09-19),CAM_FILL=4.0,"30,70,110,150",locked APPLIED
+supp_comparison_ivysaur,frozen diagC,sx_ivysaur,frozen,75,15,--rotx -20 --rotz 30 (dir fz_ivyC_*; user pick 2026-09-20),CAM_FILL=4.0,"30,70,110,150",locked APPLIED
 supp_comparison_ivysaur,frozen diagA,sx_ivysaur,frozen,200,25,(yaw matched to ours 2026-09-19; dir fq_ic_frz_dA200),CAM_FILL=4.0,"30,70,110,150",locked APPLIED
-supp_comparison_ivysaur,meshnca diagC,meshnca_export/ivysaur_petal,meshnca,45,30,+15 in-image rotation (2026-09-19),CAM_FILL=4.0,"30,70,110,150",locked APPLIED
+supp_comparison_ivysaur,meshnca diagC,meshnca_export/ivysaur_petal,meshnca,75,15,--rotx -20 --rotz 30 (dir fz_ivyC_*; user pick 2026-09-20),CAM_FILL=4.0,"30,70,110,150",locked APPLIED
 supp_comparison_ivysaur,meshnca diagA,meshnca_export/ivysaur_petal,meshnca,200,25,(yaw matched to ours 2026-09-19; dir fq_ic_mn_dA200),CAM_FILL=4.0,"30,70,110,150",locked APPLIED
 supp_comparison_ivysaur,DG4D strip (panels 0-3),-,-,,,,,,BASELINE - NEVER RE-RENDER
 flicker,frozen chairs,sx_chairmoss,frozen,230,25,,CAM_FILL=4.0,"21,61,101,150",locked APPLIED
@@ -68,3 +68,5 @@ supp_page,ivy NV1 frozen clip,sx_ivysaur,frozen,195,25,(matched to ours by silho
 supp_page,ivy NV1 meshnca clip,meshnca_export/ivysaur_petal,meshnca,195,25,(dir wp_ivy_mn_diagA),CAM_FILL=3.0,1:150,shipped v3
 supp_page,cont unicorn turntables (clip1/clip2),sx_cont2 / sx_cont1,adapted,150,15,--rotx -12 --spin 360 (upright base; dirs wp_cont1/2_spin_up),CAM_FILL=2.0,1:150,shipped v3
 NOTE 2026-09-20: lighting batch — gen ror rows (alien/monster/teapot) dim 0.8; flicker all panels+insets dim 0.75; failure ours rows dim 0.8; supp_gallery blub diagC col4 -> f136; teaser rows spaced +30; existing_texture duck B x1.15 + separator extended; webpage gallery nv clips dim 0.8, supp flicker clips dim 0.75
+supp_page,ivy NV2 clips final (3 methods),sx_ivysaur / meshnca_export,mixed,75,15,--rotx -20 --rotz 30 (dirs wp2_ivyC_*),CAM_FILL=3.0,1:150,shipped v4
+supp_gallery NOTE 2026-09-20: blub col4 = f128 (both views + strip video frame); failure viewB = az0 el70 --sun-tilt 35 --sun-rotz -45 --light-energy 6 CAM_FILL=1.0 (dirs fz_vaseB_*)
