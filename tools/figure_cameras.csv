@@ -9,8 +9,9 @@ gallery,airplane nv1,sx_airplane,adapted,240,25,dim 0.8 (2026-09-20),CAM_FILL=4.
 gallery,airplane nv2,sx_airplane,adapted,145,25,dim 0.8 (2026-09-20),CAM_FILL=4.0,"32,57,104,150",locked APPLIED
 supp_gallery,unicorn diagA,sx_unicorn,adapted,225,25,,CAM_FILL=4.0,"45,80,115,150",locked APPLIED
 supp_gallery,unicorn diagC,sx_unicorn,adapted,40,30,,CAM_FILL=4.0,"45,80,115,150",locked APPLIED
-supp_gallery,blub NV1 row,sx_blub,adapted,180,0,(sheet previously mislabeled az225),CAM_FILL=4.0,"45,80,115,128",locked APPLIED (col4 f128 2026-09-20)
-supp_gallery,blub NV2 row,sx_blub,adapted,225,25,(sheet previously mislabeled az35),CAM_FILL=4.0,"45,80,115,128",locked APPLIED (col4 f128 2026-09-20)
+supp_gallery,blub supervised/video row,sx_blub,adapted,180,0,(strip overlay cells; col4 f128 white-point-matched),CAM_FILL=4.0,"45,80,115,128",locked APPLIED (col4 f128 2026-09-20)
+supp_gallery,blub NV1 row,sx_blub,adapted,225,25,(dir fc_sg_blub_dA; col4 from blubAcand),CAM_FILL=4.0,"45,80,115,128",locked APPLIED (col4 f128 2026-09-20)
+supp_gallery,blub NV2 row,sx_blub,adapted,35,30,(dir fc_sg_blub_dC; col4 from blubCcand),CAM_FILL=4.0,"45,80,115,128",locked APPLIED (col4 f128 2026-09-21)
 supp_gallery,goat diagA,sx_goat,adapted,225,25,,CAM_FILL=4.0,"30,60,90,120",locked APPLIED
 supp_gallery,goat diagC,sx_goat,adapted,40,30,,CAM_FILL=4.0,"30,60,90,120",locked APPLIED
 supp_gallery,lady train,sx_lady2,adapted,180,0,,CAM_FILL=4.0,"24,44,63,83",locked APPLIED
@@ -69,4 +70,4 @@ supp_page,ivy NV1 meshnca clip,meshnca_export/ivysaur_petal,meshnca,195,25,(dir 
 supp_page,cont unicorn turntables (clip1/clip2),sx_cont2 / sx_cont1,adapted,150,15,--rotx -12 --spin 360 (upright base; dirs wp_cont1/2_spin_up),CAM_FILL=2.0,1:150,shipped v3
 NOTE 2026-09-20: lighting batch — gen ror rows (alien/monster/teapot) dim 0.8; flicker all panels+insets dim 0.75; failure ours rows dim 0.8; supp_gallery blub diagC col4 -> f136; teaser rows spaced +30; existing_texture duck B x1.15 + separator extended; webpage gallery nv clips dim 0.8, supp flicker clips dim 0.75
 supp_page,ivy NV2 clips final (3 methods),sx_ivysaur / meshnca_export,mixed,75,15,--rotx -20 --rotz 30 (dirs wp2_ivyC_*),CAM_FILL=3.0,1:150,shipped v4
-supp_gallery NOTE 2026-09-20: blub col4 = f128 (both views + strip video frame); failure viewB = az0 el70 --sun-tilt 35 --sun-rotz -45 --light-energy 6 CAM_FILL=1.0 (dirs fz_vaseB_*)
+supp_gallery NOTE 2026-09-21: blub section has THREE rows (supervised az180el0 overlaid in strip windows / NV1 az225el25 / NV2 az35el30); all col4 = f128 (eye visible), strip window-4 bitmap also patched with ref f128 but is covered by the supervised overlay cell in PDF order; failure viewB = az0 el70 --sun-tilt 35 --sun-rotz -45 --light-energy 6 CAM_FILL=1.0 (dirs fz_vaseB_*)
