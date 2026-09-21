@@ -102,7 +102,8 @@ O=/net/projects/ranalab/guanc/geometry-def/dynamesh_render/out
 |---|---|
 | PLY export (frames 1/45/70/90/105/130/150/230/300/380/450, adapted + frozen) | `$O/px_greyII/` |
 | **row 1 final** | `$B/teaser_row1/` |
-| **row 2 final (el-10 scale 1.40)** | `$B/teaser_row2_final/` |
+| **row 2 final (az240 el20 rotx180 obj-roll -120, 2026-09-19)** | `$B/teaser_row2_v2/` |
+| row 2 superseded (el-10 scale 1.40) | `$B/teaser_row2_final/` |
 | row 2 alternates | `$B/teaser_row2/` (el-20 NO_FLOOR), `$B/teaser_row2_e10/` (el-10 scale 1.15, too small), `$B/teaser_row2_e0/` (el0) |
 | proof that el-20 + floor is blank | `$B/proof_e20floor/0130.png` |
 | view sweeps | `$B/sweep_gII_{e0,e20,e35,em20,r1a,r1b}/`, `$B/roll_{e25,e10,em10,em25}/` |

@@ -60,10 +60,18 @@ FRAMES=1:150,AZ=230,EL=-4,SCALE=1.0,RES="768 768",EXTRA="--roll 43.5" \
   top-down cameras (el ≳ 60) where the object hides its own straight-down
   shadow; the shadow extends toward world `(-sin rotz, cos rotz)`. For a
   camera at az 0, `rotz 0` throws it toward the image bottom, `rotz -45`
-  bottom-left, `rotz 45` bottom-right.
+  bottom-left, `rotz 45` bottom-right. Since 2026-09-20 also available as
+  CLI flags `--sun-tilt/--sun-rotz` (same semantics; mutes all SUN-light
+  constraints and prints `[SUNTILT]`/`[LIGHTS]` as proof it took effect).
+  `SHADOW_ONLY=1` renders the cast shadow with the mesh invisible to the
+  camera; `OBJ_PITCH=<deg>` pitches the object about the screen axis and
+  re-drops it to the floor.
 - `EXTRA` flags: `--pattern frozen_f{:04d}.ply` / `meshnca_f{:04d}.ply`,
-  `--roll <deg>` (positive = image clockwise), `--rotx/--rotz` (object),
-  `--spin 360` (turntable), `--dist` (default 3.2).
+  `--roll <deg>` (positive = image clockwise), `--rotx/--rotz` (object;
+  rotx applies first, R = Rz·Rx), `--obj-roll`, `--lift`, `--spin 360`
+  (turntable), `--dist` (default 3.2), `--light-energy` (sun strength,
+  default 2.0 — vase B visible-shadow recipe uses 6 with
+  `--sun-tilt 35 --sun-rotz -45` and `CAM_FILL=1.0`).
 - The driver normalizes to the unit sphere, drops to the floor, and uses
   the pipeline camera convention: yaw 0 looks from +Y; per-object
   blender_az = pipeline_yaw + offset (offsets in CAMERA_ANGLES.md).

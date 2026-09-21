@@ -57,10 +57,11 @@ All in this repo, `dynamesh_page/tools/` (github: threedle/dynamesh page repo):
 | `dynamesh_page` repo (`index.html`, `supp/`, `assets/`) | The live project + supp pages (threedle.github.io/dynamesh), all videos cache-busted. |
 | `~/Downloads/dynamesh_figures_before_after/` (Guan's laptop) | Review evidence: before/after sheets, PDF-semantics confirm renders, candidate grids. |
 
-## Open item
+## Open items
 
-Teaser row 2 view: nose-up re-pick in progress; numbered candidate grid at
-`~/Downloads/dynamesh_figures_before_after/00_teaser_row2_fine_grid.png`,
-renders in `blender/tsr2_cands/`. Once picked: render frames
-70/90/105/130/150/230/300/450 at that camera, rebuild the teaser row-2
-panels via `figtool.py`, update `figure_cameras.csv`.
+None as of 2026-09-21. Teaser row 2 was picked and applied (az240 e20
+`--rotx 180 --obj-roll -120`, dir `teaser_row2_v2`); the supp-gallery
+blub section is final (three rows, all ending at f128 with the eye
+visible). Both colleague feedback batches (frame re-picks, brightness
+dims, ivysaur NV2, vase-B shadows, duck layout) are implemented in the
+XMLs and on the webpage. Current state per row: `figure_cameras.csv`.

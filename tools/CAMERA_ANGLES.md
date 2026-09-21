@@ -97,8 +97,13 @@ update the CSV first; the prose below is history and context.
 
 Gallery: webpage cameras, canonical frames 10/57/104/150.
 Supp gallery (frame-matched in the original domain, err <=0.017):
-  unicorn diagA+diagC rows frames 45/80/115/150; blub diagA+diagC
-  45/80/115/150; goat diagA+diagC 30/60/90/120; lady train 24/44/63/83,
+  unicorn diagA+diagC rows frames 45/80/115/150; blub section has THREE
+  rows — supervised az180 e0 (overlay cells inside the film-strip
+  windows), NV1 az225 e25, NV2 az35 e30 — frames 45/80/115/128 (last
+  frame moved 150→128 on 2026-09-21 so the dried fish keeps its eye;
+  col4 sources: strip/supervised = f128 white-point-matched, NV1 =
+  blubAcand/0128, NV2 = blubCcand/0128); goat diagA+diagC 30/60/90/120;
+  lady train 24/44/63/83,
   lady row2 = diagB-like back view (az~315 e-20 NO_FLOOR, being refined).
 Supp comparison (ivysaur, Page-6): row1 = diagC (az45 e30), row2 = diagA
   (az225 e25) — corrected with the universal-180 offset; frames
@@ -137,9 +142,11 @@ MeshNCA-ablation supp figure: 4 rows = MeshNCA results
   ablation; exports meshnca_export_abl_* + meshnca_export/spot_lava),
   all at az225 e25 (match .90), columns = frames 16/53/98/150 (the
   export default). Left target panels stay untouched.
-Supp gallery corrections: unicorn+blub rows are diagA+diagC (frames
-  45/80/115/150); lady row2 = back view az330 e-15 NO_FLOOR (match caps
-  at .82), frames 24/44/63/83.
+Supp gallery corrections: unicorn rows are diagA+diagC (frames
+  45/80/115/150); blub rows re-identified 2026-09-21 — the sheet had
+  them mislabeled; truth is supervised az180 e0 / NV1 az225 e25 / NV2
+  az35 e30, frames 45/80/115/128 (see the CSV); lady row2 = back view
+  az330 e-15 NO_FLOOR (match caps at .82), frames 24/44/63/83.
 
 ## Pipeline camera families (Raj's conventions)
 
@@ -150,8 +157,13 @@ y310 e25.
 
 ## Render driver knobs (`itai_render/render_anim_colors.py`)
 
-`--az --el --dist(3.2) --scale(1.0 unit-sphere) --rotx --rotz --spin
---frames A:B` · env: `NO_SIDE_SHADOW=1` (always, the approved look),
+`--az --el --dist(3.2) --scale(1.0 unit-sphere) --rotx --rotz --roll
+--obj-roll --lift --spin --sun-tilt --sun-rotz --light-energy
+--frames A:B` (`--sun-tilt/--sun-rotz` added 2026-09-20: mutes the SUN
+constraints and leans the sun — needed for top-down cameras, prints
+`[SUNTILT]`/`[LIGHTS]`) · env: `NO_SIDE_SHADOW=1` (always, the approved
+look), `SHADOW_ONLY=1` (mesh invisible to camera, shadow only),
+`OBJ_PITCH` (screen-axis pitch + re-drop),
 `NO_FLOOR=1` (below-horizon cameras; camera z < 0), `CAM_FILL=<x>`
 (camera-aligned non-casting fill; FIGURE PANELS use 4.0, duck webpage novels 3.0, chair nv2 3.0), `SUN_ANGLE`,
 `BAKE_SHADOW=1` (floor-shadow bake mode). Blender scene = Itai's
