@@ -73,3 +73,4 @@ supp_page,ivy NV2 clips final (3 methods),sx_ivysaur / meshnca_export,mixed,75,1
 supp_gallery NOTE 2026-09-21: blub section has THREE rows (supervised az180el0 overlaid in strip windows / NV1 az225el25 / NV2 az35el30); all col4 = f128 (eye visible), strip window-4 bitmap also patched with ref f128 but is covered by the supervised overlay cell in PDF order; failure viewB = az0 el70 --sun-tilt 35 --sun-rotz -45 --light-energy 6 CAM_FILL=1.0 (dirs fz_vaseB_*)
 webpage NOTE 2026-09-21: gallery rotating cells aligned to their row videos via data-lift (hand/chair 0.02, pumpkin/airplane 0.00; addStage default 0.17); comparison.js?v=47
 webpage NOTE 2026-09-22: gallery nv clips (chair/pumpkin/airplane nv1+nv2) re-encoded from pre-dim originals with white-preserving gamma 0.85 (user pick, supersedes dim 0.8); hand nv clips untouched
+webpage NOTE 2026-09-22: duck supervised view (056) re-encoded with white-preserving gamma 0.85 (user pick)
