@@ -47,6 +47,8 @@ ap.add_argument('--resolution', nargs=2, type=int, default=[768, 768])
 ap.add_argument('--samples', type=int, default=50)
 ap.add_argument('--light-angle', type=float, default=0.1745329201221466)
 ap.add_argument('--light-energy', type=float, default=2.0)
+ap.add_argument('--sun-tilt', type=float, default=0.0, help='lean the sun off vertical (degrees); shadow escapes sideways for top-down cameras')
+ap.add_argument('--sun-rotz', type=float, default=0.0, help='horizontal direction of the sun lean')
 ap.add_argument('--spin', type=float, default=0.0,
                 help='degrees of object yaw over the whole clip (rotating views)')
 A = ap.parse_args(argv)
@@ -151,6 +153,32 @@ cam.location = look + Vector((-A.dist * math.cos(el) * math.sin(az),
                               A.dist * math.cos(el) * math.cos(az),
                               A.dist * math.sin(el)))
 direction = look - cam.location
+if float(os.environ.get('OBJ_PITCH', 0) or 0):
+    # rotate the OBJECT about the camera-right horizontal axis (screen X),
+    # then re-drop: the object tips toward/away from this exact camera with
+    # no apparent yaw or elevation change. Positive tips the top AWAY.
+    from mathutils import Matrix
+    _axis = direction.normalized().cross(Vector((0.0, 0.0, 1.0))).normalized()
+    _pitch = math.radians(float(os.environ['OBJ_PITCH']))
+    _center = mesh.matrix_world @ (0.125 * sum((Vector(c) for c in mesh.bound_box), Vector()))
+    _R = (Matrix.Translation(_center) @ Matrix.Rotation(_pitch, 4, _axis)
+          @ Matrix.Translation(-_center))
+    mesh.matrix_world = _R @ mesh.matrix_world
+    bpy.context.view_layer.update()
+    import numpy as _np
+    _n = len(mesh.data.vertices)
+    _co = _np.empty(_n * 3, dtype=_np.float64)
+    mesh.data.vertices.foreach_get('co', _co)
+    _co = _co.reshape(-1, 3)
+    _mw = _np.array(mesh.matrix_world)
+    zmin = float((_co @ _mw[:3, :3].T + _mw[:3, 3]).min(axis=0)[2])
+    mesh.location.z -= zmin
+    bpy.context.view_layer.update()
+    look = Vector((0.0, 0.0, (mesh.matrix_world @ (0.125 * sum((Vector(c) for c in mesh.bound_box), Vector()))).z))
+    cam.location = look + Vector((-A.dist * math.cos(el) * math.sin(az),
+                                  A.dist * math.cos(el) * math.cos(az),
+                                  A.dist * math.sin(el)))
+    direction = look - cam.location
 if A.obj_roll:
     from mathutils import Matrix
     axis = direction.normalized()
@@ -206,13 +234,24 @@ if os.environ.get('SHADOW_ONLY'):
     # bare floor with the full cast shadow (nothing self-occluded), for
     # compositing a level shadow under an exact-silhouette 2D-rotated object
     mesh.visible_camera = False
-if os.environ.get('SUN_TILT'):
-    # "tilt rotz" degrees: lean the sun off vertical so the shadow escapes
-    # sideways — needed for top-down cameras where the object hides its own
-    # straight-down shadow. Shadow extends toward world (-sin rotz, cos rotz).
-    _t, _rz = (float(x) for x in os.environ['SUN_TILT'].split())
-    bpy.data.objects['Sun'].rotation_euler = (math.radians(_t), 0.0,
-                                              math.radians(_rz))
+if os.environ.get('SUN_TILT') or A.sun_tilt:
+    # lean the sun off vertical so the shadow escapes sideways — needed for
+    # top-down cameras where the object hides its own straight-down shadow.
+    # Shadow extends toward world (-sin rotz, cos rotz).
+    if A.sun_tilt:
+        _t, _rz = A.sun_tilt, A.sun_rotz
+    else:
+        _t, _rz = (float(x) for x in os.environ['SUN_TILT'].split())
+    for _o in bpy.data.objects:
+        if _o.type == 'LIGHT':
+            print('[LIGHTS]', _o.name, _o.data.type, _o.data.energy,
+                  [c.type for c in _o.constraints], flush=True)
+    for _o in bpy.data.objects:
+        if _o.type == 'LIGHT' and _o.data.type == 'SUN':
+            for _c in _o.constraints:
+                _c.mute = True
+            _o.rotation_euler = (math.radians(_t), 0.0, math.radians(_rz))
+    print('[SUNTILT]', _t, _rz, flush=True)
 if os.environ.get('CAM_FILL'):
     # a non-casting fill aligned with the camera: brightens exactly what
     # this view sees (for cameras that face the sun-shaded undersides)
