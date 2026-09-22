@@ -29,7 +29,7 @@ chat session. Read this file, then `SHADOW_PIPELINE.md` (the how-to) and
 
 ## Camera angles (the authoritative records)
 
-All in this repo, `dynamesh_page/tools/` (github: threedle/dynamesh page repo):
+All in this repo, `dynamesh_page/tools/` (github: threedle/dynamesh_webpage):
 
 | file | what it holds |
 |---|---|
@@ -54,7 +54,7 @@ All in this repo, `dynamesh_page/tools/` (github: threedle/dynamesh page repo):
 | path | contents |
 |---|---|
 | `~/Downloads/draw.io_xml_files/` (Guan's laptop) | The 14 final figure XMLs, panels embedded (gallery, supp_gallery, supp_comparison, comparison, spot_second_view, system, failure, flicker, extended_texture, existing_texture, generalization, meshnca_ablation, technique, teaser). |
-| `dynamesh_page` repo (`index.html`, `supp/`, `assets/`) | The live project + supp pages (threedle.github.io/dynamesh), all videos cache-busted. |
+| `dynamesh_page` repo (`index.html`, `supp/`, `assets/`) | The live project + supp pages (threedle.github.io/dynamesh_webpage), all videos cache-busted. |
 | `~/Downloads/dynamesh_figures_before_after/` (Guan's laptop) | Review evidence: before/after sheets, PDF-semantics confirm renders, candidate grids. |
 
 ## Open items
