@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DynaMesh Supplementary Results</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>">
+<link rel="icon" type="image/png" href="../assets/favicon.png?v=1">
 </head>
 <body>
 <style>
@@ -44,6 +44,9 @@ h3 { display: inline; font-size: 1.35em; }
    inside its own box so the page never scrolls sideways */
 th, td { padding: 3px 4px; }
 .mname { font-weight: bold; padding-top: 8px; }
+/* per-clip view labels: hidden on wide screens (the thead shows there),
+   shown on narrow screens where the thead is collapsed away */
+.cell-label { display: none; }
 .scroll { overflow-x: auto; }
 video { display: block; margin: 0 auto; }
 /* small screens: tables reflow into blocks instead of scrolling sideways.
@@ -55,6 +58,7 @@ video { display: block; margin: 0 auto; }
 	thead { display: none; }
 	tr { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
 	td, th { display: block; padding: 0; }
+	.cell-label { display: block; font-weight: bold; font-size: 0.8em; text-align: center; padding: 6px 0 2px; }
 	.mname { flex: 1 0 100%; text-align: center; padding-top: 8px; }
 	table video { width: 44vw; max-width: 200px; height: auto; aspect-ratio: 1 / 1; background: #fff; }
 	h1 { font-size: 1.5em; }
@@ -147,6 +151,28 @@ video { display: block; margin: 0 auto; }
         </tr></table>
 </div>
   <script>
+    // ---- per-clip view labels (narrow screens) ----------------------
+    // The thead collapses away below 1040px, so each clip carries its
+    // own column headline, mapped from the table's thead. Rows that omit
+    // the reference column (it spans rows) take the TRAILING headers.
+    (function () {
+      document.querySelectorAll('table').forEach(function (tbl) {
+        var ths = Array.prototype.map.call(tbl.querySelectorAll('thead th'), function (th) { return th.textContent; });
+        if (!ths.length) return;
+        tbl.querySelectorAll('tbody tr').forEach(function (tr) {
+          var vtds = Array.prototype.filter.call(tr.children, function (td) { return td.querySelector('video'); });
+          vtds.forEach(function (td, i) {
+            var label = (td.rowSpan > 1) ? ths[0] : ths[ths.length - vtds.length + i];
+            if (!label) return;
+            var div = document.createElement('div');
+            div.className = 'cell-label';
+            div.textContent = label;
+            td.insertBefore(div, td.firstChild);
+          });
+        });
+      });
+    })();
+
     // ---- lazy video playback under a decoder budget -----------------
     // This page carries 60 clips but the browser's media service only
     // sustains a couple dozen live decoders browser-wide (beyond that
