@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>DynaMesh: Dynamic 3D Texture Generation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png?v=1">
+  <link href="style.css?v=20" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <style>
+    /* from https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css */
+    @font-face {
+      font-family: 'Academicons';
+      font-style: normal;
+      font-weight: 400;
+      font-display: block;
+      src: url('https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/fonts/academicons.eot') format('embedded-opentype'),
+        url('https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/fonts/academicons.ttf') format('truetype'),
+        url('https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/fonts/academicons.woff') format('woff'),
+        url('https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/fonts/academicons.svg') format('svg');
+    }
+
+    .ai {
+      font-family: 'Academicons';
+      font-weight: 400;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      line-height: 1;
+    }
+
+    .ai-arxiv:before {
+      content: "\e974";
+    }
+  </style>
+
+  <meta name="description" content="DynaMesh: Dynamic 3D Texture Generation">
+  <meta name="keywords" content="Dynamic Textures, 3D Texture Generation, Video Diffusion, Texture Synthesis, 4D Generation">
+
+  <meta property='og:title' content='DynaMesh: Dynamic 3D Texture Generation' />
+  <meta property='og:url' content='https://threedle.github.io/dynamesh/' />
+  <meta property='og:image' content='https://threedle.github.io/dynamesh/assets/teaser.jpg' />
+  <meta property="og:type" content="website" />
+</head>
+
+<body>
+  <section class="intro" aria-label="intro">
+    <a href="https://3dl.cs.uchicago.edu" aria-label="3DL threedle home">
+      <div class="logobox">
+        <img src="assets/threedle_icon.png" alt="3DL threedle logo">
+      </div>
+    </a>
+    <div class="titlebox">
+      <h1>DynaMesh: Dynamic<i class="med-nbsp" aria-hidden="true"></i>3D<i class="med-nbsp"
+          aria-hidden="true"></i>Texture<wbr> Generation</h1>
+    </div>
+    <nav>
+      <a href="#" aria-label="paper pdf">
+        <i class="icon fas fa-file-pdf"></i>Paper
+      </a>
+      <a href="#"><i class="icon ai ai-arxiv"></i>arXiv</a>
+      <a href="https://github.com/threedle/dynamesh/" target="_blank" rel="noopener noreferrer" aria-label="code github"><i class="icon fab fa-github"></i>Code</a>
+    </nav>
+    <div class="authors" aria-label="authors">
+      <span><a href="https://github.com/rajhansini">Raj Hansini</a><sup>*</sup></span>
+      <span><a href="https://github.com/Guanc27">Guan Chen</a><sup>*</sup></span>
+      <span><a href="https://people.cs.uchicago.edu/~ranahanocka/">Rana Hanocka</a></span>
+      <span><a href="https://itailang.github.io/">Itai Lang</a></span>
+    </div>
+    <div class="affiliations" aria-label="affiliations">University of Chicago</div>
+    <div class="note" aria-label="note"><sup>*</sup>Equal contribution</div>
+  </section>
+
+  <!-- Floating mini-TOC pinned to the right edge on wide screens. JS
+       marks the entry corresponding to the current section as active. -->
+  <aside class="side-toc" aria-label="Page sections" data-toc>
+    <a href="#abstract" data-section="abstract">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Abstract</span>
+    </a>
+    <a href="#method" data-section="method">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Method</span>
+    </a>
+    <a href="#key-idea" data-section="key-idea">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Key Idea</span>
+    </a>
+    <a href="#gallery" data-section="gallery">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Gallery</span>
+    </a>
+    <a href="#generalization" data-section="generalization">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Generalization</span>
+    </a>
+    <a href="#applications" data-section="applications">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Existing Texture</span>
+    </a>
+    <a href="#comparison" data-section="comparison">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">Comparison</span>
+    </a>
+    <a href="#bibtex" data-section="bibtex">
+      <span class="side-toc-dot" aria-hidden="true"></span>
+      <span class="side-toc-label">BibTeX</span>
+    </a>
+  </aside>
+
+  <section class="teaser" aria-label="teaser">
+    <p class="vprompt" style="text-align:center">&ldquo;Hokusai waves gushing&rdquo;</p>
+    <div class="sync-teaser">
+      <div class="sync-panel">
+        <p class="dm-block-label">Reference video</p>
+        <video id="teaserVideo" muted loop playsinline controls preload="auto" src="assets/teaser_reference.mp4?v=2"></video>
+      </div>
+      <div class="sync-panel">
+        <p class="dm-block-label">Dynamic 3D texture</p>
+        <div id="teaser3d" aria-label="interactive 3D result, texture follows the video"></div>
+      </div>
+    </div>
+    <p class="dm-block-label">Our result, time-synced, side by side with the reference video.
+      <em>Scroll</em> to zoom, <em>Left Click + drag</em> to rotate, <em>Right Click + drag</em> to translate, <em>Click</em> to pause.</p>
+    <p class="graybox">
+      <em>DynaMesh</em> generates a dynamic appearance effect for a 3D mesh. We create a video of the desired
+      effect conditioned on a text prompt and a single view of the mesh, and propagate it consistently to the
+      entire 3D surface.
+    </p>
+  </section>
+  <section id="abstract">
+    <h2>Abstract</h2>
+    <p class="graybox">
+      We present DynaMesh, a dynamic texture generation method for 3D meshes. Given a textureless shape and a text
+      prompt describing an effect, our method produces an appearance that evolves while the object's geometry remains
+      unchanged. Previous works on dynamic 3D content generation have focused on motion, where an object's geometry
+      and position change while keeping its appearance the same. Methods on texture generation sit on the other side
+      of the problem, painting appearance onto a shape as a fixed surface property and not as an evolving process.
+      Neither addresses a visual effect that propagates on a 3D object. <br>
+      <br>
+      A natural route consists of two generators: a video model that shows the effect from a single view, and an
+      image-to-3D generator that lifts each frame to 3D. However, the latter has no notion of time, so running it per
+      video frame produces a sequence that flickers, loses effect details, and yields a different mesh at every video
+      frame. Our method addresses these failures by conditioning a video model on a render of the mesh and the prompt
+      to obtain a reference video, then running a frozen image-to-3D generator on the video with two changes. The
+      conditioning of each frame is blended over a temporal window, and low-rank adapters are fit per shape to restore
+      the lost details. The mesh is encoded once for the whole sequence, so geometry is constant by construction, and
+      the output is a single mesh with a texture per frame. Applied to various objects and effects, DynaMesh
+      substantially improves over recent video-to-4D and texturing methods, and can generalize its temporal effect to
+      different shapes never seen during training.
+    </p>
+  </section>
+  <section id="method">
+    <h2>Method</h2>
+    <img class="halfwidthflex blcent" style="width: calc(1.55 * var(--halfwidthflex-w)); max-width: 100%;" src="assets/system.jpg"
+      alt="system overview diagram: a render of the mesh and a text prompt go to a video generation model, whose frames condition the 3D generator through temporal attention.">
+    <p class="graybox">
+      <b>System overview.</b> A render of the input mesh and a text prompt describing the effect are passed
+      to a video generation model, which returns the reference video for our pipeline. The 3D generator then produces
+      the textured object at every frame. Our temporal cross-attention (the new module) conditions each frame's
+      generation on a window of neighboring video frames. Low-rank adapters on the attention modules are fit per scene
+      to recover detail. Geometry is shared across frames, so the output is one mesh whose texture evolves with the
+      video.
+    </p>
+  </section>
+  <section id="key-idea">
+    <h2>Key Idea</h2>
+    <img class="halfwidthflex blcent" style="width: calc(1.55 * var(--halfwidthflex-w)); max-width: 100%;" src="assets/method.jpg"
+      alt="token maps of a temporal window are blended by temporal attention and condition spatial cross-attention and 3D self-attention over the voxel tokens of the mesh.">
+    <p class="graybox">
+      <b>Turning a 3D generator of static objects into a dynamic texture generator.</b> To generate a smooth temporal
+      appearance sequence, we blend the tokens of nearby video frames with a temporal attention layer before they
+      reach the 3D generator. The blended tokens describe what the surface should look like at that moment, the
+      generator's cross-attention paints that appearance onto the voxels of the mesh, and its self-attention
+      propagates the effect across the entire surface.
+    </p>
+  </section>
+  <section id="gallery">
+    <h2>Gallery</h2>
+    <p class="dm-block-label">To interact with the rotating view, <em>Scroll</em> to zoom, <em>Left Click + drag</em> to rotate, and <em>Right Click + drag</em> to translate. <em>Click</em> any clip, figure, or 3D view to enlarge it.</p>
+    <div class="vgrid vgrid-4 vhead"><div>Reference video</div><div>Novel view #1</div><div>Novel view #2</div><div>Rotating view</div></div>
+    <p class="vprompt">&ldquo;Rorschach pattern forming&rdquo;</p>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/006_hand__reference_video.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/008_hand__novel_view_1.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/gal_hand_nv2.mp4?v=2" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="hand" data-az="45" data-el="25" data-lift="0.02"></div></div>
+    <p class="vprompt">&ldquo;Blue paint cracks and peels&rdquo;</p>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/010_chair__reference_video.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/012_chair__novel_view_1.mp4?v=4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/gal_chair_nv2.mp4?v=5" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="chair" data-az="45" data-el="25" data-lift="0.02"></div></div>
+    <p class="vprompt">&ldquo;Rot spreads and darkens&rdquo;</p>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/014_pumpkin__reference_video.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/016_pumpkin__novel_view_1.mp4?v=4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/gal_pumpkin_nv2.mp4?v=4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="pumpkin" data-az="45" data-el="25" data-lift="0.00"></div></div>
+    <p class="vprompt">&ldquo;Red cracks spreading&rdquo;</p>
+    <div class="vgrid vgrid-4"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/018_airplane__reference_video.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/020_airplane__novel_view_1.mp4?v=4" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/gal_airplane_nv2.mp4?v=4" type="video/mp4"></video><div class="dm-3d dm-sync" data-pack="airplane" data-az="45" data-el="25" data-lift="0.00"></div></div>
+    <p class="graybox">
+      <b>Gallery of results.</b> Four objects driven by four different effects. Each row shows the reference video,
+      our output at two novel viewpoints, and the 3D result under a rotating camera, its texture playing in sync with
+      the row. The texture remains coherent even at viewpoints unseen in training.
+    </p>
+  </section>
+  <section id="generalization">
+    <h2>Generalization</h2>
+    <p class="dm-block-label">To interact with the rotating view, <em>Scroll</em> to zoom, <em>Left Click + drag</em> to rotate, and <em>Right Click + drag</em> to translate. <em>Click</em> any clip, figure, or 3D view to enlarge it.</p>
+    <p class="vexplain">The reference video, the training shape, then twelve unseen shapes.</p>
+    <p class="vprompt">&ldquo;Rorschach effect with spots growing&rdquo;</p>
+    <div class="dm-syncstrip-wrap">
+    <div class="vscroll dm-syncstrip"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/022_rorschach_adapter__reference_video.mp4?v=2" type="video/mp4"></video>
+      <div class="dm-synccell" data-pack="gx_ror_train"></div>
+      <div class="dm-synccell" data-pack="gx_ror_aliens_ufo"></div>
+      <div class="dm-synccell" data-pack="gx_ror_animals_blub"></div>
+      <div class="dm-synccell" data-pack="gx_ror_animals_bob"></div>
+      <div class="dm-synccell" data-pack="gx_ror_animals_octopus"></div>
+      <div class="dm-synccell" data-pack="gx_ror_dragons_xyzrgb_dragon"></div>
+      <div class="dm-synccell" data-pack="gx_ror_furnature_chair"></div>
+      <div class="dm-synccell" data-pack="gx_ror_humanoid_mike_wazowski"></div>
+      <div class="dm-synccell" data-pack="gx_ror_statues_napoleon"></div>
+      <div class="dm-synccell" data-pack="gx_ror_thingi10k_octocat"></div>
+      <div class="dm-synccell" data-pack="gx_ror_thingi10k_wooly_sheep"></div>
+      <div class="dm-synccell" data-pack="gx_ror_vehicles_tie_fighter"></div>
+      <div class="dm-synccell" data-pack="gx_ror_teapot" data-rx="90" data-el="38"></div>
+    </div>
+    </div>
+    <p class="vprompt">&ldquo;Lava effect with cracks glowing in bright orange&rdquo;</p>
+    <div class="dm-syncstrip-wrap">
+    <div class="vscroll dm-syncstrip"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/036_lava_adapter__reference_video.mp4?v=2" type="video/mp4"></video>
+      <div class="dm-synccell" data-pack="gx_lava_train"></div>
+      <div class="dm-synccell" data-pack="gx_lava_aliens_ufo"></div>
+      <div class="dm-synccell" data-pack="gx_lava_animals_blub"></div>
+      <div class="dm-synccell" data-pack="gx_lava_animals_bob"></div>
+      <div class="dm-synccell" data-pack="gx_lava_animals_octopus"></div>
+      <div class="dm-synccell" data-pack="gx_lava_dragons_xyzrgb_dragon"></div>
+      <div class="dm-synccell" data-pack="gx_lava_furnature_chair"></div>
+      <div class="dm-synccell" data-pack="gx_lava_humanoid_mike_wazowski"></div>
+      <div class="dm-synccell" data-pack="gx_lava_statues_napoleon"></div>
+      <div class="dm-synccell" data-pack="gx_lava_thingi10k_octocat"></div>
+      <div class="dm-synccell" data-pack="gx_lava_thingi10k_wooly_sheep"></div>
+      <div class="dm-synccell" data-pack="gx_lava_vehicles_tie_fighter"></div>
+      <div class="dm-synccell" data-pack="gx_lava_teapot" data-rx="90" data-el="38"></div>
+    </div>
+    </div>
+    <p class="graybox">
+      <b>Generalization across shapes.</b> Per-scene adapters fit on a reference video are applied, without any
+      retraining, to meshes never seen during fitting. Both effects clearly propagate on the new shapes according to
+      the video. The adapters change only how appearance is generated, and each object keeps its own geometry, so the
+      same spreading blots or lava cracks work even on different shapes.
+    </p>
+  </section>
+  <section id="applications">
+    <h2>Bringing an existing texture to life</h2>
+    <p class="vprompt">&ldquo;Polka dots gliding over the duck&rdquo;</p>
+    <div class="vgrid vgrid-4"><div class="vcell"><div class="vcell-label">Reference video</div><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/055_duck__reference_video.mp4?v=2" type="video/mp4"></video></div><div class="vcell"><div class="vcell-label">Supervised view</div><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/056_duck__supervised_view.mp4?v=3" type="video/mp4"></video></div><div class="vcell"><div class="vcell-label">Novel view #1</div><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/057_duck__novel_view_1.mp4?v=3" type="video/mp4"></video></div><div class="vcell"><div class="vcell-label">Novel view #2</div><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/058_duck__novel_view_2.mp4?v=2" type="video/mp4"></video></div></div>
+    <p class="graybox">
+      Our method can operate on objects that already have a texture and make it change over time, as shown for the
+      moving spots over the duck. The dots glide around the ring while the head stays clear, and the painted eyes,
+      beak, and molded shading hold their place, so only the pattern moves.
+    </p>
+  </section>
+  <section id="comparison">
+    <h2>Comparison</h2>
+    <p class="vprompt">&ldquo;Lava effect with cracks glowing in bright orange&rdquo;</p>
+    <div class="cmp-layout">
+      <div class="cmp-ref">
+        <p class="dm-block-label">Reference video</p>
+        <video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/059_spot__reference_video.mp4?v=2" type="video/mp4"></video>
+      </div>
+      <div class="cmp-cols">
+        <div class="cmp-col">
+          <div class="vgrid vgrid-2 vhead"><div>Novel view #1</div><div>Novel view #2</div></div>
+        <div class="cmp-method"><p class="dm-block-label">DynaMesh (ours)</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/061_spot__novel_view.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_ours_nv2.mp4?v=2" type="video/mp4"></video></div></div>
+        <div class="cmp-method"><p class="dm-block-label">Frozen TRELLIS.2</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/063_spot__view5.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_frozen_nv2.mp4?v=2" type="video/mp4"></video></div></div>
+        <div class="cmp-method"><p class="dm-block-label">MeshNCA</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/065_spot__view7.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_meshnca_nv2.mp4?v=2" type="video/mp4"></video></div></div>
+        </div>
+        <div class="cmp-col">
+          <div class="vgrid vgrid-2 vhead"><div>Novel view #1</div><div>Novel view #2</div></div>
+        <div class="cmp-method"><p class="dm-block-label">L4GM</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/067_spot__view9.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_l4gm_nv2.mp4?v=2" type="video/mp4"></video></div></div>
+        <div class="cmp-method"><p class="dm-block-label">SV4D 2.0</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/069_spot__view11.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_sv4d2_nv2.mp4?v=2" type="video/mp4"></video></div></div>
+        <div class="cmp-method"><p class="dm-block-label">DG4D</p><div class="vgrid vgrid-2"><video autoplay muted loop playsinline preload="metadata"><source src="supp/videos/071_spot__view13.mp4?v=2" type="video/mp4"></video><video autoplay muted loop playsinline preload="metadata"><source src="assets/videos/cmp_dg4d_nv2.mp4?v=2" type="video/mp4"></video></div></div>
+        </div>
+      </div>
+    </div>
+    <p class="graybox">
+      We compare our method against the baselines on one reference video, with every method shown at two novel views
+      that none of them was supervised on. The baselines either flicker or degrade the geometry at those views. Only
+      our method tracks the effect consistently and preserves the shape's geometry.
+    </p>
+  </section>
+  <section id="more-results" aria-label="additional results">
+    <div class="more-results-wrap">
+      <a class="more-results-btn" href="supp/index.html">
+        <i class="icon fas fa-film" aria-hidden="true"></i>Additional results
+      </a>
+    </div>
+  </section>
+  <section id="bibtex">
+    <h2>BibTeX</h2>
+    <div class="bibtex-wrapper">
+      <button type="button" class="bibtex-copy-btn" data-target="bibtex-code"
+        aria-label="Copy BibTeX entry to clipboard">
+        <span class="bibtex-copy-icon" aria-hidden="true">
+          <i class="far fa-copy"></i>
+        </span>
+        <span class="bibtex-copy-text">Copy</span>
+      </button>
+      <pre class="graybox" id="bibtex-code">@misc{hansini2026dynamesh,
+      title={{DynaMesh: Dynamic 3D Texture Generation}},
+      author={Hansini, Raj and Chen, Guan and Hanocka, Rana and Lang, Itai},
+      year={2026},
+      eprint={XXXX.XXXXX},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/XXXX.XXXXX},
+}</pre>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <p>
+      This webpage was adapted from the <a href="https://threedle.github.io/geometry-in-style/" target="_blank" rel="noopener noreferrer">Geometry in Style</a>
+      webpage. We thank <a href="https://people.cs.uchicago.edu/~namanh/" target="_blank" rel="noopener noreferrer">Nam Anh Dinh</a> for creating this template.
+    </p>
+  </footer>
+
+  <script>
+    // ---- Heading anchor links (deep-link helpers) -----------------
+    (function () {
+        var sections = document.querySelectorAll('section[id] h2');
+        sections.forEach(function (h) {
+            var section = h.closest('section[id]');
+            if (!section) return;
+            if (h.querySelector('.heading-anchor')) return;
+            var a = document.createElement('a');
+            a.className = 'heading-anchor';
+            a.href = '#' + section.id;
+            a.setAttribute('aria-label', 'Permalink to ' + h.textContent.trim());
+            a.textContent = '#';
+            h.insertBefore(a, h.firstChild);
+        });
+    })();
+
+    // ---- Side TOC + active section highlight ----------------------
+    (function () {
+        var sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+        var tocLinks = document.querySelectorAll('.side-toc a[data-section]');
+        if (!sections.length) return;
+
+        var visibility = Object.create(null);
+
+        function setActive(id) {
+            tocLinks.forEach(function (a) {
+                a.classList.toggle('is-active', a.dataset.section === id);
+            });
+        }
+
+        if ('IntersectionObserver' in window) {
+            var obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    visibility[entry.target.id] = entry.intersectionRatio;
+                });
+                var bestId = null;
+                var bestRatio = 0;
+                Object.keys(visibility).forEach(function (id) {
+                    if (visibility[id] > bestRatio) {
+                        bestRatio = visibility[id];
+                        bestId = id;
+                    }
+                });
+                if (bestId && bestRatio > 0) setActive(bestId);
+            }, {
+                rootMargin: '-20% 0px -20% 0px',
+                threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+            });
+            sections.forEach(function (s) { obs.observe(s); });
+        }
+
+        var toc = document.querySelector('[data-toc]');
+        if (toc) {
+            var introH = (document.querySelector('.intro') || {}).offsetHeight || 400;
+            var onScroll = function () {
+                if (window.pageYOffset > introH * 0.6) toc.classList.add('is-visible');
+                else toc.classList.remove('is-visible');
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        }
+    })();
+  </script>
+
+  <script>
+    // ---- BibTeX copy-to-clipboard ---------------------------------
+    (function () {
+      var btn = document.querySelector('.bibtex-copy-btn');
+      if (!btn) return;
+      var resetTimer = null;
+      btn.addEventListener('click', function () {
+        var target = document.getElementById(btn.dataset.target);
+        if (!target) return;
+        var text = target.innerText;
+        var done = function (ok) {
+          btn.classList.remove('is-success', 'is-error');
+          btn.classList.add(ok ? 'is-success' : 'is-error');
+          var label = btn.querySelector('.bibtex-copy-text');
+          if (label) label.textContent = ok ? 'Copied!' : 'Copy failed';
+          if (resetTimer) clearTimeout(resetTimer);
+          resetTimer = setTimeout(function () {
+            btn.classList.remove('is-success', 'is-error');
+            if (label) label.textContent = 'Copy';
+          }, 1800);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { done(true); },
+            function () { done(false); });
+        } else {
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            var ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            done(ok);
+          } catch (err) {
+            done(false);
+          }
+        }
+      });
+    })();
+  </script>
+
+  <script>
+    // ---- lazy, synchronized video playback --------------------------
+    // This page carries ~60 clips but the browser's media service only
+    // sustains a couple dozen live decoders (beyond that every video in
+    // the whole browser stops loading). So each clip holds a decoder
+    // only while it is near the viewport, under a hard global budget.
+    // Clips are grouped per row/strip/section for synchronized playback:
+    // a newly mounted clip joins at its group's current playback time,
+    // and a slow re-pin loop corrects drift.
+    (function () {
+      var MAX_LIVE = 22;
+      var groups = [];
+      document.querySelectorAll('.vscroll').forEach(function (el) {
+        // a sync strip's reference video is the clock for its 3D cells:
+        // it plays natively and is never mounted or unmounted here
+        if (el.classList.contains('dm-syncstrip')) return;
+        groups.push({el: el, vids: el.querySelectorAll('video')});
+      });
+      document.querySelectorAll('.vgrid:not(.vhead)').forEach(function (el) {
+        if (!el.closest('#comparison')) groups.push({el: el, vids: el.querySelectorAll('video')});
+      });
+      var cmp = document.getElementById('comparison');
+      if (cmp) groups.push({el: cmp, vids: cmp.querySelectorAll('video')});
+
+      var liveCount = 0;
+      var dead = new Set();     // clips whose file failed to load: never retried
+      var wanted = new Set();   // clips currently near the viewport
+
+      groups.forEach(function (g) {
+        g.vids = Array.prototype.slice.call(g.vids);
+        g.live = new Set();
+        g.vids.forEach(function (v) {
+          var srcEl = v.querySelector('source');
+          v.dataset.src = srcEl ? srcEl.getAttribute('src') : (v.getAttribute('src') || '');
+          if (srcEl) srcEl.remove();
+          v.removeAttribute('src');
+          v.preload = 'none';
+          v.autoplay = false;
+          v.load();
+          v.__grp = g;
+        });
+      });
+
+      function groupTime(g) {
+        for (var i = 0; i < g.vids.length; i++) {
+          var v = g.vids[i];
+          if (g.live.has(v) && !v.paused && v.readyState >= 2) return v.currentTime;
+        }
+        return null;
+      }
+
+      function mountVideo(v) {
+        if (v.__live || dead.has(v) || document.hidden || liveCount >= MAX_LIVE) return;
+        v.__live = true; liveCount++;
+        var g = v.__grp; g.live.add(v);
+        v.onerror = function () { dead.add(v); unmountVideo(v); };
+        v.onloadeddata = function () {
+          var t = groupTime(g);
+          if (t !== null && v.duration) v.currentTime = t % v.duration;
+          v.play().catch(function () {});
+        };
+        v.muted = true;
+        v.preload = 'auto';
+        v.src = v.dataset.src;
+        v.load();
+      }
+
+      function unmountVideo(v) {
+        if (!v.__live) return;
+        v.__live = false; liveCount--;
+        v.__grp.live.delete(v);
+        v.onerror = v.onloadeddata = null;
+        v.pause();
+        v.removeAttribute('src');
+        v.preload = 'none';
+        v.load();                         // releases the decoder
+        wanted.forEach(mountVideo);       // hand the freed slot to a waiting clip
+      }
+
+      // a hidden tab must hold no decoders: the browser-wide pool is shared
+      // across tabs, and a backgrounded page would starve the visible one
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          groups.forEach(function (g) { g.vids.forEach(function (v) { if (v.__live) unmountVideo(v); }); });
+        } else {
+          wanted.forEach(mountVideo);
+        }
+      });
+
+      if ('IntersectionObserver' in window) {
+        // mount when a clip comes near, but only unmount once it is far
+        // away: without the gap, clips at the boundary churn on every
+        // scroll and flash while they reload
+        var obsNear = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { wanted.add(e.target); mountVideo(e.target); }
+          });
+        }, {rootMargin: '300px 500px'});
+        var obsFar = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) { wanted.delete(e.target); unmountVideo(e.target); }
+          });
+        }, {rootMargin: '1600px 900px'});
+        groups.forEach(function (g) { g.vids.forEach(function (v) { obsNear.observe(v); obsFar.observe(v); }); });
+      } else {
+        groups.forEach(function (g) { g.vids.forEach(mountVideo); });
+      }
+
+      setInterval(function () {
+        groups.forEach(function (g) {
+          var L = g.vids.filter(function (v) { return g.live.has(v) && v.readyState >= 2; });
+          if (!L.length) return;
+          var m = L[0];
+          if (m.paused) m.play().catch(function () {});
+          var t = m.currentTime;
+          var d = m.duration || 6;
+          if (t < 0.4 || t > d - 0.4) return;   // never correct across the loop wrap
+          for (var k = 1; k < L.length; k++) {
+            var v = L[k];
+            if (v.paused) { v.currentTime = t; v.play().catch(function () {}); }
+            else if (Math.abs(v.currentTime - t) > 0.45) v.currentTime = t;
+          }
+        });
+      }, 2500);
+    })();
+  </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script src="lightbox.js?v=1"></script>
+  <script type="module" src="comparison.js?v=48"></script>
+</body>
+</html>
