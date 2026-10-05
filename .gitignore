@@ -1,0 +1,19 @@
+data*/
+runs*/
+videos/
+out/
+experiments*/
+.e2e/
+.vscode/
+*.pth
+*.pyc
+__pycache__/
+REVIEW_CHECKLIST*.md
+
+# The spot_lava demo assets are committed so collaborators get them on clone.
+# Any other demo or mesh directory is generated and stays ignored.
+demo/*
+!demo/spot_lava/
+meshes/*
+!meshes/spot.obj
+!meshes/bob.obj
